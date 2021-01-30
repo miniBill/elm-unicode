@@ -1,5 +1,7 @@
 port module Main exposing (main)
 
+import Elm.CodeGen as Elm exposing (Declaration(..), and, apply, applyBinOp, boolAnn, charAnn, construct, emptyDocComment, equals, fqVal, fun, funAnn, funDecl, funExpose, gte, hex, ifExpr, int, letExpr, letVal, lt, lte, normalModule, or, parens, varPattern)
+import Elm.Pretty
 import Unicode exposing (Category(..), categoryFromCode)
 
 
@@ -89,120 +91,23 @@ init csv =
                             Nothing
                     )
 
-        header =
-            [ "module Internal exposing (..)"
-            , ""
-            , ""
-            ]
+        moduleDef =
+            normalModule [ "Internal" ] [ funExpose "isLower" ]
 
-        isLower =
-            let
-                categorize =
-                    List.foldr
-                        (\e ( aa, ae, ao ) ->
-                            case e of
-                                All f t ->
-                                    ( ( f, t ) :: aa, ae, ao )
+        imports =
+            []
 
-                                Even f t ->
-                                    ( aa, ( f, t ) :: ae, ao )
+        declarations =
+            [ isLowerDeclaration ranges ]
 
-                                Odd f t ->
-                                    ( aa, ae, ( f, t ) :: ao )
-                        )
-                        ( [], [], [] )
-
-                rangeToString ( from, to ) =
-                    if from == to then
-                        "(code == " ++ toHex from ++ ")"
-
-                    else
-                        "(code >= " ++ toHex from ++ " && code <= " ++ toHex to ++ ")"
-
-                joinOr lst =
-                    if List.isEmpty lst then
-                        "False"
-
-                    else
-                        String.join " || " lst
-
-                rangesToString t =
-                    case t of
-                        Node ( alls, evens, odds ) ->
-                            joinOr (List.map rangeToString alls)
-                                ++ (if List.isEmpty evens && List.isEmpty odds then
-                                        ""
-
-                                    else
-                                        "|| (if modBy 2 code == 0 then "
-                                            ++ joinOr (List.map rangeToString evens)
-                                            ++ " else "
-                                            ++ joinOr (List.map rangeToString odds)
-                                            ++ ")"
-                                   )
-
-                        Split at l r ->
-                            "if code < "
-                                ++ toHex at
-                                ++ " then "
-                                ++ rangesToString l
-                                ++ " else "
-                                ++ rangesToString r
-
-                lowers =
-                    ranges
-                        |> List.filter (\{ category } -> category == LetterLowercase)
-                        |> List.map toEvenOddRange
-                        |> foldWithLast
-                            (\curr last ->
-                                case ( curr, last ) of
-                                    ( Even cf ct, Even lf lt ) ->
-                                        if cf == lt + 2 then
-                                            Just <| Even lf ct
-
-                                        else
-                                            Nothing
-
-                                    ( Odd cf ct, Odd lf lt ) ->
-                                        if cf == lt + 2 then
-                                            Just <| Odd lf ct
-
-                                        else
-                                            Nothing
-
-                                    _ ->
-                                        Nothing
-                            )
-                        |> categorize
-                        |> Node
-                        |> splitAt 0x0100
-                        |> splitAt 0x1EB8
-                        |> splitAt 0x0243
-                        |> splitAt 0xA734
-                        |> splitAt 0x0506
-                        |> splitAt 0x2CC6
-                        |> splitAt 0x017D
-                        --|> splitAt 0x1D2C
-                        --|> splitAt 0x0001D6A6
-                        --|> splitAt 0x00010000
-                        --|> splitAt 0x0240
-                        --|> splitAt 0x2110
-                        |> rangesToString
-            in
-            [ "isLower : Char -> Bool"
-            , "isLower c ="
-            , "    let"
-            , "        code ="
-            , "            Char.toCode c"
-            , "    in"
-            , "    " ++ lowers
-            ]
-
-        lines =
-            List.concat [ header, isLower ]
+        file =
+            Elm.file
+                moduleDef
+                imports
+                declarations
+                Nothing
     in
-    lines
-        |> String.join "\n"
+    Elm.Pretty.pretty 120 file
         |> output
         |> Tuple.pair ()
 
@@ -256,7 +161,7 @@ splitAt at tree =
 
 toEvenOddRange : { a | from : Int, to : Int } -> EvenOddRange
 toEvenOddRange { from, to } =
-    if from == to && False then
+    if from == to then
         if modBy 2 from == 0 then
             Even from from
 
@@ -334,3 +239,154 @@ fromHex =
     String.toList
         >> List.map fromHexChar
         >> List.foldl (\e a -> a * 16 + e) 0
+
+
+isLowerDeclaration :
+    List { category : Category, from : Int, to : Int }
+    -> Declaration
+isLowerDeclaration ranges =
+    let
+        categorize =
+            List.foldr
+                (\e ( aa, ae, ao ) ->
+                    case e of
+                        All f t ->
+                            ( ( f, t ) :: aa, ae, ao )
+
+                        Even f t ->
+                            if f == t then
+                                ( ( f, t ) :: aa, ae, ao )
+
+                            else
+                                ( aa, ( f, t ) :: ae, ao )
+
+                        Odd f t ->
+                            if f == t then
+                                ( ( f, t ) :: aa, ae, ao )
+
+                            else
+                                ( aa, ae, ( f, t ) :: ao )
+                )
+                ( [], [], [] )
+
+        rangeToExpression ( from, to ) =
+            parens <|
+                if from == to then
+                    applyBinOp (fun "code") equals (hex from)
+
+                else
+                    applyBinOp
+                        (applyBinOp (fun "code") gte (hex from))
+                        and
+                        (applyBinOp (fun "code") lte (hex to))
+
+        joinOr lst =
+            case lst of
+                [] ->
+                    construct "False" []
+
+                fst :: tail ->
+                    List.foldl (\e a -> applyBinOp a or e) fst tail
+
+        rangesToExpression t =
+            case t of
+                Node ( alls, evens, odds ) ->
+                    let
+                        modIs n =
+                            applyBinOp
+                                (apply [ fun "modBy", int 2, fun "code" ])
+                                equals
+                                (int n)
+
+                        modded =
+                            if List.isEmpty evens then
+                                if List.isEmpty odds then
+                                    []
+
+                                else
+                                    [ parens <|
+                                        applyBinOp
+                                            (modIs 1)
+                                            and
+                                            (joinOr (List.map rangeToExpression odds))
+                                    ]
+
+                            else if List.isEmpty odds then
+                                [ parens <|
+                                    applyBinOp
+                                        (modIs 0)
+                                        and
+                                        (joinOr (List.map rangeToExpression evens))
+                                ]
+
+                            else
+                                [ parens <|
+                                    ifExpr (modIs 0)
+                                        (joinOr (List.map rangeToExpression evens))
+                                        (joinOr (List.map rangeToExpression odds))
+                                ]
+                    in
+                    joinOr
+                        (List.map rangeToExpression alls ++ modded)
+
+                Split at l r ->
+                    ifExpr (applyBinOp (fun "code") lt (hex at))
+                        (rangesToExpression l)
+                        (rangesToExpression r)
+
+        lowers =
+            ranges
+                |> List.filter (\{ category } -> category == LetterLowercase)
+                |> List.map toEvenOddRange
+                |> foldWithLast
+                    (\curr last ->
+                        case ( curr, last ) of
+                            ( Even cf ct, Even lf lt ) ->
+                                if cf == lt + 2 then
+                                    Just <| Even lf ct
+
+                                else
+                                    Nothing
+
+                            ( Odd cf ct, Odd lf lt ) ->
+                                if cf == lt + 2 then
+                                    Just <| Odd lf ct
+
+                                else
+                                    Nothing
+
+                            _ ->
+                                Nothing
+                    )
+                |> categorize
+                |> Node
+                |> splitAt 0x0100
+                |> splitAt 0x1D2C
+                |> splitAt 0x0001D6A6
+                |> splitAt 0x00010000
+                |> splitAt 0x0240
+                |> splitAt 0x2110
+                |> rangesToExpression
+
+        doc =
+            emptyDocComment
+                |> Elm.markdown "Detect lower case characters"
+
+        typeAnnotation =
+            funAnn charAnn boolAnn
+
+        code =
+            letExpr
+                [ letVal "code" <|
+                    apply
+                        [ fqVal [ "Char" ] "toCode"
+                        , fun "c"
+                        ]
+                ]
+                lowers
+    in
+    funDecl (Just doc)
+        (Just typeAnnotation)
+        "isLower"
+        [ varPattern "c" ]
+        code

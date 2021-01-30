@@ -298,10 +298,10 @@ categoryToDescription cat =
             "Punctuation, Close"
 
         PunctuationInitialQuote ->
-            "Punctuation, Initial quote (may behave like Ps or Pe depending on usage)"
+            "Punctuation, Initial quote"
 
         PunctuationFinalQuote ->
-            "Punctuation, Final quote (may behave like Ps or Pe depending on usage)"
+            "Punctuation, Final quote"
 
         PunctuationOther ->
             "Punctuation, Other"
