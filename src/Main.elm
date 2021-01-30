@@ -100,10 +100,28 @@ init csv =
             []
 
         declarations =
-            [ categoryToDeclaration
+            [ categoriesToDeclaration
+                { name = "isUpper"
+                , categories = [ LetterUppercase ]
+                , comment = "Detect upper case characters (UTF-8 category Lu)"
+                }
+                ranges
+            , categoriesToDeclaration
                 { name = "isLower"
-                , category = LetterLowercase
-                , comment = "Detect lower case characters"
+                , categories = [ LetterLowercase ]
+                , comment = "Detect lower case characters (UTF-8 category Lo)"
+                }
+                ranges
+            , categoriesToDeclaration
+                { name = "isAlpha"
+                , categories =
+                    [ LetterLowercase
+                    , LetterUppercase
+                    , LetterTitlecase
+                    , LetterModifier
+                    , LetterOther
+                    ]
+                , comment = "Detect letters (UTF-8 categories Lu, Ll, Lt, Lm, Lo)"
                 }
                 ranges
             ]
@@ -216,14 +234,14 @@ parseLine line =
             Nothing
 
 
-categoryToDeclaration :
+categoriesToDeclaration :
     { name : String
-    , category : Category
+    , categories : List Category
     , comment : String
     }
     -> List { category : Category, from : Int, to : Int }
     -> Declaration
-categoryToDeclaration { name, category, comment } ranges =
+categoriesToDeclaration { name, categories, comment } ranges =
     let
         categorize =
             List.foldr
@@ -313,9 +331,9 @@ categoryToDeclaration { name, category, comment } ranges =
                         (rangesToExpression l)
                         (rangesToExpression r)
 
-        lowers =
+        categorized =
             ranges
-                |> List.filter (\c -> c.category == category)
+                |> List.filter (\{ category } -> List.member category categories)
                 |> List.map toEvenOddRange
                 |> foldWithLast
                     (\curr last ->
@@ -334,15 +352,68 @@ categoryToDeclaration { name, category, comment } ranges =
                                 else
                                     Nothing
 
-                            _ ->
-                                Nothing
+                            ( Even cf ct, Odd lf lt ) ->
+                                if lf == lt && cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( Odd cf ct, Even lf lt ) ->
+                                if lf == lt && cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( Even cf ct, All lf lt ) ->
+                                if cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( Odd cf ct, All lf lt ) ->
+                                if cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( All cf ct, All lf lt ) ->
+                                if cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( All cf ct, Even lf lt ) ->
+                                if lf == lt && cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
+
+                            ( All cf ct, Odd lf lt ) ->
+                                if lf == lt && cf == lt + 1 then
+                                    Just <| All lf ct
+
+                                else
+                                    Nothing
                     )
                 |> categorize
+
+        splitCount =
+            categorized.all
+                |> List.length
+                |> toFloat
+                |> logBase 3
+                |> floor
+
+        checks =
+            categorized
                 |> Node
-                |> split
-                |> split
-                |> split
-                |> split
+                |> repeat splitCount split
                 |> rangesToExpression
 
         doc =
@@ -360,13 +431,22 @@ categoryToDeclaration { name, category, comment } ranges =
                         , fun "c"
                         ]
                 ]
-                lowers
+                checks
     in
     funDecl (Just doc)
         (Just typeAnnotation)
         name
         [ varPattern "c" ]
         code
+
+
+repeat : number -> (a -> a) -> a -> a
+repeat n f x =
+    if n <= 0 then
+        x
+
+    else
+        repeat (n - 1) f (f x)
 
 
 split : Tree -> Tree
