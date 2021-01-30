@@ -94,7 +94,13 @@ init csv =
                     )
 
         moduleDef =
-            normalModule [ "Internal" ] [ funExpose "isLower" ]
+            normalModule [ "Internal" ]
+                [ funExpose "isUpper"
+                , funExpose "isLower"
+                , funExpose "isAlpha"
+                , funExpose "isDigit"
+                , funExpose "isAlphanum"
+                ]
 
         imports =
             []
@@ -122,6 +128,25 @@ init csv =
                     , LetterOther
                     ]
                 , comment = "Detect letters (UTF-8 categories Lu, Ll, Lt, Lm, Lo)"
+                }
+                ranges
+            , categoriesToDeclaration
+                { name = "isDigit"
+                , categories = [ NumberDecimalDigit ]
+                , comment = "Detect digits (UTF-8 category Nd)"
+                }
+                ranges
+            , categoriesToDeclaration
+                { name = "isAlphaNum"
+                , categories =
+                    [ LetterLowercase
+                    , LetterUppercase
+                    , LetterTitlecase
+                    , LetterModifier
+                    , LetterOther
+                    , NumberDecimalDigit
+                    ]
+                , comment = "Detect letters or digits (UTF-8 categories Lu, Ll, Lt, Lm, Lo, Nd)"
                 }
                 ranges
             ]
@@ -331,7 +356,7 @@ categoriesToDeclaration { name, categories, comment } ranges =
                         (rangesToExpression l)
                         (rangesToExpression r)
 
-        categorized =
+        checks =
             ranges
                 |> List.filter (\{ category } -> List.member category categories)
                 |> List.map toEvenOddRange
@@ -402,18 +427,8 @@ categoriesToDeclaration { name, categories, comment } ranges =
                                     Nothing
                     )
                 |> categorize
-
-        splitCount =
-            categorized.all
-                |> List.length
-                |> toFloat
-                |> logBase 3
-                |> floor
-
-        checks =
-            categorized
                 |> Node
-                |> repeat splitCount split
+                |> split
                 |> rangesToExpression
 
         doc =
@@ -440,15 +455,6 @@ categoriesToDeclaration { name, categories, comment } ranges =
         code
 
 
-repeat : number -> (a -> a) -> a -> a
-repeat n f x =
-    if n <= 0 then
-        x
-
-    else
-        repeat (n - 1) f (f x)
-
-
 split : Tree -> Tree
 split t =
     case t of
@@ -465,9 +471,13 @@ split t =
                         |> List.drop splitLen
                         |> List.head
             in
-            case pivot of
-                Just ( f, _ ) ->
-                    splitAt (f - 1) <| Node n
+            if List.length n.all <= 12 then
+                t
 
-                Nothing ->
-                    t
+            else
+                case pivot of
+                    Just ( f, _ ) ->
+                        split <| splitAt (f - 1) <| Node n
+
+                    Nothing ->
+                        t
