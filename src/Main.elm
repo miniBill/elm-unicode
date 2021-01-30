@@ -100,7 +100,13 @@ init csv =
             []
 
         declarations =
-            [ isLowerDeclaration ranges ]
+            [ categoryToDeclaration
+                { name = "isLower"
+                , category = LetterLowercase
+                , comment = "Detect lower case characters"
+                }
+                ranges
+            ]
 
         file =
             Elm.file
@@ -127,27 +133,30 @@ splitAt at tree =
             else
                 tree
 
-        Node ( a, e, o ) ->
+        Node n ->
             let
                 splot =
                     List.foldr
                         (\( elf, elt ) ( lacc, hacc ) ->
-                            if elf < at then
+                            if elt < at then
                                 ( ( elf, elt ) :: lacc, hacc )
 
-                            else
+                            else if elf >= at then
                                 ( lacc, ( elf, elt ) :: hacc )
+
+                            else
+                                ( ( elf, at - 1 ) :: lacc, ( at, elt ) :: hacc )
                         )
                         ( [], [] )
 
                 ( la, ha ) =
-                    splot a
+                    splot n.all
 
                 ( le, he ) =
-                    splot e
+                    splot n.even
 
                 ( lo, ho ) =
-                    splot o
+                    splot n.odd
             in
             if List.isEmpty la && List.isEmpty le && List.isEmpty lo then
                 tree
@@ -157,8 +166,8 @@ splitAt at tree =
 
             else
                 Split at
-                    (Node ( la, le, lo ))
-                    (Node ( ha, he, ho ))
+                    (Node { all = la, even = le, odd = lo })
+                    (Node { all = ha, even = he, odd = ho })
 
 
 toEvenOddRange : { a | from : Int, to : Int } -> EvenOddRange
@@ -181,7 +190,11 @@ type EvenOddRange
 
 
 type Tree
-    = Node ( List ( Int, Int ), List ( Int, Int ), List ( Int, Int ) )
+    = Node
+        { all : List ( Int, Int )
+        , even : List ( Int, Int )
+        , odd : List ( Int, Int )
+        }
     | Split Int Tree Tree
 
 
@@ -203,33 +216,37 @@ parseLine line =
             Nothing
 
 
-isLowerDeclaration :
-    List { category : Category, from : Int, to : Int }
+categoryToDeclaration :
+    { name : String
+    , category : Category
+    , comment : String
+    }
+    -> List { category : Category, from : Int, to : Int }
     -> Declaration
-isLowerDeclaration ranges =
+categoryToDeclaration { name, category, comment } ranges =
     let
         categorize =
             List.foldr
-                (\e ( aa, ae, ao ) ->
+                (\e n ->
                     case e of
                         All f t ->
-                            ( ( f, t ) :: aa, ae, ao )
+                            { n | all = ( f, t ) :: n.all }
 
                         Even f t ->
                             if f == t then
-                                ( ( f, t ) :: aa, ae, ao )
+                                { n | all = ( f, t ) :: n.all }
 
                             else
-                                ( aa, ( f, t ) :: ae, ao )
+                                { n | even = ( f, t ) :: n.even }
 
                         Odd f t ->
                             if f == t then
-                                ( ( f, t ) :: aa, ae, ao )
+                                { n | all = ( f, t ) :: n.all }
 
                             else
-                                ( aa, ae, ( f, t ) :: ao )
+                                { n | odd = ( f, t ) :: n.odd }
                 )
-                ( [], [], [] )
+                { all = [], even = [], odd = [] }
 
         rangeToExpression ( from, to ) =
             parens <|
@@ -252,7 +269,7 @@ isLowerDeclaration ranges =
 
         rangesToExpression t =
             case t of
-                Node ( alls, evens, odds ) ->
+                Node { all, even, odd } ->
                     let
                         modIs n =
                             applyBinOp
@@ -261,8 +278,8 @@ isLowerDeclaration ranges =
                                 (int n)
 
                         modded =
-                            if List.isEmpty evens then
-                                if List.isEmpty odds then
+                            if List.isEmpty even then
+                                if List.isEmpty odd then
                                     []
 
                                 else
@@ -270,26 +287,26 @@ isLowerDeclaration ranges =
                                         applyBinOp
                                             (modIs 1)
                                             and
-                                            (joinOr (List.map rangeToExpression odds))
+                                            (joinOr (List.map rangeToExpression odd))
                                     ]
 
-                            else if List.isEmpty odds then
+                            else if List.isEmpty odd then
                                 [ parens <|
                                     applyBinOp
                                         (modIs 0)
                                         and
-                                        (joinOr (List.map rangeToExpression evens))
+                                        (joinOr (List.map rangeToExpression even))
                                 ]
 
                             else
                                 [ parens <|
                                     ifExpr (modIs 0)
-                                        (joinOr (List.map rangeToExpression evens))
-                                        (joinOr (List.map rangeToExpression odds))
+                                        (joinOr (List.map rangeToExpression even))
+                                        (joinOr (List.map rangeToExpression odd))
                                 ]
                     in
                     joinOr
-                        (List.map rangeToExpression alls ++ modded)
+                        (List.map rangeToExpression all ++ modded)
 
                 Split at l r ->
                     ifExpr (applyBinOp (fun "code") lt (hex at))
@@ -298,7 +315,7 @@ isLowerDeclaration ranges =
 
         lowers =
             ranges
-                |> List.filter (\{ category } -> category == LetterLowercase)
+                |> List.filter (\c -> c.category == category)
                 |> List.map toEvenOddRange
                 |> foldWithLast
                     (\curr last ->
@@ -322,17 +339,15 @@ isLowerDeclaration ranges =
                     )
                 |> categorize
                 |> Node
-                |> splitAt 0x0100
-                |> splitAt 0x1D2C
-                |> splitAt 0x0001D6A6
-                |> splitAt 0x00010000
-                |> splitAt 0x0240
-                |> splitAt 0x2110
+                |> split
+                |> split
+                |> split
+                |> split
                 |> rangesToExpression
 
         doc =
             emptyDocComment
-                |> Elm.markdown "Detect lower case characters"
+                |> Elm.markdown comment
 
         typeAnnotation =
             funAnn charAnn boolAnn
@@ -349,6 +364,30 @@ isLowerDeclaration ranges =
     in
     funDecl (Just doc)
         (Just typeAnnotation)
-        "isLower"
+        name
         [ varPattern "c" ]
         code
+
+
+split : Tree -> Tree
+split t =
+    case t of
+        Split at l r ->
+            Split at (split l) (split r)
+
+        Node n ->
+            let
+                splitLen =
+                    List.length n.all // 2
+
+                pivot =
+                    n.all
+                        |> List.drop splitLen
+                        |> List.head
+            in
+            case pivot of
+                Just ( f, _ ) ->
+                    splitAt (f - 1) <| Node n
+
+                Nothing ->
+                    t
