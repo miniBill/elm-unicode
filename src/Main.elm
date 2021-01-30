@@ -2,6 +2,8 @@ port module Main exposing (main)
 
 import Elm.CodeGen as Elm exposing (Declaration(..), and, apply, applyBinOp, boolAnn, charAnn, construct, emptyDocComment, equals, fqVal, fun, funAnn, funDecl, funExpose, gte, hex, ifExpr, int, letExpr, letVal, lt, lte, normalModule, or, parens, varPattern)
 import Elm.Pretty
+import Hex
+import Result
 import Unicode exposing (Category(..), categoryFromCode)
 
 
@@ -187,58 +189,18 @@ parseLine : String -> Maybe { codeValue : Int, characterName : String, category 
 parseLine line =
     case String.split ";" line of
         codeValueHex :: characterName :: generalCategory :: _ ->
-            Maybe.map
-                (\category ->
-                    { codeValue = fromHex codeValueHex
+            Maybe.map2
+                (\codeValue category ->
+                    { codeValue = codeValue
                     , characterName = characterName
                     , category = category
                     }
                 )
+                (Result.toMaybe <| Hex.fromString <| String.toLower codeValueHex)
                 (categoryFromCode generalCategory)
 
         _ ->
             Nothing
-
-
-toHex : Int -> String
-toHex i =
-    if i == 0 then
-        "0"
-
-    else
-        let
-            toHexChar k =
-                if k < 0x0A then
-                    String.fromInt k
-
-                else
-                    String.fromChar (Char.fromCode (Char.toCode 'A' + k - 0x0A))
-
-            go n acc =
-                if n == 0 then
-                    acc
-
-                else
-                    go (n // 16) (toHexChar (modBy 16 n) ++ acc)
-        in
-        "0x" ++ go i ""
-
-
-fromHex : String -> Int
-fromHex =
-    let
-        fromHexChar c =
-            case String.toInt (String.fromChar c) of
-                Just i ->
-                    i
-
-                Nothing ->
-                    -- We can just assume the input is well formed tbh
-                    Char.toCode (Char.toUpper c) - Char.toCode 'A' + 0x0A
-    in
-    String.toList
-        >> List.map fromHexChar
-        >> List.foldl (\e a -> a * 16 + e) 0
 
 
 isLowerDeclaration :
