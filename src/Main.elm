@@ -272,29 +272,6 @@ categoriesToDeclaration :
     -> Declaration
 categoriesToDeclaration { name, categories, comment } ranges =
     let
-        categorize =
-            List.foldr
-                (\e n ->
-                    case e of
-                        All f t ->
-                            { n | all = ( f, t ) :: n.all }
-
-                        Even f t ->
-                            if f == t then
-                                { n | all = ( f, t ) :: n.all }
-
-                            else
-                                { n | even = ( f, t ) :: n.even }
-
-                        Odd f t ->
-                            if f == t then
-                                { n | all = ( f, t ) :: n.all }
-
-                            else
-                                { n | odd = ( f, t ) :: n.odd }
-                )
-                { all = [], even = [], odd = [] }
-
         rangeToExpression ( from, to ) =
             parens <|
                 if from == to then
@@ -432,6 +409,7 @@ categoriesToDeclaration { name, categories, comment } ranges =
                     )
                 |> categorize
                 |> Node
+                |> splitAt 0x0100
                 |> split
                 |> rangesToExpression
 
@@ -457,6 +435,31 @@ categoriesToDeclaration { name, categories, comment } ranges =
         name
         [ varPattern "c" ]
         code
+
+
+categorize : List EvenOddRange -> { all : List ( Int, Int ), even : List ( Int, Int ), odd : List ( Int, Int ) }
+categorize =
+    List.foldr
+        (\e n ->
+            case e of
+                All f t ->
+                    { n | all = ( f, t ) :: n.all }
+
+                Even f t ->
+                    if f == t then
+                        { n | all = ( f, t ) :: n.all }
+
+                    else
+                        { n | even = ( f, t ) :: n.even }
+
+                Odd f t ->
+                    if f == t then
+                        { n | all = ( f, t ) :: n.all }
+
+                    else
+                        { n | odd = ( f, t ) :: n.odd }
+        )
+        { all = [], even = [], odd = [] }
 
 
 split : Tree -> Tree
