@@ -1723,7 +1723,7 @@ isAlphaNum c =
             || (code >= 0x00020000 && code <= 0x0003134A)
 
 
-{-| Get the UTF category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead.
+{-| Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead.
 -}
 getCategory : Char -> Maybe Category
 getCategory c =

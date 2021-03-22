@@ -335,7 +335,7 @@ getCategoryDeclaration ranges =
 
         doc =
             emptyDocComment
-                |> Elm.markdown """Get the UTF category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead."""
+                |> Elm.markdown """Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead."""
 
         group { all, even, odd } =
             let
