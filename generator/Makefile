@@ -1,4 +1,4 @@
-all: ../src/Utf8.elm
+all: ../src/Unicode.elm ../docs.json
 
 dist/UnicodeData.txt:
 	mkdir -p $$(dirname $@)
@@ -12,10 +12,14 @@ dist/index.js: src/index.js
 	mkdir -p $$(dirname $@)
 	cp $^ $@
 
-../src/Utf8.elm: dist/index.js dist/Main.elm.js dist/UnicodeData.txt
+../src/Unicode.elm: dist/index.js dist/Main.elm.js dist/UnicodeData.txt src/Unicode.elm
 	node $< < dist/UnicodeData.txt > $@
+	tail -n+2 src/Unicode.elm >> $@
 	elm-format --yes $@
+
+../docs.json: ../src/Unicode.elm
+	(cd ..; elm make --docs=$@ src/Unicode.elm)
 
 .PHONY: clean
 clean:
-	rm -r dist
+	rm -rf dist elm-stuff ../elm-stuff

@@ -1,4 +1,4 @@
-module Unicode exposing (Category(..), categoryFromCode, categoryToCode, categoryToDescription)
+module Unicode exposing (Category(..), categoryFromString, categoryToDescription, categoryToString)
 
 
 type Category
@@ -34,8 +34,8 @@ type Category
     | SymbolOther
 
 
-categoryFromCode : String -> Maybe Category
-categoryFromCode generalCategory =
+categoryFromString : String -> Maybe Category
+categoryFromString generalCategory =
     case generalCategory of
         "Lu" ->
             Just LetterUppercase
@@ -131,8 +131,8 @@ categoryFromCode generalCategory =
             Nothing
 
 
-categoryToCode : Category -> String
-categoryToCode generalCategory =
+categoryToString : Category -> String
+categoryToString generalCategory =
     case generalCategory of
         LetterUppercase ->
             "Lu"
