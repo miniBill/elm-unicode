@@ -1,6 +1,6 @@
 module Unicode exposing (Category(..), categoryFromString, categoryToDescription, categoryToString)
 
-
+{-| A category as defined by the Unicode standard. -}
 type Category
     = LetterUppercase
     | LetterLowercase
@@ -33,7 +33,7 @@ type Category
     | SymbolModifier
     | SymbolOther
 
-
+{-| Parses a category name (Lu, Ll, Lt, ...). -}
 categoryFromString : String -> Maybe Category
 categoryFromString generalCategory =
     case generalCategory of
@@ -131,6 +131,7 @@ categoryFromString generalCategory =
             Nothing
 
 
+{-| Convert a category to its short category name (Lu, Ll, Lt, ...) -}
 categoryToString : Category -> String
 categoryToString generalCategory =
     case generalCategory of
@@ -224,7 +225,7 @@ categoryToString generalCategory =
         SymbolOther ->
             "So"
 
-
+{-| Converts a category to its English description. Mostly useful for debugging purposes. -}
 categoryToDescription : Category -> String
 categoryToDescription cat =
     case cat of

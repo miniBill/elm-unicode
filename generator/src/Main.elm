@@ -120,7 +120,7 @@ init csv =
             , categoriesToDeclaration
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
-                , comment = "Detect lower case characters (UTF-8 category Lo)"
+                , comment = "Detect lower case characters (UTF-8 category Ll)"
                 }
                 ranges
             , categoriesToDeclaration
@@ -137,8 +137,8 @@ init csv =
                 ranges
             , categoriesToDeclaration
                 { name = "isDigit"
-                , categories = [ NumberDecimalDigit ]
-                , comment = "Detect digits (UTF-8 category Nd)"
+                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                , comment = "Detect digits (UTF-8 categories Nd, Nl, No)"
                 }
                 ranges
             , categoriesToDeclaration
@@ -150,8 +150,10 @@ init csv =
                     , LetterModifier
                     , LetterOther
                     , NumberDecimalDigit
+                    , NumberLetter
+                    , NumberOther
                     ]
-                , comment = "Detect letters or digits (UTF-8 categories Lu, Ll, Lt, Lm, Lo, Nd)"
+                , comment = "Detect letters or digits (UTF-8 categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
                 }
                 ranges
             , getCategoryDeclaration ranges
@@ -380,7 +382,9 @@ getCategoryDeclaration ranges =
                                                     applyBinOp
                                                         (modIs 1)
                                                         and
-                                                        (joinOr (List.map rangeToCondition odd))
+                                                    <|
+                                                        parens <|
+                                                            joinOr (List.map rangeToCondition odd)
                                                 ]
 
                                         else if List.isEmpty odd then
@@ -388,7 +392,9 @@ getCategoryDeclaration ranges =
                                                 applyBinOp
                                                     (modIs 0)
                                                     and
-                                                    (joinOr (List.map rangeToCondition even))
+                                                <|
+                                                    parens <|
+                                                        joinOr (List.map rangeToCondition even)
                                             ]
 
                                         else
@@ -539,7 +545,9 @@ categoriesToDeclaration { name, categories, comment } ranges =
                                         applyBinOp
                                             (modIs 1)
                                             and
-                                            (joinOr (List.map rangeToCondition odd))
+                                        <|
+                                            parens <|
+                                                joinOr (List.map rangeToCondition odd)
                                     ]
 
                             else if List.isEmpty odd then
@@ -547,7 +555,9 @@ categoriesToDeclaration { name, categories, comment } ranges =
                                     applyBinOp
                                         (modIs 0)
                                         and
-                                        (joinOr (List.map rangeToCondition even))
+                                    <|
+                                        parens <|
+                                            joinOr (List.map rangeToCondition even)
                                 ]
 
                             else
