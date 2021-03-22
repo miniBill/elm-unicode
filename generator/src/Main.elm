@@ -114,13 +114,13 @@ init csv =
             [ categoriesToDeclaration
                 { name = "isUpper"
                 , categories = [ LetterUppercase ]
-                , comment = "Detect upper case characters (UTF-8 category Lu)"
+                , comment = "Detect upper case characters (Unicode category Lu)"
                 }
                 ranges
             , categoriesToDeclaration
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
-                , comment = "Detect lower case characters (UTF-8 category Ll)"
+                , comment = "Detect lower case characters (Unicode category Ll)"
                 }
                 ranges
             , categoriesToDeclaration
@@ -132,13 +132,13 @@ init csv =
                     , LetterModifier
                     , LetterOther
                     ]
-                , comment = "Detect letters (UTF-8 categories Lu, Ll, Lt, Lm, Lo)"
+                , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
                 }
                 ranges
             , categoriesToDeclaration
                 { name = "isDigit"
                 , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (UTF-8 categories Nd, Nl, No)"
+                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
                 }
                 ranges
             , categoriesToDeclaration
@@ -153,7 +153,7 @@ init csv =
                     , NumberLetter
                     , NumberOther
                     ]
-                , comment = "Detect letters or digits (UTF-8 categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
+                , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
                 }
                 ranges
             , getCategoryDeclaration ranges
@@ -161,7 +161,7 @@ init csv =
 
         fileComment =
             emptyFileComment
-                |> Elm.markdown """UTF-8 aware functions for working with characters.
+                |> Elm.markdown """Unicode aware functions for working with characters.
 
 # Letters
 @docs isUpper, isLower, isAlpha, isAlphaNum

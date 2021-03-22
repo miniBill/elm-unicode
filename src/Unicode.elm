@@ -4,7 +4,7 @@ module Unicode exposing
     , Category(..), getCategory, categoryFromString, categoryToString, categoryToDescription
     )
 
-{-| UTF-8 aware functions for working with characters.
+{-| Unicode aware functions for working with characters.
 
 
 # Letters
@@ -24,7 +24,7 @@ module Unicode exposing
 -}
 
 
-{-| Detect upper case characters (UTF-8 category Lu)
+{-| Detect upper case characters (Unicode category Lu)
 -}
 isUpper : Char -> Bool
 isUpper c =
@@ -227,7 +227,7 @@ isUpper c =
             || (code >= 0x0001E900 && code <= 0x0001E921)
 
 
-{-| Detect lower case characters (UTF-8 category Ll)
+{-| Detect lower case characters (Unicode category Ll)
 -}
 isLower : Char -> Bool
 isLower c =
@@ -459,7 +459,7 @@ isLower c =
             || (code >= 0x0001E922 && code <= 0x0001E943)
 
 
-{-| Detect letters (UTF-8 categories Lu, Ll, Lt, Lm, Lo)
+{-| Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)
 -}
 isAlpha : Char -> Bool
 isAlpha c =
@@ -920,7 +920,7 @@ isAlpha c =
             || (code >= 0x00020000 && code <= 0x0003134A)
 
 
-{-| Detect digits (UTF-8 categories Nd, Nl, No)
+{-| Detect digits (Unicode categories Nd, Nl, No)
 -}
 isDigit : Char -> Bool
 isDigit c =
@@ -1100,7 +1100,7 @@ isDigit c =
             || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
 
 
-{-| Detect letters or digits (UTF-8 categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)
+{-| Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)
 -}
 isAlphaNum : Char -> Bool
 isAlphaNum c =
