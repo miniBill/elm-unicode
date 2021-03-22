@@ -94,7 +94,7 @@ init csv =
                     )
 
         moduleDef =
-            normalModule [ "Internal" ]
+            normalModule [ "Utf8" ]
                 [ funExpose "isUpper"
                 , funExpose "isLower"
                 , funExpose "isAlpha"
