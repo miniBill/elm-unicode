@@ -5,7 +5,6 @@ import Common
 import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
 import Elm.Let
-import Gen.Maybe
 import GenerateCategories
 import Hex
 import Result
@@ -252,13 +251,14 @@ parseLine line =
 
 rangeToCondition : Expression -> ( Int, Int, a ) -> Expression
 rangeToCondition code ( from, to, _ ) =
-    if from == to then
-        Elm.equal code (Elm.hex from)
+    Elm.parensExposed <|
+        if from == to then
+            Elm.equal code (Elm.hex from)
 
-    else
-        Elm.and
-            (Elm.gte code <| Elm.hex from)
-            (Elm.lte code <| Elm.hex to)
+        else
+            Elm.and
+                (Elm.gte code <| Elm.hex from)
+                (Elm.lte code <| Elm.hex to)
 
 
 joinOr : List Expression -> Expression
@@ -273,17 +273,18 @@ joinOr lst =
 
 modIs : Expression -> Int -> Expression
 modIs code n =
-    Elm.equal
-        (Elm.apply
-            (Elm.value
-                { importFrom = [ "Basics" ]
-                , name = "modBy"
-                , annotation = Just (Type.function [ Type.int, Type.int ] Type.int)
-                }
+    Elm.parensExposed <|
+        Elm.equal
+            (Elm.apply
+                (Elm.value
+                    { importFrom = []
+                    , name = "modBy"
+                    , annotation = Just (Type.function [ Type.int, Type.int ] Type.int)
+                    }
+                )
+                [ Elm.int 2, code ]
             )
-            [ Elm.int 2, code ]
-        )
-        (Elm.int n)
+            (Elm.int n)
 
 
 letCode : (Expression -> Expression) -> Expression -> Expression
@@ -294,7 +295,7 @@ letCode inner code =
                 (Elm.value
                     { importFrom = [ "Char" ]
                     , name = "toCode"
-                    , annotation = Just (Type.function [ Type.char ] Type.int)
+                    , annotation = Just (Type.function [ Type.named [] "Char" ] Type.int)
                     }
                 )
                 [ code ]
@@ -354,15 +355,17 @@ getCategoryDeclaration ranges =
                                                 []
 
                                             else
-                                                [ Elm.and
-                                                    (modIs code 1)
-                                                    (joinOr (List.map (rangeToCondition code) odd))
+                                                [ Elm.parensExposed <|
+                                                    Elm.and
+                                                        (modIs code 1)
+                                                        (joinOr (List.map (rangeToCondition code) odd))
                                                 ]
 
                                         else if List.isEmpty odd then
-                                            [ Elm.and
-                                                (modIs code 0)
-                                                (joinOr (List.map (rangeToCondition code) even))
+                                            [ Elm.parensExposed <|
+                                                Elm.and
+                                                    (modIs code 0)
+                                                    (joinOr (List.map (rangeToCondition code) even))
                                             ]
 
                                         else
@@ -371,12 +374,12 @@ getCategoryDeclaration ranges =
                                                 (joinOr (List.map (rangeToCondition code) odd))
                                             ]
                                 in
-                                ( Gen.Maybe.make_.just <| categoryToConstructor category
+                                ( Elm.apply (Elm.value { importFrom = [], name = "Just", annotation = Nothing }) [ categoryToConstructor category ]
                                 , joinOr
                                     (List.map (rangeToCondition code) all ++ modded)
                                 )
                             )
-                        |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) Gen.Maybe.make_.nothing
+                        |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) (Elm.value { importFrom = [], name = "Nothing", annotation = Nothing })
 
                 Split at l r ->
                     Elm.ifThen (Elm.lt code (Elm.hex at))
@@ -518,21 +521,24 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                                     []
 
                                 else
-                                    [ Elm.and
-                                        (modIs code 1)
-                                        (joinOr (List.map (rangeToCondition code) odd))
+                                    [ Elm.parensExposed <|
+                                        Elm.and
+                                            (modIs code 1)
+                                            (joinOr (List.map (rangeToCondition code) odd))
                                     ]
 
                             else if List.isEmpty odd then
-                                [ Elm.and
-                                    (modIs code 0)
-                                    (joinOr (List.map (rangeToCondition code) even))
+                                [ Elm.parensExposed <|
+                                    Elm.and
+                                        (modIs code 0)
+                                        (joinOr (List.map (rangeToCondition code) even))
                                 ]
 
                             else
-                                [ Elm.ifThen (modIs code 0)
-                                    (joinOr (List.map (rangeToCondition code) even))
-                                    (joinOr (List.map (rangeToCondition code) odd))
+                                [ Elm.parensExposed <|
+                                    Elm.ifThen (modIs code 0)
+                                        (joinOr (List.map (rangeToCondition code) even))
+                                        (joinOr (List.map (rangeToCondition code) odd))
                                 ]
                     in
                     joinOr
@@ -551,10 +557,9 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                 |> rangesToTree
                 |> treeToExpression code
     in
-    Elm.declaration name
-        (Elm.fn "c"
-            (letCode checks)
-        )
+    Elm.fn "c" (letCode checks)
+        |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
+        |> Elm.declaration name
         |> Elm.withDocumentation comment
         |> Elm.exposeWith { exposeConstructor = False, group = Just group }
 
