@@ -4,12 +4,12 @@ ev.on("event", function (line) {
     console.log(line);
 })
 
-var Elm = require("./Main.elm.js").Elm;
+var Elm = require("./Unicode.elm.js").Elm;
 
 var fs = require('fs');
 var data = fs.readFileSync(process.stdin.fd, 'utf-8');
 
-const app = Elm.Main.init({
+const app = Elm.GenerateUnicode.init({
     flags: data
 });
 

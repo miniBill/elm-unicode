@@ -9,7 +9,7 @@ import Unicode exposing (Category(..))
 suite : Test
 suite =
     describe "Is coherent" <|
-        List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "}") <| \_ -> checkCode code) <|
+        List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code) <|
             List.range 0 0x0010FFFF
 
 

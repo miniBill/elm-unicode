@@ -1,44 +1,19 @@
-port module Main exposing (main)
+module GenerateUnicode exposing (main)
 
-import Elm.CodeGen as Elm exposing (Declaration(..), Expression, and, apply, applyBinOp, boolAnn, charAnn, construct, emptyDocComment, emptyFileComment, equals, fqVal, fun, funAnn, funDecl, funExpose, gte, hex, ifExpr, int, letExpr, letVal, lt, lte, maybeAnn, normalModule, openTypeExpose, or, parens, typed, varPattern)
-import Elm.Pretty
+import Categories exposing (Category(..), categoryFromString)
+import Common
+import Elm exposing (Declaration, Expression, File)
+import Elm.Annotation as Type
+import Elm.Let
+import Gen.Maybe
+import GenerateCategories
 import Hex
 import Result
-import Unicode exposing (Category(..), categoryFromString)
 
 
-port output : String -> Cmd msg
-
-
-type alias Flags =
-    String
-
-
-type alias Model =
-    ()
-
-
-type alias Msg =
-    ()
-
-
-main : Program Flags Model Msg
+main : Program Common.Flags Common.Model Common.Msg
 main =
-    Platform.worker
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update () () =
-    ( (), Cmd.none )
+    Common.program flagsToFile
 
 
 foldWithLast : (a -> a -> Maybe a) -> List a -> List a
@@ -70,8 +45,8 @@ foldWithLast step list =
         |> List.reverse
 
 
-init : Flags -> ( Model, Cmd Msg )
-init csv =
+flagsToFile : Common.Flags -> File
+flagsToFile csv =
     let
         toRange e =
             { from = e.codeValue
@@ -93,34 +68,19 @@ init csv =
                             Nothing
                     )
 
-        moduleDef =
-            normalModule [ "Unicode" ]
-                [ funExpose "isUpper"
-                , funExpose "isLower"
-                , funExpose "isAlpha"
-                , funExpose "isDigit"
-                , funExpose "isAlphaNum"
-                , openTypeExpose "Category"
-                , funExpose "getCategory"
-                , funExpose "categoryFromString"
-                , funExpose "categoryToString"
-                , funExpose "categoryToDescription"
-                ]
-
-        imports =
-            []
-
         declarations =
             [ categoriesToDeclaration
                 { name = "isUpper"
                 , categories = [ LetterUppercase ]
                 , comment = "Detect upper case characters (Unicode category Lu)"
+                , group = "Letters"
                 }
                 ranges
             , categoriesToDeclaration
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
                 , comment = "Detect lower case characters (Unicode category Ll)"
+                , group = "Letters"
                 }
                 ranges
             , categoriesToDeclaration
@@ -133,12 +93,7 @@ init csv =
                     , LetterOther
                     ]
                 , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
-                }
-                ranges
-            , categoriesToDeclaration
-                { name = "isDigit"
-                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                , group = "Letters"
                 }
                 ranges
             , categoriesToDeclaration
@@ -154,34 +109,47 @@ init csv =
                     , NumberOther
                     ]
                 , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
+                , group = "Letters"
                 }
                 ranges
-            , getCategoryDeclaration ranges
+            , categoriesToDeclaration
+                { name = "isDigit"
+                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                , group = "Digits"
+                }
+                ranges
             ]
-
-        fileComment =
-            emptyFileComment
-                |> Elm.markdown """Unicode aware functions for working with characters.
-
-# Letters
-@docs isUpper, isLower, isAlpha, isAlphaNum
-
-# Digits
-@docs isDigit
-
-# Categories
-@docs Category, getCategory, categoryFromString, categoryToString, categoryToDescription"""
-
-        file =
-            Elm.file
-                moduleDef
-                imports
-                declarations
-                (Just fileComment)
+                ++ List.take 1 GenerateCategories.declarations
+                ++ (getCategoryDeclaration ranges
+                        :: List.drop 1 GenerateCategories.declarations
+                   )
     in
-    Elm.Pretty.pretty 120 file
-        |> output
-        |> Tuple.pair ()
+    Elm.fileWith [ "Unicode" ]
+        { docs =
+            \groups ->
+                "Unicode aware functions for working with characters."
+                    :: List.map Elm.docs
+                        (List.sortBy
+                            (\{ group } ->
+                                case group of
+                                    Just "Letters" ->
+                                        0
+
+                                    Just "Digits" ->
+                                        1
+
+                                    Just "Categories" ->
+                                        2
+
+                                    _ ->
+                                        3
+                            )
+                            groups
+                        )
+        , aliases = []
+        }
+        declarations
 
 
 splitAt : Int -> Tree -> Tree
@@ -282,47 +250,56 @@ parseLine line =
             Nothing
 
 
-rangeToCondition : ( Int, Int, a ) -> Expression
-rangeToCondition ( from, to, _ ) =
-    parens <|
-        if from == to then
-            applyBinOp (fun "code") equals (hex from)
+rangeToCondition : Expression -> ( Int, Int, a ) -> Expression
+rangeToCondition code ( from, to, _ ) =
+    if from == to then
+        Elm.equal code (Elm.hex from)
 
-        else
-            applyBinOp
-                (applyBinOp (fun "code") gte (hex from))
-                and
-                (applyBinOp (fun "code") lte (hex to))
+    else
+        Elm.and
+            (Elm.gte code <| Elm.hex from)
+            (Elm.lte code <| Elm.hex to)
 
 
 joinOr : List Expression -> Expression
 joinOr lst =
     case lst of
         [] ->
-            construct "False" []
+            Elm.bool False
 
         fst :: tail ->
-            List.foldl (\e a -> applyBinOp a or e) fst tail
+            List.foldl (\e a -> Elm.or a e) fst tail
 
 
-modIs : Int -> Expression
-modIs n =
-    applyBinOp
-        (apply [ fun "modBy", int 2, fun "code" ])
-        equals
-        (int n)
+modIs : Expression -> Int -> Expression
+modIs code n =
+    Elm.equal
+        (Elm.apply
+            (Elm.value
+                { importFrom = [ "Basics" ]
+                , name = "modBy"
+                , annotation = Just (Type.function [ Type.int, Type.int ] Type.int)
+                }
+            )
+            [ Elm.int 2, code ]
+        )
+        (Elm.int n)
 
 
-letCode : Expression -> Expression
-letCode inner =
-    letExpr
-        [ letVal "code" <|
-            apply
-                [ fqVal [ "Char" ] "toCode"
-                , fun "c"
-                ]
-        ]
-        inner
+letCode : (Expression -> Expression) -> Expression -> Expression
+letCode inner code =
+    Elm.Let.letIn inner
+        |> Elm.Let.value "code"
+            (Elm.apply
+                (Elm.value
+                    { importFrom = [ "Char" ]
+                    , name = "toCode"
+                    , annotation = Just (Type.function [ Type.char ] Type.int)
+                    }
+                )
+                [ code ]
+            )
+        |> Elm.Let.toExpression
 
 
 getCategoryDeclaration :
@@ -330,12 +307,11 @@ getCategoryDeclaration :
     -> Declaration
 getCategoryDeclaration ranges =
     let
-        typeAnnotation =
-            funAnn charAnn (maybeAnn <| typed "Category" [])
+        annotation =
+            Type.function [ Type.char ] (Type.maybe <| Type.named [] "Category")
 
         doc =
-            emptyDocComment
-                |> Elm.markdown """Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead."""
+            """Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead."""
 
         group { all, even, odd } =
             let
@@ -364,7 +340,7 @@ getCategoryDeclaration ranges =
                 ( _, _, ( _, _, category ) :: _ ) ->
                     go category
 
-        treeToExpression t =
+        treeToExpression code t =
             case t of
                 Node n ->
                     n
@@ -378,160 +354,161 @@ getCategoryDeclaration ranges =
                                                 []
 
                                             else
-                                                [ parens <|
-                                                    applyBinOp
-                                                        (modIs 1)
-                                                        and
-                                                    <|
-                                                        parens <|
-                                                            joinOr (List.map rangeToCondition odd)
+                                                [ Elm.and
+                                                    (modIs code 1)
+                                                    (joinOr (List.map (rangeToCondition code) odd))
                                                 ]
 
                                         else if List.isEmpty odd then
-                                            [ parens <|
-                                                applyBinOp
-                                                    (modIs 0)
-                                                    and
-                                                <|
-                                                    parens <|
-                                                        joinOr (List.map rangeToCondition even)
+                                            [ Elm.and
+                                                (modIs code 0)
+                                                (joinOr (List.map (rangeToCondition code) even))
                                             ]
 
                                         else
-                                            [ parens <|
-                                                ifExpr (modIs 0)
-                                                    (joinOr (List.map rangeToCondition even))
-                                                    (joinOr (List.map rangeToCondition odd))
+                                            [ Elm.ifThen (modIs code 0)
+                                                (joinOr (List.map (rangeToCondition code) even))
+                                                (joinOr (List.map (rangeToCondition code) odd))
                                             ]
                                 in
-                                ( apply [ fun "Just", fun <| categoryToConstructor category ]
+                                ( Gen.Maybe.make_.just <| categoryToConstructor category
                                 , joinOr
-                                    (List.map rangeToCondition all ++ modded)
+                                    (List.map (rangeToCondition code) all ++ modded)
                                 )
                             )
-                        |> List.foldr (\( category, condition ) acc -> ifExpr condition category acc) (fun "Nothing")
+                        |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) Gen.Maybe.make_.nothing
 
                 Split at l r ->
-                    ifExpr (applyBinOp (fun "code") lt (hex at))
-                        (treeToExpression l)
-                        (treeToExpression r)
+                    Elm.ifThen (Elm.lt code (Elm.hex at))
+                        (treeToExpression code l)
+                        (treeToExpression code r)
 
-        checks =
+        checks code =
             ranges
                 |> rangesToTree
                 |> split
-                |> treeToExpression
+                |> treeToExpression code
     in
-    funDecl (Just doc)
-        (Just typeAnnotation)
-        "getCategory"
-        [ varPattern "c" ]
-        (letCode checks)
+    Elm.fn "c" (letCode checks)
+        |> Elm.withType annotation
+        |> Elm.declaration "getCategory"
+        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.withDocumentation doc
 
 
+categoryToConstructor : Category -> Expression
 categoryToConstructor category =
-    case category of
-        LetterUppercase ->
-            "LetterUppercase"
+    let
+        name =
+            case category of
+                LetterUppercase ->
+                    "LetterUppercase"
 
-        LetterLowercase ->
-            "LetterLowercase"
+                LetterLowercase ->
+                    "LetterLowercase"
 
-        LetterTitlecase ->
-            "LetterTitlecase"
+                LetterTitlecase ->
+                    "LetterTitlecase"
 
-        MarkNonSpacing ->
-            "MarkNonSpacing"
+                MarkNonSpacing ->
+                    "MarkNonSpacing"
 
-        MarkSpacingCombining ->
-            "MarkSpacingCombining"
+                MarkSpacingCombining ->
+                    "MarkSpacingCombining"
 
-        MarkEnclosing ->
-            "MarkEnclosing"
+                MarkEnclosing ->
+                    "MarkEnclosing"
 
-        NumberDecimalDigit ->
-            "NumberDecimalDigit"
+                NumberDecimalDigit ->
+                    "NumberDecimalDigit"
 
-        NumberLetter ->
-            "NumberLetter"
+                NumberLetter ->
+                    "NumberLetter"
 
-        NumberOther ->
-            "NumberOther"
+                NumberOther ->
+                    "NumberOther"
 
-        SeparatorSpace ->
-            "SeparatorSpace"
+                SeparatorSpace ->
+                    "SeparatorSpace"
 
-        SeparatorLine ->
-            "SeparatorLine"
+                SeparatorLine ->
+                    "SeparatorLine"
 
-        SeparatorParagraph ->
-            "SeparatorParagraph"
+                SeparatorParagraph ->
+                    "SeparatorParagraph"
 
-        OtherControl ->
-            "OtherControl"
+                OtherControl ->
+                    "OtherControl"
 
-        OtherFormat ->
-            "OtherFormat"
+                OtherFormat ->
+                    "OtherFormat"
 
-        OtherSurrogate ->
-            "OtherSurrogate"
+                OtherSurrogate ->
+                    "OtherSurrogate"
 
-        OtherPrivateUse ->
-            "OtherPrivateUse"
+                OtherPrivateUse ->
+                    "OtherPrivateUse"
 
-        OtherNotAssigned ->
-            "OtherNotAssigned"
+                OtherNotAssigned ->
+                    "OtherNotAssigned"
 
-        LetterModifier ->
-            "LetterModifier"
+                LetterModifier ->
+                    "LetterModifier"
 
-        LetterOther ->
-            "LetterOther"
+                LetterOther ->
+                    "LetterOther"
 
-        PunctuationConnector ->
-            "PunctuationConnector"
+                PunctuationConnector ->
+                    "PunctuationConnector"
 
-        PunctuationDash ->
-            "PunctuationDash"
+                PunctuationDash ->
+                    "PunctuationDash"
 
-        PunctuationOpen ->
-            "PunctuationOpen"
+                PunctuationOpen ->
+                    "PunctuationOpen"
 
-        PunctuationClose ->
-            "PunctuationClose"
+                PunctuationClose ->
+                    "PunctuationClose"
 
-        PunctuationInitialQuote ->
-            "PunctuationInitialQuote"
+                PunctuationInitialQuote ->
+                    "PunctuationInitialQuote"
 
-        PunctuationFinalQuote ->
-            "PunctuationFinalQuote"
+                PunctuationFinalQuote ->
+                    "PunctuationFinalQuote"
 
-        PunctuationOther ->
-            "PunctuationOther"
+                PunctuationOther ->
+                    "PunctuationOther"
 
-        SymbolMath ->
-            "SymbolMath"
+                SymbolMath ->
+                    "SymbolMath"
 
-        SymbolCurrency ->
-            "SymbolCurrency"
+                SymbolCurrency ->
+                    "SymbolCurrency"
 
-        SymbolModifier ->
-            "SymbolModifier"
+                SymbolModifier ->
+                    "SymbolModifier"
 
-        SymbolOther ->
-            "SymbolOther"
+                SymbolOther ->
+                    "SymbolOther"
+    in
+    Elm.value
+        { importFrom = []
+        , name = name
+        , annotation = Just (Type.named [] "Category")
+        }
 
 
 categoriesToDeclaration :
     { name : String
     , categories : List Category
     , comment : String
+    , group : String
     }
     -> List { category : Category, from : Int, to : Int }
     -> Declaration
-categoriesToDeclaration { name, categories, comment } ranges =
+categoriesToDeclaration { name, categories, comment, group } ranges =
     let
-        treeToExpression t =
+        treeToExpression code t =
             case t of
                 Node { all, even, odd } ->
                     let
@@ -541,60 +518,45 @@ categoriesToDeclaration { name, categories, comment } ranges =
                                     []
 
                                 else
-                                    [ parens <|
-                                        applyBinOp
-                                            (modIs 1)
-                                            and
-                                        <|
-                                            parens <|
-                                                joinOr (List.map rangeToCondition odd)
+                                    [ Elm.and
+                                        (modIs code 1)
+                                        (joinOr (List.map (rangeToCondition code) odd))
                                     ]
 
                             else if List.isEmpty odd then
-                                [ parens <|
-                                    applyBinOp
-                                        (modIs 0)
-                                        and
-                                    <|
-                                        parens <|
-                                            joinOr (List.map rangeToCondition even)
+                                [ Elm.and
+                                    (modIs code 0)
+                                    (joinOr (List.map (rangeToCondition code) even))
                                 ]
 
                             else
-                                [ parens <|
-                                    ifExpr (modIs 0)
-                                        (joinOr (List.map rangeToCondition even))
-                                        (joinOr (List.map rangeToCondition odd))
+                                [ Elm.ifThen (modIs code 0)
+                                    (joinOr (List.map (rangeToCondition code) even))
+                                    (joinOr (List.map (rangeToCondition code) odd))
                                 ]
                     in
                     joinOr
-                        (List.map rangeToCondition all ++ modded)
+                        (List.map (rangeToCondition code) all ++ modded)
 
                 Split at l r ->
-                    ifExpr (applyBinOp (fun "code") lt (hex at))
-                        (treeToExpression l)
-                        (treeToExpression r)
+                    Elm.ifThen (Elm.lt code (Elm.hex at))
+                        (treeToExpression code l)
+                        (treeToExpression code r)
 
-        checks =
+        checks code =
             ranges
                 |> List.filter (\{ category } -> List.member category categories)
                 -- Squash all the categories into one
                 |> List.map (\r -> { r | category = SymbolOther })
                 |> rangesToTree
-                |> treeToExpression
-
-        doc =
-            emptyDocComment
-                |> Elm.markdown comment
-
-        typeAnnotation =
-            funAnn charAnn boolAnn
+                |> treeToExpression code
     in
-    funDecl (Just doc)
-        (Just typeAnnotation)
-        name
-        [ varPattern "c" ]
-        (letCode checks)
+    Elm.declaration name
+        (Elm.fn "c"
+            (letCode checks)
+        )
+        |> Elm.withDocumentation comment
+        |> Elm.exposeWith { exposeConstructor = False, group = Just group }
 
 
 rangesToTree : List { a | from : Int, to : Int, category : Category } -> Tree
