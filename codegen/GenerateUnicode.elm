@@ -85,7 +85,7 @@ flagsToFile csv =
                 |> List.map toRange
                 |> foldWithLast
                     (\e last ->
-                        if last.category == e.category then
+                        if last.to + 1 == e.from && last.category == e.category then
                             Just { last | to = e.to }
 
                         else
@@ -664,6 +664,9 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                     (\e last ->
                         if not last.hasAny then
                             Just e
+
+                        else if e.from /= last.to + 1 then
+                            Nothing
 
                         else
                             let
