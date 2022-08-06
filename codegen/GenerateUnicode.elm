@@ -84,7 +84,10 @@ flagsToFile csv =
                 |> List.map toRange
                 |> foldWithLast
                     (\e last ->
-                        if last.to + 1 == e.from && last.category == e.category then
+                        if
+                            (last.to + 1 == e.from || e.category == OtherPrivateUse)
+                                && (last.category == e.category)
+                        then
                             Just { last | to = e.to }
 
                         else
