@@ -35,7 +35,7 @@ isUpper c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex
@@ -111,7 +111,7 @@ isLower c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex
@@ -228,7 +228,7 @@ isAlpha c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex
@@ -1057,7 +1057,7 @@ isDigit c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex
@@ -1247,7 +1247,7 @@ isAlphaNum c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex
@@ -2198,7 +2198,7 @@ getCategory c =
             \from to -> from <= code && code <= to
 
         e =
-            (==) code
+            \hex -> hex == code
 
         l =
             \hex -> code < hex

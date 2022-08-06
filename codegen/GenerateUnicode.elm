@@ -436,14 +436,7 @@ lessThanDef =
 
 equalsDef : Expression
 equalsDef =
-    Elm.apply
-        (Elm.value
-            { importFrom = []
-            , name = "(==)"
-            , annotation = Nothing
-            }
-        )
-        [ codeVariable ]
+    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.equal hex codeVariable
 
 
 inRangeDef : Expression
