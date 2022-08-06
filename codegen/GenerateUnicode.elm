@@ -6,6 +6,7 @@ import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
 import Elm.Let
 import Elm.Op
+import Gen.Char
 import GenerateCategories
 import Hex
 import List.Extra
@@ -75,6 +76,13 @@ flagsToFile csv =
                 , categories = [ LetterUppercase ]
                 , comment = "Detect upper case characters (Unicode category Lu)"
                 , group = "Letters"
+                , simple =
+                    ( \c -> Char.toUpper c == c && Char.toLower /= c
+                    , \c ->
+                        Elm.Op.and
+                            (Elm.Op.equal (Gen.Char.toUpper c) c)
+                            (Elm.Op.notEqual (Gen.Char.toLower c) c)
+                    )
                 }
                 ranges
             , categoriesToDeclaration
@@ -514,6 +522,7 @@ categoriesToDeclaration :
     -> Declaration
 categoriesToDeclaration { name, categories, comment, group } ranges =
     let
+        treeToExpression : Expression -> Tree -> Expression
         treeToExpression code t =
             case t of
                 Node { all, even, odd } ->

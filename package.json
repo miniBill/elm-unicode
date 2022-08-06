@@ -6,7 +6,7 @@
         "node-elm-compiler": "^5.0.6"
     },
     "scripts": {
-        "elm-codegen": "node ../../elm-codegen/bin/elm-codegen",
-        "regen": "pnpm elm-codegen install"
+        "codegen": "node ../elm-codegen/bin/elm-codegen",
+        "regen": "pnpm codegen install"
     }
 }

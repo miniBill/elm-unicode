@@ -1,18 +1,20 @@
 module GenerateCategories exposing (declarations, main)
 
-import Common
 import Elm exposing (Declaration, File)
 import Elm.Annotation as Type exposing (Annotation)
 import Elm.Case
+import Gen.CodeGen.Generate as Generate
 
 
-main : Program Common.Flags Common.Model Common.Msg
+main : Program {} () ()
 main =
-    Common.program flagsToFile
+    Generate.run <|
+        [ file
+        ]
 
 
-flagsToFile : Common.Flags -> File
-flagsToFile _ =
+file : File
+file =
     Elm.file [ "Categories" ] declarations
 
 
@@ -62,37 +64,8 @@ categoryList =
 
 category : Declaration
 category =
-    [ Elm.variant "LetterUppercase"
-    , Elm.variant "LetterLowercase"
-    , Elm.variant "LetterTitlecase"
-    , Elm.variant "MarkNonSpacing"
-    , Elm.variant "MarkSpacingCombining"
-    , Elm.variant "MarkEnclosing"
-    , Elm.variant "NumberDecimalDigit"
-    , Elm.variant "NumberLetter"
-    , Elm.variant "NumberOther"
-    , Elm.variant "SeparatorSpace"
-    , Elm.variant "SeparatorLine"
-    , Elm.variant "SeparatorParagraph"
-    , Elm.variant "OtherControl"
-    , Elm.variant "OtherFormat"
-    , Elm.variant "OtherSurrogate"
-    , Elm.variant "OtherPrivateUse"
-    , Elm.variant "OtherNotAssigned"
-    , Elm.variant "LetterModifier"
-    , Elm.variant "LetterOther"
-    , Elm.variant "PunctuationConnector"
-    , Elm.variant "PunctuationDash"
-    , Elm.variant "PunctuationOpen"
-    , Elm.variant "PunctuationClose"
-    , Elm.variant "PunctuationInitialQuote"
-    , Elm.variant "PunctuationFinalQuote"
-    , Elm.variant "PunctuationOther"
-    , Elm.variant "SymbolMath"
-    , Elm.variant "SymbolCurrency"
-    , Elm.variant "SymbolModifier"
-    , Elm.variant "SymbolOther"
-    ]
+    categoryList
+        |> List.map (\( _, name, _ ) -> Elm.variant name)
         |> Elm.customType "Category"
         |> Elm.withDocumentation "A category as defined by the Unicode standard."
         |> Elm.exposeWith { exposeConstructor = True, group = Just "Categories" }
