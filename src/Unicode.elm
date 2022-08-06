@@ -31,74 +31,74 @@ import Char
 isUpper : Char -> Bool
 isUpper c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         simple =
             Char.toUpper c == c && Char.toLower c /= c
 
         code =
             Char.toCode c
     in
-    (simple
-        && (if code < 0x0100 then
-                code >= 0x00 && code <= 0xFF
-
-            else
-                (code >= 0x0100 && code <= 0x215F)
-                    || (code >= 0x2170 && code <= 0x24B5)
-                    || (code >= 0x24D0 && code <= 0x000F0000)
-           )
-    )
-        || (if code < 0x0001D4CF then
-                if code < 0x213D then
-                    (code >= 0x03D2 && code <= 0x03D4)
-                        || (code == 0x2102)
-                        || (code == 0x2107)
-                        || (code >= 0x210B && code <= 0x210D)
-                        || (code >= 0x2110 && code <= 0x2112)
-                        || (code == 0x2115)
-                        || (code >= 0x2119 && code <= 0x211D)
-                        || (code == 0x2124)
-                        || (code == 0x2128)
-                        || (code >= 0x212A && code <= 0x212D)
-                        || (code >= 0x2130 && code <= 0x2133)
+    (simple && (code <= 0x215F || r 0x2170 0x24B5 || r 0x24D0 0x000F0000))
+        || (if l 0x0001D4CF then
+                if l 0x213D then
+                    r 0x03D2 0x03D4
+                        || e 0x2102
+                        || e 0x2107
+                        || r 0x210B 0x210D
+                        || r 0x2110 0x2112
+                        || e 0x2115
+                        || r 0x2119 0x211D
+                        || e 0x2124
+                        || e 0x2128
+                        || r 0x212A 0x212D
+                        || r 0x2130 0x2133
 
                 else
-                    (code >= 0x213E && code <= 0x213F)
-                        || (code == 0x2145)
-                        || (code >= 0x0001D400 && code <= 0x0001D419)
-                        || (code >= 0x0001D434 && code <= 0x0001D44D)
-                        || (code >= 0x0001D468 && code <= 0x0001D481)
-                        || (code == 0x0001D49C)
-                        || (code >= 0x0001D49E && code <= 0x0001D49F)
-                        || (code == 0x0001D4A2)
-                        || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                        || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-                        || (code >= 0x0001D4AE && code <= 0x0001D4B5)
+                    r 0x213E 0x213F
+                        || e 0x2145
+                        || r 0x0001D400 0x0001D419
+                        || r 0x0001D434 0x0001D44D
+                        || r 0x0001D468 0x0001D481
+                        || e 0x0001D49C
+                        || r 0x0001D49E 0x0001D49F
+                        || e 0x0001D4A2
+                        || r 0x0001D4A5 0x0001D4A6
+                        || r 0x0001D4A9 0x0001D4AC
+                        || r 0x0001D4AE 0x0001D4B5
 
-            else if code < 0x0001D59F then
-                (code >= 0x0001D4D0 && code <= 0x0001D4E9)
-                    || (code >= 0x0001D504 && code <= 0x0001D505)
-                    || (code >= 0x0001D507 && code <= 0x0001D50A)
-                    || (code >= 0x0001D50D && code <= 0x0001D514)
-                    || (code >= 0x0001D516 && code <= 0x0001D51C)
-                    || (code >= 0x0001D538 && code <= 0x0001D539)
-                    || (code >= 0x0001D53B && code <= 0x0001D53E)
-                    || (code >= 0x0001D540 && code <= 0x0001D544)
-                    || (code == 0x0001D546)
-                    || (code >= 0x0001D54A && code <= 0x0001D550)
-                    || (code >= 0x0001D56C && code <= 0x0001D585)
+            else if l 0x0001D59F then
+                r 0x0001D4D0 0x0001D4E9
+                    || r 0x0001D504 0x0001D505
+                    || r 0x0001D507 0x0001D50A
+                    || r 0x0001D50D 0x0001D514
+                    || r 0x0001D516 0x0001D51C
+                    || r 0x0001D538 0x0001D539
+                    || r 0x0001D53B 0x0001D53E
+                    || r 0x0001D540 0x0001D544
+                    || e 0x0001D546
+                    || r 0x0001D54A 0x0001D550
+                    || r 0x0001D56C 0x0001D585
 
             else
-                (code >= 0x0001D5A0 && code <= 0x0001D5B9)
-                    || (code >= 0x0001D5D4 && code <= 0x0001D5ED)
-                    || (code >= 0x0001D608 && code <= 0x0001D621)
-                    || (code >= 0x0001D63C && code <= 0x0001D655)
-                    || (code >= 0x0001D670 && code <= 0x0001D689)
-                    || (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                    || (code >= 0x0001D6E2 && code <= 0x0001D6FA)
-                    || (code >= 0x0001D71C && code <= 0x0001D734)
-                    || (code >= 0x0001D756 && code <= 0x0001D76E)
-                    || (code >= 0x0001D790 && code <= 0x0001D7A8)
-                    || (code == 0x0001D7CA)
+                r 0x0001D5A0 0x0001D5B9
+                    || r 0x0001D5D4 0x0001D5ED
+                    || r 0x0001D608 0x0001D621
+                    || r 0x0001D63C 0x0001D655
+                    || r 0x0001D670 0x0001D689
+                    || r 0x0001D6A8 0x0001D6C0
+                    || r 0x0001D6E2 0x0001D6FA
+                    || r 0x0001D71C 0x0001D734
+                    || r 0x0001D756 0x0001D76E
+                    || r 0x0001D790 0x0001D7A8
+                    || e 0x0001D7CA
            )
 
 
@@ -107,6 +107,15 @@ isUpper c =
 isLower : Char -> Bool
 isLower c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         simple =
             Char.toLower c == c && Char.toUpper c /= c
 
@@ -114,104 +123,99 @@ isLower c =
             Char.toCode c
     in
     (simple
-        && (if code < 0x0100 then
-                code >= 0x00 && code <= 0xFF
-
-            else
-                (code >= 0x0100 && code <= 0x0344)
-                    || (code >= 0x0346 && code <= 0x216F)
-                    || (code >= 0x2180 && code <= 0x24CF)
-                    || (code >= 0x24EA && code <= 0x000F0000)
+        && (code
+                <= 0x0344
+                || r 0x0346 0x216F
+                || r 0x2180 0x24CF
+                || r 0x24EA 0x000F0000
            )
     )
-        || (if code < 0xA7AE then
-                if code < 0x1E9E then
-                    if code < 0x024E then
-                        (code >= 0x0137 && code <= 0x0138)
-                            || (code >= 0x018C && code <= 0x018D)
-                            || (code >= 0x0199 && code <= 0x019B)
-                            || (code >= 0x01AA && code <= 0x01AB)
-                            || (code >= 0x01B9 && code <= 0x01BA)
-                            || (code >= 0x01BD && code <= 0x01BF)
-                            || (code == 0x0221)
-                            || (code >= 0x0233 && code <= 0x0239)
+        || (if l 0xA7AE then
+                if l 0x1E9E then
+                    if l 0x024E then
+                        r 0x0137 0x0138
+                            || r 0x018C 0x018D
+                            || r 0x0199 0x019B
+                            || r 0x01AA 0x01AB
+                            || r 0x01B9 0x01BA
+                            || r 0x01BD 0x01BF
+                            || e 0x0221
+                            || r 0x0233 0x0239
 
                     else
-                        (code >= 0x024F && code <= 0x0293)
-                            || (code >= 0x0295 && code <= 0x02AF)
-                            || (code >= 0x03FB && code <= 0x03FC)
-                            || (code >= 0x0560 && code <= 0x0588)
-                            || (code >= 0x1D00 && code <= 0x1D2B)
-                            || (code >= 0x1D6B && code <= 0x1D77)
-                            || (code >= 0x1D79 && code <= 0x1D9A)
-                            || (code >= 0x1E95 && code <= 0x1E9D)
+                        r 0x024F 0x0293
+                            || r 0x0295 0x02AF
+                            || r 0x03FB 0x03FC
+                            || r 0x0560 0x0588
+                            || r 0x1D00 0x1D2B
+                            || r 0x1D6B 0x1D77
+                            || r 0x1D79 0x1D9A
+                            || r 0x1E95 0x1E9D
 
-                else if code < 0x2145 then
-                    (code == 0x1E9F)
-                        || (code == 0x210A)
-                        || (code >= 0x210E && code <= 0x210F)
-                        || (code == 0x2113)
-                        || (code == 0x212F)
-                        || (code == 0x2134)
-                        || (code == 0x2139)
-                        || (code >= 0x213C && code <= 0x213D)
-
-                else
-                    (code >= 0x2146 && code <= 0x2149)
-                        || (code == 0x2C71)
-                        || (code >= 0x2C73 && code <= 0x2C74)
-                        || (code >= 0x2C76 && code <= 0x2C7B)
-                        || (code >= 0x2CE3 && code <= 0x2CE4)
-                        || (code >= 0xA72F && code <= 0xA731)
-                        || (code >= 0xA771 && code <= 0xA778)
-                        || (code == 0xA78E)
-                        || (code >= 0xA793 && code <= 0xA795)
-
-            else if code < 0x0001D5ED then
-                if code < 0x0001D4B5 then
-                    (code == 0xA7AF)
-                        || (code == 0xA7FA)
-                        || (code >= 0xAB30 && code <= 0xAB5A)
-                        || (code >= 0xAB60 && code <= 0xAB68)
-                        || (code >= 0x0001D41A && code <= 0x0001D433)
-                        || (code >= 0x0001D44E && code <= 0x0001D454)
-                        || (code >= 0x0001D456 && code <= 0x0001D467)
-                        || (code >= 0x0001D482 && code <= 0x0001D49B)
-                        || ((modBy 2 code == 1)
-                                && (code >= 0xA7D3 && code <= 0xA7D5)
-                           )
+                else if l 0x2145 then
+                    e 0x1E9F
+                        || e 0x210A
+                        || r 0x210E 0x210F
+                        || e 0x2113
+                        || e 0x212F
+                        || e 0x2134
+                        || e 0x2139
+                        || r 0x213C 0x213D
 
                 else
-                    (code >= 0x0001D4B6 && code <= 0x0001D4B9)
-                        || (code == 0x0001D4BB)
-                        || (code >= 0x0001D4BD && code <= 0x0001D4C3)
-                        || (code >= 0x0001D4C5 && code <= 0x0001D4CF)
-                        || (code >= 0x0001D4EA && code <= 0x0001D503)
-                        || (code >= 0x0001D51E && code <= 0x0001D537)
-                        || (code >= 0x0001D552 && code <= 0x0001D56B)
-                        || (code >= 0x0001D586 && code <= 0x0001D59F)
-                        || (code >= 0x0001D5BA && code <= 0x0001D5D3)
+                    r 0x2146 0x2149
+                        || e 0x2C71
+                        || r 0x2C73 0x2C74
+                        || r 0x2C76 0x2C7B
+                        || r 0x2CE3 0x2CE4
+                        || r 0xA72F 0xA731
+                        || r 0xA771 0xA778
+                        || e 0xA78E
+                        || r 0xA793 0xA795
 
-            else if code < 0x0001D735 then
-                (code >= 0x0001D5EE && code <= 0x0001D607)
-                    || (code >= 0x0001D622 && code <= 0x0001D63B)
-                    || (code >= 0x0001D656 && code <= 0x0001D66F)
-                    || (code >= 0x0001D68A && code <= 0x0001D6A5)
-                    || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                    || (code >= 0x0001D6DC && code <= 0x0001D6E1)
-                    || (code >= 0x0001D6FC && code <= 0x0001D714)
-                    || (code >= 0x0001D716 && code <= 0x0001D71B)
+            else if l 0x0001D5ED then
+                if l 0x0001D4B5 then
+                    e 0xA7AF
+                        || e 0xA7FA
+                        || r 0xAB30 0xAB5A
+                        || r 0xAB60 0xAB68
+                        || r 0x0001D41A 0x0001D433
+                        || r 0x0001D44E 0x0001D454
+                        || r 0x0001D456 0x0001D467
+                        || r 0x0001D482 0x0001D49B
+                        || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
+
+                else
+                    r 0x0001D4B6 0x0001D4B9
+                        || e 0x0001D4BB
+                        || r 0x0001D4BD 0x0001D4C3
+                        || r 0x0001D4C5 0x0001D4CF
+                        || r 0x0001D4EA 0x0001D503
+                        || r 0x0001D51E 0x0001D537
+                        || r 0x0001D552 0x0001D56B
+                        || r 0x0001D586 0x0001D59F
+                        || r 0x0001D5BA 0x0001D5D3
+
+            else if l 0x0001D735 then
+                r 0x0001D5EE 0x0001D607
+                    || r 0x0001D622 0x0001D63B
+                    || r 0x0001D656 0x0001D66F
+                    || r 0x0001D68A 0x0001D6A5
+                    || r 0x0001D6C2 0x0001D6DA
+                    || r 0x0001D6DC 0x0001D6E1
+                    || r 0x0001D6FC 0x0001D714
+                    || r 0x0001D716 0x0001D71B
 
             else
-                (code >= 0x0001D736 && code <= 0x0001D74E)
-                    || (code >= 0x0001D750 && code <= 0x0001D755)
-                    || (code >= 0x0001D770 && code <= 0x0001D788)
-                    || (code >= 0x0001D78A && code <= 0x0001D78F)
-                    || (code >= 0x0001D7AA && code <= 0x0001D7C2)
-                    || (code >= 0x0001D7C4 && code <= 0x0001D7C9)
-                    || (code == 0x0001D7CB)
-                    || (code >= 0x0001DF00 && code <= 0x0001DF09)
-                    || (code >= 0x0001DF0B && code <= 0x0001DF1E)
+                r 0x0001D736 0x0001D74E
+                    || r 0x0001D750 0x0001D755
+                    || r 0x0001D770 0x0001D788
+                    || r 0x0001D78A 0x0001D78F
+                    || r 0x0001D7AA 0x0001D7C2
+                    || r 0x0001D7C4 0x0001D7C9
+                    || e 0x0001D7CB
+                    || r 0x0001DF00 0x0001DF09
+                    || r 0x0001DF0B 0x0001DF1E
            )
 
 
@@ -220,829 +224,828 @@ isLower c =
 isAlpha : Char -> Bool
 isAlpha c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         code =
             Char.toCode c
     in
-    if code < 0x0100 then
-        (code >= 0x41 && code <= 0x5A)
-            || (code >= 0x61 && code <= 0x7A)
-            || (code == 0xAA)
-            || (code == 0xB5)
-            || (code == 0xBA)
-            || (code >= 0xC0 && code <= 0xD6)
-            || (code >= 0xD8 && code <= 0xF6)
-            || (code >= 0xF8 && code <= 0xFF)
+    if l 0x0100 then
+        r 0x41 0x5A
+            || r 0x61 0x7A
+            || e 0xAA
+            || e 0xB5
+            || e 0xBA
+            || r 0xC0 0xD6
+            || r 0xD8 0xF6
+            || r 0xF8 0xFF
 
-    else if code < 0xA9CE then
-        if code < 0x106D then
-            if code < 0x0ADF then
-                if code < 0x085F then
-                    if code < 0x061F then
-                        if code < 0x038B then
-                            (code >= 0x0100 && code <= 0x02C1)
-                                || (code >= 0x02C6 && code <= 0x02D1)
-                                || (code >= 0x02E0 && code <= 0x02E4)
-                                || (code >= 0x0370 && code <= 0x0374)
-                                || (code >= 0x0376 && code <= 0x0377)
-                                || (code >= 0x037A && code <= 0x037D)
-                                || (code == 0x037F)
-                                || (code == 0x0386)
-                                || (code >= 0x0388 && code <= 0x038A)
-                                || ((modBy 2 code == 0)
-                                        && (code >= 0x02EC && code <= 0x02EE)
-                                   )
+    else if l 0xA9CE then
+        if l 0x106D then
+            if l 0x0ADF then
+                if l 0x085F then
+                    if l 0x061F then
+                        if l 0x038B then
+                            r 0x0100 0x02C1
+                                || r 0x02C6 0x02D1
+                                || r 0x02E0 0x02E4
+                                || r 0x0370 0x0374
+                                || r 0x0376 0x0377
+                                || r 0x037A 0x037D
+                                || e 0x037F
+                                || e 0x0386
+                                || r 0x0388 0x038A
+                                || ((modBy 2 code == 0) && r 0x02EC 0x02EE)
 
                         else
-                            (code == 0x038C)
-                                || (code >= 0x038E && code <= 0x03A1)
-                                || (code >= 0x03A3 && code <= 0x03F5)
-                                || (code >= 0x03F7 && code <= 0x0481)
-                                || (code >= 0x048A && code <= 0x052F)
-                                || (code >= 0x0531 && code <= 0x0556)
-                                || (code == 0x0559)
-                                || (code >= 0x0560 && code <= 0x0588)
-                                || (code >= 0x05D0 && code <= 0x05EA)
-                                || (code >= 0x05EF && code <= 0x05F2)
+                            e 0x038C
+                                || r 0x038E 0x03A1
+                                || r 0x03A3 0x03F5
+                                || r 0x03F7 0x0481
+                                || r 0x048A 0x052F
+                                || r 0x0531 0x0556
+                                || e 0x0559
+                                || r 0x0560 0x0588
+                                || r 0x05D0 0x05EA
+                                || r 0x05EF 0x05F2
 
-                    else if code < 0x074C then
-                        (code >= 0x0620 && code <= 0x064A)
-                            || (code >= 0x066E && code <= 0x066F)
-                            || (code >= 0x0671 && code <= 0x06D3)
-                            || (code == 0x06D5)
-                            || (code >= 0x06E5 && code <= 0x06E6)
-                            || (code >= 0x06EE && code <= 0x06EF)
-                            || (code >= 0x06FA && code <= 0x06FC)
-                            || (code == 0x06FF)
-                            || (code == 0x0710)
-                            || (code >= 0x0712 && code <= 0x072F)
-
-                    else
-                        (code >= 0x074D && code <= 0x07A5)
-                            || (code == 0x07B1)
-                            || (code >= 0x07CA && code <= 0x07EA)
-                            || (code >= 0x07F4 && code <= 0x07F5)
-                            || (code == 0x07FA)
-                            || (code >= 0x0800 && code <= 0x0815)
-                            || (code == 0x081A)
-                            || (code == 0x0824)
-                            || (code == 0x0828)
-                            || (code >= 0x0840 && code <= 0x0858)
-
-                else if code < 0x09EF then
-                    if code < 0x0984 then
-                        (code >= 0x0860 && code <= 0x086A)
-                            || (code >= 0x0870 && code <= 0x0887)
-                            || (code >= 0x0889 && code <= 0x088E)
-                            || (code >= 0x08A0 && code <= 0x08C9)
-                            || (code >= 0x0904 && code <= 0x0939)
-                            || (code == 0x093D)
-                            || (code == 0x0950)
-                            || (code >= 0x0958 && code <= 0x0961)
-                            || (code >= 0x0971 && code <= 0x0980)
+                    else if l 0x074C then
+                        r 0x0620 0x064A
+                            || r 0x066E 0x066F
+                            || r 0x0671 0x06D3
+                            || e 0x06D5
+                            || r 0x06E5 0x06E6
+                            || r 0x06EE 0x06EF
+                            || r 0x06FA 0x06FC
+                            || e 0x06FF
+                            || e 0x0710
+                            || r 0x0712 0x072F
 
                     else
-                        (code >= 0x0985 && code <= 0x098C)
-                            || (code >= 0x098F && code <= 0x0990)
-                            || (code >= 0x0993 && code <= 0x09A8)
-                            || (code >= 0x09AA && code <= 0x09B0)
-                            || (code == 0x09B2)
-                            || (code >= 0x09B6 && code <= 0x09B9)
-                            || (code == 0x09BD)
-                            || (code == 0x09CE)
-                            || (code >= 0x09DC && code <= 0x09DD)
-                            || (code >= 0x09DF && code <= 0x09E1)
+                        r 0x074D 0x07A5
+                            || e 0x07B1
+                            || r 0x07CA 0x07EA
+                            || r 0x07F4 0x07F5
+                            || e 0x07FA
+                            || r 0x0800 0x0815
+                            || e 0x081A
+                            || e 0x0824
+                            || e 0x0828
+                            || r 0x0840 0x0858
 
-                else if code < 0x0A5D then
-                    (code >= 0x09F0 && code <= 0x09F1)
-                        || (code == 0x09FC)
-                        || (code >= 0x0A05 && code <= 0x0A0A)
-                        || (code >= 0x0A0F && code <= 0x0A10)
-                        || (code >= 0x0A13 && code <= 0x0A28)
-                        || (code >= 0x0A2A && code <= 0x0A30)
-                        || (code >= 0x0A32 && code <= 0x0A33)
-                        || (code >= 0x0A35 && code <= 0x0A36)
-                        || (code >= 0x0A38 && code <= 0x0A39)
-                        || (code >= 0x0A59 && code <= 0x0A5C)
-
-                else
-                    (code == 0x0A5E)
-                        || (code >= 0x0A72 && code <= 0x0A74)
-                        || (code >= 0x0A85 && code <= 0x0A8D)
-                        || (code >= 0x0A8F && code <= 0x0A91)
-                        || (code >= 0x0A93 && code <= 0x0AA8)
-                        || (code >= 0x0AAA && code <= 0x0AB0)
-                        || (code >= 0x0AB2 && code <= 0x0AB3)
-                        || (code >= 0x0AB5 && code <= 0x0AB9)
-                        || (code == 0x0ABD)
-                        || (code == 0x0AD0)
-
-            else if code < 0x0CDF then
-                if code < 0x0BA2 then
-                    if code < 0x0B5B then
-                        (code >= 0x0AE0 && code <= 0x0AE1)
-                            || (code == 0x0AF9)
-                            || (code >= 0x0B05 && code <= 0x0B0C)
-                            || (code >= 0x0B0F && code <= 0x0B10)
-                            || (code >= 0x0B13 && code <= 0x0B28)
-                            || (code >= 0x0B2A && code <= 0x0B30)
-                            || (code >= 0x0B32 && code <= 0x0B33)
-                            || (code >= 0x0B35 && code <= 0x0B39)
-                            || (code == 0x0B3D)
+                else if l 0x09EF then
+                    if l 0x0984 then
+                        r 0x0860 0x086A
+                            || r 0x0870 0x0887
+                            || r 0x0889 0x088E
+                            || r 0x08A0 0x08C9
+                            || r 0x0904 0x0939
+                            || e 0x093D
+                            || e 0x0950
+                            || r 0x0958 0x0961
+                            || r 0x0971 0x0980
 
                     else
-                        (code >= 0x0B5C && code <= 0x0B5D)
-                            || (code >= 0x0B5F && code <= 0x0B61)
-                            || (code == 0x0B71)
-                            || (code == 0x0B83)
-                            || (code >= 0x0B85 && code <= 0x0B8A)
-                            || (code >= 0x0B8E && code <= 0x0B90)
-                            || (code >= 0x0B92 && code <= 0x0B95)
-                            || (code >= 0x0B99 && code <= 0x0B9A)
-                            || (code == 0x0B9C)
-                            || (code >= 0x0B9E && code <= 0x0B9F)
+                        r 0x0985 0x098C
+                            || r 0x098F 0x0990
+                            || r 0x0993 0x09A8
+                            || r 0x09AA 0x09B0
+                            || e 0x09B2
+                            || r 0x09B6 0x09B9
+                            || e 0x09BD
+                            || e 0x09CE
+                            || r 0x09DC 0x09DD
+                            || r 0x09DF 0x09E1
 
-                else if code < 0x0C5C then
-                    (code >= 0x0BA3 && code <= 0x0BA4)
-                        || (code >= 0x0BA8 && code <= 0x0BAA)
-                        || (code >= 0x0BAE && code <= 0x0BB9)
-                        || (code == 0x0BD0)
-                        || (code >= 0x0C05 && code <= 0x0C0C)
-                        || (code >= 0x0C0E && code <= 0x0C10)
-                        || (code >= 0x0C12 && code <= 0x0C28)
-                        || (code >= 0x0C2A && code <= 0x0C39)
-                        || (code == 0x0C3D)
-                        || (code >= 0x0C58 && code <= 0x0C5A)
-
-                else
-                    (code == 0x0C5D)
-                        || (code >= 0x0C60 && code <= 0x0C61)
-                        || (code == 0x0C80)
-                        || (code >= 0x0C85 && code <= 0x0C8C)
-                        || (code >= 0x0C8E && code <= 0x0C90)
-                        || (code >= 0x0C92 && code <= 0x0CA8)
-                        || (code >= 0x0CAA && code <= 0x0CB3)
-                        || (code >= 0x0CB5 && code <= 0x0CB9)
-                        || (code == 0x0CBD)
-                        || (code >= 0x0CDD && code <= 0x0CDE)
-
-            else if code < 0x0E83 then
-                if code < 0x0D79 then
-                    (code >= 0x0CE0 && code <= 0x0CE1)
-                        || (code >= 0x0CF1 && code <= 0x0CF2)
-                        || (code >= 0x0D04 && code <= 0x0D0C)
-                        || (code >= 0x0D0E && code <= 0x0D10)
-                        || (code >= 0x0D12 && code <= 0x0D3A)
-                        || (code == 0x0D3D)
-                        || (code == 0x0D4E)
-                        || (code >= 0x0D54 && code <= 0x0D56)
-                        || (code >= 0x0D5F && code <= 0x0D61)
+                else if l 0x0A5D then
+                    r 0x09F0 0x09F1
+                        || e 0x09FC
+                        || r 0x0A05 0x0A0A
+                        || r 0x0A0F 0x0A10
+                        || r 0x0A13 0x0A28
+                        || r 0x0A2A 0x0A30
+                        || r 0x0A32 0x0A33
+                        || r 0x0A35 0x0A36
+                        || r 0x0A38 0x0A39
+                        || r 0x0A59 0x0A5C
 
                 else
-                    (code >= 0x0D7A && code <= 0x0D7F)
-                        || (code >= 0x0D85 && code <= 0x0D96)
-                        || (code >= 0x0D9A && code <= 0x0DB1)
-                        || (code >= 0x0DB3 && code <= 0x0DBB)
-                        || (code == 0x0DBD)
-                        || (code >= 0x0DC0 && code <= 0x0DC6)
-                        || (code >= 0x0E01 && code <= 0x0E30)
-                        || (code >= 0x0E32 && code <= 0x0E33)
-                        || (code >= 0x0E40 && code <= 0x0E46)
-                        || (code >= 0x0E81 && code <= 0x0E82)
+                    e 0x0A5E
+                        || r 0x0A72 0x0A74
+                        || r 0x0A85 0x0A8D
+                        || r 0x0A8F 0x0A91
+                        || r 0x0A93 0x0AA8
+                        || r 0x0AAA 0x0AB0
+                        || r 0x0AB2 0x0AB3
+                        || r 0x0AB5 0x0AB9
+                        || e 0x0ABD
+                        || e 0x0AD0
 
-            else if code < 0x0EFF then
-                (code == 0x0E84)
-                    || (code >= 0x0E86 && code <= 0x0E8A)
-                    || (code >= 0x0E8C && code <= 0x0EA3)
-                    || (code == 0x0EA5)
-                    || (code >= 0x0EA7 && code <= 0x0EB0)
-                    || (code >= 0x0EB2 && code <= 0x0EB3)
-                    || (code == 0x0EBD)
-                    || (code >= 0x0EC0 && code <= 0x0EC4)
-                    || (code == 0x0EC6)
-                    || (code >= 0x0EDC && code <= 0x0EDF)
-
-            else
-                (code == 0x0F00)
-                    || (code >= 0x0F40 && code <= 0x0F47)
-                    || (code >= 0x0F49 && code <= 0x0F6C)
-                    || (code >= 0x0F88 && code <= 0x0F8C)
-                    || (code >= 0x1000 && code <= 0x102A)
-                    || (code == 0x103F)
-                    || (code >= 0x1050 && code <= 0x1055)
-                    || (code >= 0x105A && code <= 0x105D)
-                    || (code == 0x1061)
-                    || (code >= 0x1065 && code <= 0x1066)
-
-        else if code < 0x1FC5 then
-            if code < 0x181F then
-                if code < 0x12C7 then
-                    if code < 0x124F then
-                        (code >= 0x106E && code <= 0x1070)
-                            || (code >= 0x1075 && code <= 0x1081)
-                            || (code == 0x108E)
-                            || (code >= 0x10A0 && code <= 0x10C5)
-                            || (code == 0x10C7)
-                            || (code == 0x10CD)
-                            || (code >= 0x10D0 && code <= 0x10FA)
-                            || (code >= 0x10FC && code <= 0x1248)
-                            || (code >= 0x124A && code <= 0x124D)
+            else if l 0x0CDF then
+                if l 0x0BA2 then
+                    if l 0x0B5B then
+                        r 0x0AE0 0x0AE1
+                            || e 0x0AF9
+                            || r 0x0B05 0x0B0C
+                            || r 0x0B0F 0x0B10
+                            || r 0x0B13 0x0B28
+                            || r 0x0B2A 0x0B30
+                            || r 0x0B32 0x0B33
+                            || r 0x0B35 0x0B39
+                            || e 0x0B3D
 
                     else
-                        (code >= 0x1250 && code <= 0x1256)
-                            || (code == 0x1258)
-                            || (code >= 0x125A && code <= 0x125D)
-                            || (code >= 0x1260 && code <= 0x1288)
-                            || (code >= 0x128A && code <= 0x128D)
-                            || (code >= 0x1290 && code <= 0x12B0)
-                            || (code >= 0x12B2 && code <= 0x12B5)
-                            || (code >= 0x12B8 && code <= 0x12BE)
-                            || (code == 0x12C0)
-                            || (code >= 0x12C2 && code <= 0x12C5)
+                        r 0x0B5C 0x0B5D
+                            || r 0x0B5F 0x0B61
+                            || e 0x0B71
+                            || e 0x0B83
+                            || r 0x0B85 0x0B8A
+                            || r 0x0B8E 0x0B90
+                            || r 0x0B92 0x0B95
+                            || r 0x0B99 0x0B9A
+                            || e 0x0B9C
+                            || r 0x0B9E 0x0B9F
 
-                else if code < 0x169F then
-                    (code >= 0x12C8 && code <= 0x12D6)
-                        || (code >= 0x12D8 && code <= 0x1310)
-                        || (code >= 0x1312 && code <= 0x1315)
-                        || (code >= 0x1318 && code <= 0x135A)
-                        || (code >= 0x1380 && code <= 0x138F)
-                        || (code >= 0x13A0 && code <= 0x13F5)
-                        || (code >= 0x13F8 && code <= 0x13FD)
-                        || (code >= 0x1401 && code <= 0x166C)
-                        || (code >= 0x166F && code <= 0x167F)
-                        || (code >= 0x1681 && code <= 0x169A)
-
-                else
-                    (code >= 0x16A0 && code <= 0x16EA)
-                        || (code >= 0x16F1 && code <= 0x16F8)
-                        || (code >= 0x1700 && code <= 0x1711)
-                        || (code >= 0x171F && code <= 0x1731)
-                        || (code >= 0x1740 && code <= 0x1751)
-                        || (code >= 0x1760 && code <= 0x176C)
-                        || (code >= 0x176E && code <= 0x1770)
-                        || (code >= 0x1780 && code <= 0x17B3)
-                        || (code == 0x17D7)
-                        || (code == 0x17DC)
-
-            else if code < 0x1C4C then
-                if code < 0x19AF then
-                    (code >= 0x1820 && code <= 0x1878)
-                        || (code >= 0x1880 && code <= 0x1884)
-                        || (code >= 0x1887 && code <= 0x18A8)
-                        || (code == 0x18AA)
-                        || (code >= 0x18B0 && code <= 0x18F5)
-                        || (code >= 0x1900 && code <= 0x191E)
-                        || (code >= 0x1950 && code <= 0x196D)
-                        || (code >= 0x1970 && code <= 0x1974)
-                        || (code >= 0x1980 && code <= 0x19AB)
+                else if l 0x0C5C then
+                    r 0x0BA3 0x0BA4
+                        || r 0x0BA8 0x0BAA
+                        || r 0x0BAE 0x0BB9
+                        || e 0x0BD0
+                        || r 0x0C05 0x0C0C
+                        || r 0x0C0E 0x0C10
+                        || r 0x0C12 0x0C28
+                        || r 0x0C2A 0x0C39
+                        || e 0x0C3D
+                        || r 0x0C58 0x0C5A
 
                 else
-                    (code >= 0x19B0 && code <= 0x19C9)
-                        || (code >= 0x1A00 && code <= 0x1A16)
-                        || (code >= 0x1A20 && code <= 0x1A54)
-                        || (code == 0x1AA7)
-                        || (code >= 0x1B05 && code <= 0x1B33)
-                        || (code >= 0x1B45 && code <= 0x1B4C)
-                        || (code >= 0x1B83 && code <= 0x1BA0)
-                        || (code >= 0x1BAE && code <= 0x1BAF)
-                        || (code >= 0x1BBA && code <= 0x1BE5)
-                        || (code >= 0x1C00 && code <= 0x1C23)
+                    e 0x0C5D
+                        || r 0x0C60 0x0C61
+                        || e 0x0C80
+                        || r 0x0C85 0x0C8C
+                        || r 0x0C8E 0x0C90
+                        || r 0x0C92 0x0CA8
+                        || r 0x0CAA 0x0CB3
+                        || r 0x0CB5 0x0CB9
+                        || e 0x0CBD
+                        || r 0x0CDD 0x0CDE
 
-            else if code < 0x1DFF then
-                (code >= 0x1C4D && code <= 0x1C4F)
-                    || (code >= 0x1C5A && code <= 0x1C7D)
-                    || (code >= 0x1C80 && code <= 0x1C88)
-                    || (code >= 0x1C90 && code <= 0x1CBA)
-                    || (code >= 0x1CBD && code <= 0x1CBF)
-                    || (code >= 0x1CE9 && code <= 0x1CEC)
-                    || (code >= 0x1CEE && code <= 0x1CF3)
-                    || (code >= 0x1CF5 && code <= 0x1CF6)
-                    || (code == 0x1CFA)
-                    || (code >= 0x1D00 && code <= 0x1DBF)
-
-            else
-                (code >= 0x1E00 && code <= 0x1F15)
-                    || (code >= 0x1F18 && code <= 0x1F1D)
-                    || (code >= 0x1F20 && code <= 0x1F45)
-                    || (code >= 0x1F48 && code <= 0x1F4D)
-                    || (code >= 0x1F50 && code <= 0x1F57)
-                    || (code >= 0x1F60 && code <= 0x1F7D)
-                    || (code >= 0x1F80 && code <= 0x1FB4)
-                    || (code >= 0x1FB6 && code <= 0x1FBC)
-                    || (code == 0x1FBE)
-                    || (code >= 0x1FC2 && code <= 0x1FC4)
-                    || ((modBy 2 code == 1)
-                            && (code >= 0x1F59 && code <= 0x1F5F)
-                       )
-
-        else if code < 0x3030 then
-            if code < 0x2182 then
-                if code < 0x2101 then
-                    (code >= 0x1FC6 && code <= 0x1FCC)
-                        || (code >= 0x1FD0 && code <= 0x1FD3)
-                        || (code >= 0x1FD6 && code <= 0x1FDB)
-                        || (code >= 0x1FE0 && code <= 0x1FEC)
-                        || (code >= 0x1FF2 && code <= 0x1FF4)
-                        || (code >= 0x1FF6 && code <= 0x1FFC)
-                        || (code == 0x2071)
-                        || (code == 0x207F)
-                        || (code >= 0x2090 && code <= 0x209C)
+            else if l 0x0E83 then
+                if l 0x0D79 then
+                    r 0x0CE0 0x0CE1
+                        || r 0x0CF1 0x0CF2
+                        || r 0x0D04 0x0D0C
+                        || r 0x0D0E 0x0D10
+                        || r 0x0D12 0x0D3A
+                        || e 0x0D3D
+                        || e 0x0D4E
+                        || r 0x0D54 0x0D56
+                        || r 0x0D5F 0x0D61
 
                 else
-                    (code == 0x2102)
-                        || (code == 0x2107)
-                        || (code >= 0x210A && code <= 0x2113)
-                        || (code == 0x2115)
-                        || (code >= 0x2119 && code <= 0x211D)
-                        || (code >= 0x212A && code <= 0x212D)
-                        || (code >= 0x212F && code <= 0x2139)
-                        || (code >= 0x213C && code <= 0x213F)
-                        || (code >= 0x2145 && code <= 0x2149)
-                        || (code == 0x214E)
-                        || ((modBy 2 code == 0)
-                                && (code >= 0x2124 && code <= 0x2128)
-                           )
+                    r 0x0D7A 0x0D7F
+                        || r 0x0D85 0x0D96
+                        || r 0x0D9A 0x0DB1
+                        || r 0x0DB3 0x0DBB
+                        || e 0x0DBD
+                        || r 0x0DC0 0x0DC6
+                        || r 0x0E01 0x0E30
+                        || r 0x0E32 0x0E33
+                        || r 0x0E40 0x0E46
+                        || r 0x0E81 0x0E82
 
-            else if code < 0x2D9F then
-                (code >= 0x2183 && code <= 0x2184)
-                    || (code >= 0x2C00 && code <= 0x2CE4)
-                    || (code >= 0x2CEB && code <= 0x2CEE)
-                    || (code >= 0x2CF2 && code <= 0x2CF3)
-                    || (code >= 0x2D00 && code <= 0x2D25)
-                    || (code == 0x2D27)
-                    || (code == 0x2D2D)
-                    || (code >= 0x2D30 && code <= 0x2D67)
-                    || (code == 0x2D6F)
-                    || (code >= 0x2D80 && code <= 0x2D96)
+            else if l 0x0EFF then
+                e 0x0E84
+                    || r 0x0E86 0x0E8A
+                    || r 0x0E8C 0x0EA3
+                    || e 0x0EA5
+                    || r 0x0EA7 0x0EB0
+                    || r 0x0EB2 0x0EB3
+                    || e 0x0EBD
+                    || r 0x0EC0 0x0EC4
+                    || e 0x0EC6
+                    || r 0x0EDC 0x0EDF
 
             else
-                (code >= 0x2DA0 && code <= 0x2DA6)
-                    || (code >= 0x2DA8 && code <= 0x2DAE)
-                    || (code >= 0x2DB0 && code <= 0x2DB6)
-                    || (code >= 0x2DB8 && code <= 0x2DBE)
-                    || (code >= 0x2DC0 && code <= 0x2DC6)
-                    || (code >= 0x2DC8 && code <= 0x2DCE)
-                    || (code >= 0x2DD0 && code <= 0x2DD6)
-                    || (code >= 0x2DD8 && code <= 0x2DDE)
-                    || (code == 0x2E2F)
-                    || (code >= 0x3005 && code <= 0x3006)
+                e 0x0F00
+                    || r 0x0F40 0x0F47
+                    || r 0x0F49 0x0F6C
+                    || r 0x0F88 0x0F8C
+                    || r 0x1000 0x102A
+                    || e 0x103F
+                    || r 0x1050 0x1055
+                    || r 0x105A 0x105D
+                    || e 0x1061
+                    || r 0x1065 0x1066
 
-        else if code < 0xA67E then
-            if code < 0x31EF then
-                (code >= 0x3031 && code <= 0x3035)
-                    || (code >= 0x303B && code <= 0x303C)
-                    || (code >= 0x3041 && code <= 0x3096)
-                    || (code >= 0x309D && code <= 0x309F)
-                    || (code >= 0x30A1 && code <= 0x30FA)
-                    || (code >= 0x30FC && code <= 0x30FF)
-                    || (code >= 0x3105 && code <= 0x312F)
-                    || (code >= 0x3131 && code <= 0x318E)
-                    || (code >= 0x31A0 && code <= 0x31BF)
+        else if l 0x1FC5 then
+            if l 0x181F then
+                if l 0x12C7 then
+                    if l 0x124F then
+                        r 0x106E 0x1070
+                            || r 0x1075 0x1081
+                            || e 0x108E
+                            || r 0x10A0 0x10C5
+                            || e 0x10C7
+                            || e 0x10CD
+                            || r 0x10D0 0x10FA
+                            || r 0x10FC 0x1248
+                            || r 0x124A 0x124D
+
+                    else
+                        r 0x1250 0x1256
+                            || e 0x1258
+                            || r 0x125A 0x125D
+                            || r 0x1260 0x1288
+                            || r 0x128A 0x128D
+                            || r 0x1290 0x12B0
+                            || r 0x12B2 0x12B5
+                            || r 0x12B8 0x12BE
+                            || e 0x12C0
+                            || r 0x12C2 0x12C5
+
+                else if l 0x169F then
+                    r 0x12C8 0x12D6
+                        || r 0x12D8 0x1310
+                        || r 0x1312 0x1315
+                        || r 0x1318 0x135A
+                        || r 0x1380 0x138F
+                        || r 0x13A0 0x13F5
+                        || r 0x13F8 0x13FD
+                        || r 0x1401 0x166C
+                        || r 0x166F 0x167F
+                        || r 0x1681 0x169A
+
+                else
+                    r 0x16A0 0x16EA
+                        || r 0x16F1 0x16F8
+                        || r 0x1700 0x1711
+                        || r 0x171F 0x1731
+                        || r 0x1740 0x1751
+                        || r 0x1760 0x176C
+                        || r 0x176E 0x1770
+                        || r 0x1780 0x17B3
+                        || e 0x17D7
+                        || e 0x17DC
+
+            else if l 0x1C4C then
+                if l 0x19AF then
+                    r 0x1820 0x1878
+                        || r 0x1880 0x1884
+                        || r 0x1887 0x18A8
+                        || e 0x18AA
+                        || r 0x18B0 0x18F5
+                        || r 0x1900 0x191E
+                        || r 0x1950 0x196D
+                        || r 0x1970 0x1974
+                        || r 0x1980 0x19AB
+
+                else
+                    r 0x19B0 0x19C9
+                        || r 0x1A00 0x1A16
+                        || r 0x1A20 0x1A54
+                        || e 0x1AA7
+                        || r 0x1B05 0x1B33
+                        || r 0x1B45 0x1B4C
+                        || r 0x1B83 0x1BA0
+                        || r 0x1BAE 0x1BAF
+                        || r 0x1BBA 0x1BE5
+                        || r 0x1C00 0x1C23
+
+            else if l 0x1DFF then
+                r 0x1C4D 0x1C4F
+                    || r 0x1C5A 0x1C7D
+                    || r 0x1C80 0x1C88
+                    || r 0x1C90 0x1CBA
+                    || r 0x1CBD 0x1CBF
+                    || r 0x1CE9 0x1CEC
+                    || r 0x1CEE 0x1CF3
+                    || r 0x1CF5 0x1CF6
+                    || e 0x1CFA
+                    || r 0x1D00 0x1DBF
 
             else
-                (code >= 0x31F0 && code <= 0x31FF)
-                    || (code == 0x3400)
-                    || (code == 0x4DBF)
-                    || (code == 0x4E00)
-                    || (code >= 0x9FFF && code <= 0xA48C)
-                    || (code >= 0xA4D0 && code <= 0xA4FD)
-                    || (code >= 0xA500 && code <= 0xA60C)
-                    || (code >= 0xA610 && code <= 0xA61F)
-                    || (code >= 0xA62A && code <= 0xA62B)
-                    || (code >= 0xA640 && code <= 0xA66E)
+                r 0x1E00 0x1F15
+                    || r 0x1F18 0x1F1D
+                    || r 0x1F20 0x1F45
+                    || r 0x1F48 0x1F4D
+                    || r 0x1F50 0x1F57
+                    || r 0x1F60 0x1F7D
+                    || r 0x1F80 0x1FB4
+                    || r 0x1FB6 0x1FBC
+                    || e 0x1FBE
+                    || r 0x1FC2 0x1FC4
+                    || ((modBy 2 code == 1) && r 0x1F59 0x1F5F)
 
-        else if code < 0xA80B then
-            (code >= 0xA67F && code <= 0xA69D)
-                || (code >= 0xA6A0 && code <= 0xA6E5)
-                || (code >= 0xA717 && code <= 0xA71F)
-                || (code >= 0xA722 && code <= 0xA788)
-                || (code >= 0xA78B && code <= 0xA7CA)
-                || (code >= 0xA7D0 && code <= 0xA7D1)
-                || (code >= 0xA7D6 && code <= 0xA7D9)
-                || (code >= 0xA7F2 && code <= 0xA801)
-                || (code >= 0xA803 && code <= 0xA805)
-                || (code >= 0xA807 && code <= 0xA80A)
-                || ((modBy 2 code == 1) && (code >= 0xA7D3 && code <= 0xA7D5))
+        else if l 0x3030 then
+            if l 0x2182 then
+                if l 0x2101 then
+                    r 0x1FC6 0x1FCC
+                        || r 0x1FD0 0x1FD3
+                        || r 0x1FD6 0x1FDB
+                        || r 0x1FE0 0x1FEC
+                        || r 0x1FF2 0x1FF4
+                        || r 0x1FF6 0x1FFC
+                        || e 0x2071
+                        || e 0x207F
+                        || r 0x2090 0x209C
+
+                else
+                    e 0x2102
+                        || e 0x2107
+                        || r 0x210A 0x2113
+                        || e 0x2115
+                        || r 0x2119 0x211D
+                        || r 0x212A 0x212D
+                        || r 0x212F 0x2139
+                        || r 0x213C 0x213F
+                        || r 0x2145 0x2149
+                        || e 0x214E
+                        || ((modBy 2 code == 0) && r 0x2124 0x2128)
+
+            else if l 0x2D9F then
+                r 0x2183 0x2184
+                    || r 0x2C00 0x2CE4
+                    || r 0x2CEB 0x2CEE
+                    || r 0x2CF2 0x2CF3
+                    || r 0x2D00 0x2D25
+                    || e 0x2D27
+                    || e 0x2D2D
+                    || r 0x2D30 0x2D67
+                    || e 0x2D6F
+                    || r 0x2D80 0x2D96
+
+            else
+                r 0x2DA0 0x2DA6
+                    || r 0x2DA8 0x2DAE
+                    || r 0x2DB0 0x2DB6
+                    || r 0x2DB8 0x2DBE
+                    || r 0x2DC0 0x2DC6
+                    || r 0x2DC8 0x2DCE
+                    || r 0x2DD0 0x2DD6
+                    || r 0x2DD8 0x2DDE
+                    || e 0x2E2F
+                    || r 0x3005 0x3006
+
+        else if l 0xA67E then
+            if l 0x31EF then
+                r 0x3031 0x3035
+                    || r 0x303B 0x303C
+                    || r 0x3041 0x3096
+                    || r 0x309D 0x309F
+                    || r 0x30A1 0x30FA
+                    || r 0x30FC 0x30FF
+                    || r 0x3105 0x312F
+                    || r 0x3131 0x318E
+                    || r 0x31A0 0x31BF
+
+            else
+                r 0x31F0 0x31FF
+                    || e 0x3400
+                    || e 0x4DBF
+                    || e 0x4E00
+                    || r 0x9FFF 0xA48C
+                    || r 0xA4D0 0xA4FD
+                    || r 0xA500 0xA60C
+                    || r 0xA610 0xA61F
+                    || r 0xA62A 0xA62B
+                    || r 0xA640 0xA66E
+
+        else if l 0xA80B then
+            r 0xA67F 0xA69D
+                || r 0xA6A0 0xA6E5
+                || r 0xA717 0xA71F
+                || r 0xA722 0xA788
+                || r 0xA78B 0xA7CA
+                || r 0xA7D0 0xA7D1
+                || r 0xA7D6 0xA7D9
+                || r 0xA7F2 0xA801
+                || r 0xA803 0xA805
+                || r 0xA807 0xA80A
+                || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
 
         else
-            (code >= 0xA80C && code <= 0xA822)
-                || (code >= 0xA840 && code <= 0xA873)
-                || (code >= 0xA882 && code <= 0xA8B3)
-                || (code >= 0xA8F2 && code <= 0xA8F7)
-                || (code == 0xA8FB)
-                || (code >= 0xA8FD && code <= 0xA8FE)
-                || (code >= 0xA90A && code <= 0xA925)
-                || (code >= 0xA930 && code <= 0xA946)
-                || (code >= 0xA960 && code <= 0xA97C)
-                || (code >= 0xA984 && code <= 0xA9B2)
+            r 0xA80C 0xA822
+                || r 0xA840 0xA873
+                || r 0xA882 0xA8B3
+                || r 0xA8F2 0xA8F7
+                || e 0xA8FB
+                || r 0xA8FD 0xA8FE
+                || r 0xA90A 0xA925
+                || r 0xA930 0xA946
+                || r 0xA960 0xA97C
+                || r 0xA984 0xA9B2
 
-    else if code < 0x00011446 then
-        if code < 0x00010596 then
-            if code < 0xFB45 then
-                if code < 0xAB1F then
-                    if code < 0xAA7D then
-                        (code == 0xA9CF)
-                            || (code >= 0xA9E0 && code <= 0xA9E4)
-                            || (code >= 0xA9E6 && code <= 0xA9EF)
-                            || (code >= 0xA9FA && code <= 0xA9FE)
-                            || (code >= 0xAA00 && code <= 0xAA28)
-                            || (code >= 0xAA40 && code <= 0xAA42)
-                            || (code >= 0xAA44 && code <= 0xAA4B)
-                            || (code >= 0xAA60 && code <= 0xAA76)
-                            || (code == 0xAA7A)
+    else if l 0x00011446 then
+        if l 0x00010596 then
+            if l 0xFB45 then
+                if l 0xAB1F then
+                    if l 0xAA7D then
+                        e 0xA9CF
+                            || r 0xA9E0 0xA9E4
+                            || r 0xA9E6 0xA9EF
+                            || r 0xA9FA 0xA9FE
+                            || r 0xAA00 0xAA28
+                            || r 0xAA40 0xAA42
+                            || r 0xAA44 0xAA4B
+                            || r 0xAA60 0xAA76
+                            || e 0xAA7A
 
                     else
-                        (code >= 0xAA7E && code <= 0xAAAF)
-                            || (code == 0xAAB1)
-                            || (code >= 0xAAB5 && code <= 0xAAB6)
-                            || (code >= 0xAAB9 && code <= 0xAABD)
-                            || (code >= 0xAADB && code <= 0xAADD)
-                            || (code >= 0xAAE0 && code <= 0xAAEA)
-                            || (code >= 0xAAF2 && code <= 0xAAF4)
-                            || (code >= 0xAB01 && code <= 0xAB06)
-                            || (code >= 0xAB09 && code <= 0xAB0E)
-                            || (code >= 0xAB11 && code <= 0xAB16)
-                            || ((modBy 2 code == 0)
-                                    && (code >= 0xAAC0 && code <= 0xAAC2)
-                               )
+                        r 0xAA7E 0xAAAF
+                            || e 0xAAB1
+                            || r 0xAAB5 0xAAB6
+                            || r 0xAAB9 0xAABD
+                            || r 0xAADB 0xAADD
+                            || r 0xAAE0 0xAAEA
+                            || r 0xAAF2 0xAAF4
+                            || r 0xAB01 0xAB06
+                            || r 0xAB09 0xAB0E
+                            || r 0xAB11 0xAB16
+                            || ((modBy 2 code == 0) && r 0xAAC0 0xAAC2)
 
-                else if code < 0xFA6F then
-                    (code >= 0xAB20 && code <= 0xAB26)
-                        || (code >= 0xAB28 && code <= 0xAB2E)
-                        || (code >= 0xAB30 && code <= 0xAB5A)
-                        || (code >= 0xAB5C && code <= 0xAB69)
-                        || (code >= 0xAB70 && code <= 0xABE2)
-                        || (code == 0xAC00)
-                        || (code == 0xD7A3)
-                        || (code >= 0xD7B0 && code <= 0xD7C6)
-                        || (code >= 0xD7CB && code <= 0xD7FB)
-                        || (code >= 0xF900 && code <= 0xFA6D)
+                else if l 0xFA6F then
+                    r 0xAB20 0xAB26
+                        || r 0xAB28 0xAB2E
+                        || r 0xAB30 0xAB5A
+                        || r 0xAB5C 0xAB69
+                        || r 0xAB70 0xABE2
+                        || e 0xAC00
+                        || e 0xD7A3
+                        || r 0xD7B0 0xD7C6
+                        || r 0xD7CB 0xD7FB
+                        || r 0xF900 0xFA6D
 
                 else
-                    (code >= 0xFA70 && code <= 0xFAD9)
-                        || (code >= 0xFB00 && code <= 0xFB06)
-                        || (code >= 0xFB13 && code <= 0xFB17)
-                        || (code == 0xFB1D)
-                        || (code >= 0xFB1F && code <= 0xFB28)
-                        || (code >= 0xFB2A && code <= 0xFB36)
-                        || (code >= 0xFB38 && code <= 0xFB3C)
-                        || (code == 0xFB3E)
-                        || (code >= 0xFB40 && code <= 0xFB41)
-                        || (code >= 0xFB43 && code <= 0xFB44)
+                    r 0xFA70 0xFAD9
+                        || r 0xFB00 0xFB06
+                        || r 0xFB13 0xFB17
+                        || e 0xFB1D
+                        || r 0xFB1F 0xFB28
+                        || r 0xFB2A 0xFB36
+                        || r 0xFB38 0xFB3C
+                        || e 0xFB3E
+                        || r 0xFB40 0xFB41
+                        || r 0xFB43 0xFB44
 
-            else if code < 0x0001004F then
-                if code < 0xFF65 then
-                    (code >= 0xFB46 && code <= 0xFBB1)
-                        || (code >= 0xFBD3 && code <= 0xFD3D)
-                        || (code >= 0xFD50 && code <= 0xFD8F)
-                        || (code >= 0xFD92 && code <= 0xFDC7)
-                        || (code >= 0xFDF0 && code <= 0xFDFB)
-                        || (code >= 0xFE70 && code <= 0xFE74)
-                        || (code >= 0xFE76 && code <= 0xFEFC)
-                        || (code >= 0xFF21 && code <= 0xFF3A)
-                        || (code >= 0xFF41 && code <= 0xFF5A)
-
-                else
-                    (code >= 0xFF66 && code <= 0xFFBE)
-                        || (code >= 0xFFC2 && code <= 0xFFC7)
-                        || (code >= 0xFFCA && code <= 0xFFCF)
-                        || (code >= 0xFFD2 && code <= 0xFFD7)
-                        || (code >= 0xFFDA && code <= 0xFFDC)
-                        || (code >= 0x00010000 && code <= 0x0001000B)
-                        || (code >= 0x0001000D && code <= 0x00010026)
-                        || (code >= 0x00010028 && code <= 0x0001003A)
-                        || (code >= 0x0001003C && code <= 0x0001003D)
-                        || (code >= 0x0001003F && code <= 0x0001004D)
-
-            else if code < 0x000103C7 then
-                (code >= 0x00010050 && code <= 0x0001005D)
-                    || (code >= 0x00010080 && code <= 0x000100FA)
-                    || (code >= 0x00010280 && code <= 0x0001029C)
-                    || (code >= 0x000102A0 && code <= 0x000102D0)
-                    || (code >= 0x00010300 && code <= 0x0001031F)
-                    || (code >= 0x0001032D && code <= 0x00010340)
-                    || (code >= 0x00010342 && code <= 0x00010349)
-                    || (code >= 0x00010350 && code <= 0x00010375)
-                    || (code >= 0x00010380 && code <= 0x0001039D)
-                    || (code >= 0x000103A0 && code <= 0x000103C3)
-
-            else
-                (code >= 0x000103C8 && code <= 0x000103CF)
-                    || (code >= 0x00010400 && code <= 0x0001049D)
-                    || (code >= 0x000104B0 && code <= 0x000104D3)
-                    || (code >= 0x000104D8 && code <= 0x000104FB)
-                    || (code >= 0x00010500 && code <= 0x00010527)
-                    || (code >= 0x00010530 && code <= 0x00010563)
-                    || (code >= 0x00010570 && code <= 0x0001057A)
-                    || (code >= 0x0001057C && code <= 0x0001058A)
-                    || (code >= 0x0001058C && code <= 0x00010592)
-                    || (code >= 0x00010594 && code <= 0x00010595)
-
-        else if code < 0x00010CFF then
-            if code < 0x000108F3 then
-                if code < 0x000107B1 then
-                    (code >= 0x00010597 && code <= 0x000105A1)
-                        || (code >= 0x000105A3 && code <= 0x000105B1)
-                        || (code >= 0x000105B3 && code <= 0x000105B9)
-                        || (code >= 0x000105BB && code <= 0x000105BC)
-                        || (code >= 0x00010600 && code <= 0x00010736)
-                        || (code >= 0x00010740 && code <= 0x00010755)
-                        || (code >= 0x00010760 && code <= 0x00010767)
-                        || (code >= 0x00010780 && code <= 0x00010785)
-                        || (code >= 0x00010787 && code <= 0x000107B0)
+            else if l 0x0001004F then
+                if l 0xFF65 then
+                    r 0xFB46 0xFBB1
+                        || r 0xFBD3 0xFD3D
+                        || r 0xFD50 0xFD8F
+                        || r 0xFD92 0xFDC7
+                        || r 0xFDF0 0xFDFB
+                        || r 0xFE70 0xFE74
+                        || r 0xFE76 0xFEFC
+                        || r 0xFF21 0xFF3A
+                        || r 0xFF41 0xFF5A
 
                 else
-                    (code >= 0x000107B2 && code <= 0x000107BA)
-                        || (code >= 0x00010800 && code <= 0x00010805)
-                        || (code == 0x00010808)
-                        || (code >= 0x0001080A && code <= 0x00010835)
-                        || (code >= 0x00010837 && code <= 0x00010838)
-                        || (code == 0x0001083C)
-                        || (code >= 0x0001083F && code <= 0x00010855)
-                        || (code >= 0x00010860 && code <= 0x00010876)
-                        || (code >= 0x00010880 && code <= 0x0001089E)
-                        || (code >= 0x000108E0 && code <= 0x000108F2)
+                    r 0xFF66 0xFFBE
+                        || r 0xFFC2 0xFFC7
+                        || r 0xFFCA 0xFFCF
+                        || r 0xFFD2 0xFFD7
+                        || r 0xFFDA 0xFFDC
+                        || r 0x00010000 0x0001000B
+                        || r 0x0001000D 0x00010026
+                        || r 0x00010028 0x0001003A
+                        || r 0x0001003C 0x0001003D
+                        || r 0x0001003F 0x0001004D
 
-            else if code < 0x00010A7F then
-                (code >= 0x000108F4 && code <= 0x000108F5)
-                    || (code >= 0x00010900 && code <= 0x00010915)
-                    || (code >= 0x00010920 && code <= 0x00010939)
-                    || (code >= 0x00010980 && code <= 0x000109B7)
-                    || (code >= 0x000109BE && code <= 0x000109BF)
-                    || (code == 0x00010A00)
-                    || (code >= 0x00010A10 && code <= 0x00010A13)
-                    || (code >= 0x00010A15 && code <= 0x00010A17)
-                    || (code >= 0x00010A19 && code <= 0x00010A35)
-                    || (code >= 0x00010A60 && code <= 0x00010A7C)
-
-            else
-                (code >= 0x00010A80 && code <= 0x00010A9C)
-                    || (code >= 0x00010AC0 && code <= 0x00010AC7)
-                    || (code >= 0x00010AC9 && code <= 0x00010AE4)
-                    || (code >= 0x00010B00 && code <= 0x00010B35)
-                    || (code >= 0x00010B40 && code <= 0x00010B55)
-                    || (code >= 0x00010B60 && code <= 0x00010B72)
-                    || (code >= 0x00010B80 && code <= 0x00010B91)
-                    || (code >= 0x00010C00 && code <= 0x00010C48)
-                    || (code >= 0x00010C80 && code <= 0x00010CB2)
-                    || (code >= 0x00010CC0 && code <= 0x00010CF2)
-
-        else if code < 0x00011182 then
-            if code < 0x00011002 then
-                (code >= 0x00010D00 && code <= 0x00010D23)
-                    || (code >= 0x00010E80 && code <= 0x00010EA9)
-                    || (code >= 0x00010EB0 && code <= 0x00010EB1)
-                    || (code >= 0x00010F00 && code <= 0x00010F1C)
-                    || (code == 0x00010F27)
-                    || (code >= 0x00010F30 && code <= 0x00010F45)
-                    || (code >= 0x00010F70 && code <= 0x00010F81)
-                    || (code >= 0x00010FB0 && code <= 0x00010FC4)
-                    || (code >= 0x00010FE0 && code <= 0x00010FF6)
+            else if l 0x000103C7 then
+                r 0x00010050 0x0001005D
+                    || r 0x00010080 0x000100FA
+                    || r 0x00010280 0x0001029C
+                    || r 0x000102A0 0x000102D0
+                    || r 0x00010300 0x0001031F
+                    || r 0x0001032D 0x00010340
+                    || r 0x00010342 0x00010349
+                    || r 0x00010350 0x00010375
+                    || r 0x00010380 0x0001039D
+                    || r 0x000103A0 0x000103C3
 
             else
-                (code >= 0x00011003 && code <= 0x00011037)
-                    || (code >= 0x00011071 && code <= 0x00011072)
-                    || (code == 0x00011075)
-                    || (code >= 0x00011083 && code <= 0x000110AF)
-                    || (code >= 0x000110D0 && code <= 0x000110E8)
-                    || (code >= 0x00011103 && code <= 0x00011126)
-                    || (code == 0x00011144)
-                    || (code == 0x00011147)
-                    || (code >= 0x00011150 && code <= 0x00011172)
-                    || (code == 0x00011176)
+                r 0x000103C8 0x000103CF
+                    || r 0x00010400 0x0001049D
+                    || r 0x000104B0 0x000104D3
+                    || r 0x000104D8 0x000104FB
+                    || r 0x00010500 0x00010527
+                    || r 0x00010530 0x00010563
+                    || r 0x00010570 0x0001057A
+                    || r 0x0001057C 0x0001058A
+                    || r 0x0001058C 0x00010592
+                    || r 0x00010594 0x00010595
 
-        else if code < 0x00011304 then
-            (code >= 0x00011183 && code <= 0x000111B2)
-                || (code >= 0x000111C1 && code <= 0x000111C4)
-                || (code >= 0x00011200 && code <= 0x00011211)
-                || (code >= 0x00011213 && code <= 0x0001122B)
-                || (code >= 0x00011280 && code <= 0x00011286)
-                || (code == 0x00011288)
-                || (code >= 0x0001128A && code <= 0x0001128D)
-                || (code >= 0x0001128F && code <= 0x0001129D)
-                || (code >= 0x0001129F && code <= 0x000112A8)
-                || (code >= 0x000112B0 && code <= 0x000112DE)
-                || ((modBy 2 code == 0)
-                        && (code >= 0x000111DA && code <= 0x000111DC)
-                   )
+        else if l 0x00010CFF then
+            if l 0x000108F3 then
+                if l 0x000107B1 then
+                    r 0x00010597 0x000105A1
+                        || r 0x000105A3 0x000105B1
+                        || r 0x000105B3 0x000105B9
+                        || r 0x000105BB 0x000105BC
+                        || r 0x00010600 0x00010736
+                        || r 0x00010740 0x00010755
+                        || r 0x00010760 0x00010767
+                        || r 0x00010780 0x00010785
+                        || r 0x00010787 0x000107B0
+
+                else
+                    r 0x000107B2 0x000107BA
+                        || r 0x00010800 0x00010805
+                        || e 0x00010808
+                        || r 0x0001080A 0x00010835
+                        || r 0x00010837 0x00010838
+                        || e 0x0001083C
+                        || r 0x0001083F 0x00010855
+                        || r 0x00010860 0x00010876
+                        || r 0x00010880 0x0001089E
+                        || r 0x000108E0 0x000108F2
+
+            else if l 0x00010A7F then
+                r 0x000108F4 0x000108F5
+                    || r 0x00010900 0x00010915
+                    || r 0x00010920 0x00010939
+                    || r 0x00010980 0x000109B7
+                    || r 0x000109BE 0x000109BF
+                    || e 0x00010A00
+                    || r 0x00010A10 0x00010A13
+                    || r 0x00010A15 0x00010A17
+                    || r 0x00010A19 0x00010A35
+                    || r 0x00010A60 0x00010A7C
+
+            else
+                r 0x00010A80 0x00010A9C
+                    || r 0x00010AC0 0x00010AC7
+                    || r 0x00010AC9 0x00010AE4
+                    || r 0x00010B00 0x00010B35
+                    || r 0x00010B40 0x00010B55
+                    || r 0x00010B60 0x00010B72
+                    || r 0x00010B80 0x00010B91
+                    || r 0x00010C00 0x00010C48
+                    || r 0x00010C80 0x00010CB2
+                    || r 0x00010CC0 0x00010CF2
+
+        else if l 0x00011182 then
+            if l 0x00011002 then
+                r 0x00010D00 0x00010D23
+                    || r 0x00010E80 0x00010EA9
+                    || r 0x00010EB0 0x00010EB1
+                    || r 0x00010F00 0x00010F1C
+                    || e 0x00010F27
+                    || r 0x00010F30 0x00010F45
+                    || r 0x00010F70 0x00010F81
+                    || r 0x00010FB0 0x00010FC4
+                    || r 0x00010FE0 0x00010FF6
+
+            else
+                r 0x00011003 0x00011037
+                    || r 0x00011071 0x00011072
+                    || e 0x00011075
+                    || r 0x00011083 0x000110AF
+                    || r 0x000110D0 0x000110E8
+                    || r 0x00011103 0x00011126
+                    || e 0x00011144
+                    || e 0x00011147
+                    || r 0x00011150 0x00011172
+                    || e 0x00011176
+
+        else if l 0x00011304 then
+            r 0x00011183 0x000111B2
+                || r 0x000111C1 0x000111C4
+                || r 0x00011200 0x00011211
+                || r 0x00011213 0x0001122B
+                || r 0x00011280 0x00011286
+                || e 0x00011288
+                || r 0x0001128A 0x0001128D
+                || r 0x0001128F 0x0001129D
+                || r 0x0001129F 0x000112A8
+                || r 0x000112B0 0x000112DE
+                || ((modBy 2 code == 0) && r 0x000111DA 0x000111DC)
 
         else
-            (code >= 0x00011305 && code <= 0x0001130C)
-                || (code >= 0x0001130F && code <= 0x00011310)
-                || (code >= 0x00011313 && code <= 0x00011328)
-                || (code >= 0x0001132A && code <= 0x00011330)
-                || (code >= 0x00011332 && code <= 0x00011333)
-                || (code >= 0x00011335 && code <= 0x00011339)
-                || (code == 0x0001133D)
-                || (code == 0x00011350)
-                || (code >= 0x0001135D && code <= 0x00011361)
-                || (code >= 0x00011400 && code <= 0x00011434)
+            r 0x00011305 0x0001130C
+                || r 0x0001130F 0x00011310
+                || r 0x00011313 0x00011328
+                || r 0x0001132A 0x00011330
+                || r 0x00011332 0x00011333
+                || r 0x00011335 0x00011339
+                || e 0x0001133D
+                || e 0x00011350
+                || r 0x0001135D 0x00011361
+                || r 0x00011400 0x00011434
 
-    else if code < 0x0001D3FF then
-        if code < 0x00011D69 then
-            if code < 0x00011917 then
-                if code < 0x0001167F then
-                    (code >= 0x00011447 && code <= 0x0001144A)
-                        || (code >= 0x0001145F && code <= 0x00011461)
-                        || (code >= 0x00011480 && code <= 0x000114AF)
-                        || (code >= 0x000114C4 && code <= 0x000114C5)
-                        || (code == 0x000114C7)
-                        || (code >= 0x00011580 && code <= 0x000115AE)
-                        || (code >= 0x000115D8 && code <= 0x000115DB)
-                        || (code >= 0x00011600 && code <= 0x0001162F)
-                        || (code == 0x00011644)
+    else if l 0x0001D3FF then
+        if l 0x00011D69 then
+            if l 0x00011917 then
+                if l 0x0001167F then
+                    r 0x00011447 0x0001144A
+                        || r 0x0001145F 0x00011461
+                        || r 0x00011480 0x000114AF
+                        || r 0x000114C4 0x000114C5
+                        || e 0x000114C7
+                        || r 0x00011580 0x000115AE
+                        || r 0x000115D8 0x000115DB
+                        || r 0x00011600 0x0001162F
+                        || e 0x00011644
 
                 else
-                    (code >= 0x00011680 && code <= 0x000116AA)
-                        || (code == 0x000116B8)
-                        || (code >= 0x00011700 && code <= 0x0001171A)
-                        || (code >= 0x00011740 && code <= 0x00011746)
-                        || (code >= 0x00011800 && code <= 0x0001182B)
-                        || (code >= 0x000118A0 && code <= 0x000118DF)
-                        || (code >= 0x000118FF && code <= 0x00011906)
-                        || (code == 0x00011909)
-                        || (code >= 0x0001190C && code <= 0x00011913)
-                        || (code >= 0x00011915 && code <= 0x00011916)
+                    r 0x00011680 0x000116AA
+                        || e 0x000116B8
+                        || r 0x00011700 0x0001171A
+                        || r 0x00011740 0x00011746
+                        || r 0x00011800 0x0001182B
+                        || r 0x000118A0 0x000118DF
+                        || r 0x000118FF 0x00011906
+                        || e 0x00011909
+                        || r 0x0001190C 0x00011913
+                        || r 0x00011915 0x00011916
 
-            else if code < 0x00011BFF then
-                (code >= 0x00011918 && code <= 0x0001192F)
-                    || (code >= 0x000119A0 && code <= 0x000119A7)
-                    || (code >= 0x000119AA && code <= 0x000119D0)
-                    || (code == 0x00011A00)
-                    || (code >= 0x00011A0B && code <= 0x00011A32)
-                    || (code == 0x00011A3A)
-                    || (code == 0x00011A50)
-                    || (code >= 0x00011A5C && code <= 0x00011A89)
-                    || (code == 0x00011A9D)
-                    || (code >= 0x00011AB0 && code <= 0x00011AF8)
+            else if l 0x00011BFF then
+                r 0x00011918 0x0001192F
+                    || r 0x000119A0 0x000119A7
+                    || r 0x000119AA 0x000119D0
+                    || e 0x00011A00
+                    || r 0x00011A0B 0x00011A32
+                    || e 0x00011A3A
+                    || e 0x00011A50
+                    || r 0x00011A5C 0x00011A89
+                    || e 0x00011A9D
+                    || r 0x00011AB0 0x00011AF8
                     || ((modBy 2 code == 1)
-                            && ((code >= 0x0001193F && code <= 0x00011941)
-                                    || (code >= 0x000119E1 && code <= 0x000119E3)
+                            && (r 0x0001193F 0x00011941
+                                    || r 0x000119E1 0x000119E3
                                )
                        )
 
             else
-                (code >= 0x00011C00 && code <= 0x00011C08)
-                    || (code >= 0x00011C0A && code <= 0x00011C2E)
-                    || (code == 0x00011C40)
-                    || (code >= 0x00011C72 && code <= 0x00011C8F)
-                    || (code >= 0x00011D00 && code <= 0x00011D06)
-                    || (code >= 0x00011D08 && code <= 0x00011D09)
-                    || (code >= 0x00011D0B && code <= 0x00011D30)
-                    || (code == 0x00011D46)
-                    || (code >= 0x00011D60 && code <= 0x00011D65)
-                    || (code >= 0x00011D67 && code <= 0x00011D68)
+                r 0x00011C00 0x00011C08
+                    || r 0x00011C0A 0x00011C2E
+                    || e 0x00011C40
+                    || r 0x00011C72 0x00011C8F
+                    || r 0x00011D00 0x00011D06
+                    || r 0x00011D08 0x00011D09
+                    || r 0x00011D0B 0x00011D30
+                    || e 0x00011D46
+                    || r 0x00011D60 0x00011D65
+                    || r 0x00011D67 0x00011D68
 
-        else if code < 0x00016F4F then
-            if code < 0x000167FF then
-                (code >= 0x00011D6A && code <= 0x00011D89)
-                    || (code == 0x00011D98)
-                    || (code >= 0x00011EE0 && code <= 0x00011EF2)
-                    || (code == 0x00011FB0)
-                    || (code >= 0x00012000 && code <= 0x00012399)
-                    || (code >= 0x00012480 && code <= 0x00012543)
-                    || (code >= 0x00012F90 && code <= 0x00012FF0)
-                    || (code >= 0x00013000 && code <= 0x0001342E)
-                    || (code >= 0x00014400 && code <= 0x00014646)
-
-            else
-                (code >= 0x00016800 && code <= 0x00016A38)
-                    || (code >= 0x00016A40 && code <= 0x00016A5E)
-                    || (code >= 0x00016A70 && code <= 0x00016ABE)
-                    || (code >= 0x00016AD0 && code <= 0x00016AED)
-                    || (code >= 0x00016B00 && code <= 0x00016B2F)
-                    || (code >= 0x00016B40 && code <= 0x00016B43)
-                    || (code >= 0x00016B63 && code <= 0x00016B77)
-                    || (code >= 0x00016B7D && code <= 0x00016B8F)
-                    || (code >= 0x00016E40 && code <= 0x00016E7F)
-                    || (code >= 0x00016F00 && code <= 0x00016F4A)
-
-        else if code < 0x0001AFF4 then
-            (code == 0x00016F50)
-                || (code >= 0x00016F93 && code <= 0x00016F9F)
-                || (code >= 0x00016FE0 && code <= 0x00016FE1)
-                || (code == 0x00016FE3)
-                || (code == 0x00017000)
-                || (code == 0x000187F7)
-                || (code >= 0x00018800 && code <= 0x00018CD5)
-                || (code == 0x00018D00)
-                || (code == 0x00018D08)
-                || (code >= 0x0001AFF0 && code <= 0x0001AFF3)
-
-        else
-            (code >= 0x0001AFF5 && code <= 0x0001AFFB)
-                || (code >= 0x0001AFFD && code <= 0x0001AFFE)
-                || (code >= 0x0001B000 && code <= 0x0001B122)
-                || (code >= 0x0001B150 && code <= 0x0001B152)
-                || (code >= 0x0001B164 && code <= 0x0001B167)
-                || (code >= 0x0001B170 && code <= 0x0001B2FB)
-                || (code >= 0x0001BC00 && code <= 0x0001BC6A)
-                || (code >= 0x0001BC70 && code <= 0x0001BC7C)
-                || (code >= 0x0001BC80 && code <= 0x0001BC88)
-                || (code >= 0x0001BC90 && code <= 0x0001BC99)
-
-    else if code < 0x0001E7EF then
-        if code < 0x0001D6A7 then
-            if code < 0x0001D4C4 then
-                (code >= 0x0001D400 && code <= 0x0001D454)
-                    || (code >= 0x0001D456 && code <= 0x0001D49C)
-                    || (code >= 0x0001D49E && code <= 0x0001D49F)
-                    || (code == 0x0001D4A2)
-                    || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                    || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-                    || (code >= 0x0001D4AE && code <= 0x0001D4B9)
-                    || (code == 0x0001D4BB)
-                    || (code >= 0x0001D4BD && code <= 0x0001D4C3)
+        else if l 0x00016F4F then
+            if l 0x000167FF then
+                r 0x00011D6A 0x00011D89
+                    || e 0x00011D98
+                    || r 0x00011EE0 0x00011EF2
+                    || e 0x00011FB0
+                    || r 0x00012000 0x00012399
+                    || r 0x00012480 0x00012543
+                    || r 0x00012F90 0x00012FF0
+                    || r 0x00013000 0x0001342E
+                    || r 0x00014400 0x00014646
 
             else
-                (code >= 0x0001D4C5 && code <= 0x0001D505)
-                    || (code >= 0x0001D507 && code <= 0x0001D50A)
-                    || (code >= 0x0001D50D && code <= 0x0001D514)
-                    || (code >= 0x0001D516 && code <= 0x0001D51C)
-                    || (code >= 0x0001D51E && code <= 0x0001D539)
-                    || (code >= 0x0001D53B && code <= 0x0001D53E)
-                    || (code >= 0x0001D540 && code <= 0x0001D544)
-                    || (code == 0x0001D546)
-                    || (code >= 0x0001D54A && code <= 0x0001D550)
-                    || (code >= 0x0001D552 && code <= 0x0001D6A5)
+                r 0x00016800 0x00016A38
+                    || r 0x00016A40 0x00016A5E
+                    || r 0x00016A70 0x00016ABE
+                    || r 0x00016AD0 0x00016AED
+                    || r 0x00016B00 0x00016B2F
+                    || r 0x00016B40 0x00016B43
+                    || r 0x00016B63 0x00016B77
+                    || r 0x00016B7D 0x00016B8F
+                    || r 0x00016E40 0x00016E7F
+                    || r 0x00016F00 0x00016F4A
 
-        else if code < 0x0001D7C3 then
-            (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                || (code >= 0x0001D6DC && code <= 0x0001D6FA)
-                || (code >= 0x0001D6FC && code <= 0x0001D714)
-                || (code >= 0x0001D716 && code <= 0x0001D734)
-                || (code >= 0x0001D736 && code <= 0x0001D74E)
-                || (code >= 0x0001D750 && code <= 0x0001D76E)
-                || (code >= 0x0001D770 && code <= 0x0001D788)
-                || (code >= 0x0001D78A && code <= 0x0001D7A8)
-                || (code >= 0x0001D7AA && code <= 0x0001D7C2)
-
-        else
-            (code >= 0x0001D7C4 && code <= 0x0001D7CB)
-                || (code >= 0x0001DF00 && code <= 0x0001DF1E)
-                || (code >= 0x0001E100 && code <= 0x0001E12C)
-                || (code >= 0x0001E137 && code <= 0x0001E13D)
-                || (code == 0x0001E14E)
-                || (code >= 0x0001E290 && code <= 0x0001E2AD)
-                || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
-                || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
-                || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
-                || (code >= 0x0001E7ED && code <= 0x0001E7EE)
-
-    else if code < 0x0001EE78 then
-        if code < 0x0001EE33 then
-            (code >= 0x0001E7F0 && code <= 0x0001E7FE)
-                || (code >= 0x0001E800 && code <= 0x0001E8C4)
-                || (code >= 0x0001E900 && code <= 0x0001E943)
-                || (code == 0x0001E94B)
-                || (code >= 0x0001EE00 && code <= 0x0001EE03)
-                || (code >= 0x0001EE05 && code <= 0x0001EE1F)
-                || (code >= 0x0001EE21 && code <= 0x0001EE22)
-                || (code == 0x0001EE24)
-                || (code == 0x0001EE27)
-                || (code >= 0x0001EE29 && code <= 0x0001EE32)
+        else if l 0x0001AFF4 then
+            e 0x00016F50
+                || r 0x00016F93 0x00016F9F
+                || r 0x00016FE0 0x00016FE1
+                || e 0x00016FE3
+                || e 0x00017000
+                || e 0x000187F7
+                || r 0x00018800 0x00018CD5
+                || e 0x00018D00
+                || e 0x00018D08
+                || r 0x0001AFF0 0x0001AFF3
 
         else
-            (code >= 0x0001EE34 && code <= 0x0001EE37)
-                || (code == 0x0001EE42)
-                || (code >= 0x0001EE4D && code <= 0x0001EE4F)
-                || (code >= 0x0001EE51 && code <= 0x0001EE52)
-                || (code == 0x0001EE54)
-                || (code >= 0x0001EE61 && code <= 0x0001EE62)
-                || (code == 0x0001EE64)
-                || (code >= 0x0001EE67 && code <= 0x0001EE6A)
-                || (code >= 0x0001EE6C && code <= 0x0001EE72)
-                || (code >= 0x0001EE74 && code <= 0x0001EE77)
+            r 0x0001AFF5 0x0001AFFB
+                || r 0x0001AFFD 0x0001AFFE
+                || r 0x0001B000 0x0001B122
+                || r 0x0001B150 0x0001B152
+                || r 0x0001B164 0x0001B167
+                || r 0x0001B170 0x0001B2FB
+                || r 0x0001BC00 0x0001BC6A
+                || r 0x0001BC70 0x0001BC7C
+                || r 0x0001BC80 0x0001BC88
+                || r 0x0001BC90 0x0001BC99
+
+    else if l 0x0001E7EF then
+        if l 0x0001D6A7 then
+            if l 0x0001D4C4 then
+                r 0x0001D400 0x0001D454
+                    || r 0x0001D456 0x0001D49C
+                    || r 0x0001D49E 0x0001D49F
+                    || e 0x0001D4A2
+                    || r 0x0001D4A5 0x0001D4A6
+                    || r 0x0001D4A9 0x0001D4AC
+                    || r 0x0001D4AE 0x0001D4B9
+                    || e 0x0001D4BB
+                    || r 0x0001D4BD 0x0001D4C3
+
+            else
+                r 0x0001D4C5 0x0001D505
+                    || r 0x0001D507 0x0001D50A
+                    || r 0x0001D50D 0x0001D514
+                    || r 0x0001D516 0x0001D51C
+                    || r 0x0001D51E 0x0001D539
+                    || r 0x0001D53B 0x0001D53E
+                    || r 0x0001D540 0x0001D544
+                    || e 0x0001D546
+                    || r 0x0001D54A 0x0001D550
+                    || r 0x0001D552 0x0001D6A5
+
+        else if l 0x0001D7C3 then
+            r 0x0001D6A8 0x0001D6C0
+                || r 0x0001D6C2 0x0001D6DA
+                || r 0x0001D6DC 0x0001D6FA
+                || r 0x0001D6FC 0x0001D714
+                || r 0x0001D716 0x0001D734
+                || r 0x0001D736 0x0001D74E
+                || r 0x0001D750 0x0001D76E
+                || r 0x0001D770 0x0001D788
+                || r 0x0001D78A 0x0001D7A8
+                || r 0x0001D7AA 0x0001D7C2
+
+        else
+            r 0x0001D7C4 0x0001D7CB
+                || r 0x0001DF00 0x0001DF1E
+                || r 0x0001E100 0x0001E12C
+                || r 0x0001E137 0x0001E13D
+                || e 0x0001E14E
+                || r 0x0001E290 0x0001E2AD
+                || r 0x0001E2C0 0x0001E2EB
+                || r 0x0001E7E0 0x0001E7E6
+                || r 0x0001E7E8 0x0001E7EB
+                || r 0x0001E7ED 0x0001E7EE
+
+    else if l 0x0001EE78 then
+        if l 0x0001EE33 then
+            r 0x0001E7F0 0x0001E7FE
+                || r 0x0001E800 0x0001E8C4
+                || r 0x0001E900 0x0001E943
+                || e 0x0001E94B
+                || r 0x0001EE00 0x0001EE03
+                || r 0x0001EE05 0x0001EE1F
+                || r 0x0001EE21 0x0001EE22
+                || e 0x0001EE24
+                || e 0x0001EE27
+                || r 0x0001EE29 0x0001EE32
+
+        else
+            r 0x0001EE34 0x0001EE37
+                || e 0x0001EE42
+                || r 0x0001EE4D 0x0001EE4F
+                || r 0x0001EE51 0x0001EE52
+                || e 0x0001EE54
+                || r 0x0001EE61 0x0001EE62
+                || e 0x0001EE64
+                || r 0x0001EE67 0x0001EE6A
+                || r 0x0001EE6C 0x0001EE72
+                || r 0x0001EE74 0x0001EE77
                 || ((modBy 2 code == 1)
-                        && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
-                                || (code >= 0x0001EE47 && code <= 0x0001EE4B)
-                                || (code >= 0x0001EE57 && code <= 0x0001EE5F)
+                        && (r 0x0001EE39 0x0001EE3B
+                                || r 0x0001EE47 0x0001EE4B
+                                || r 0x0001EE57 0x0001EE5F
                            )
                    )
 
-    else if code < 0x0002B737 then
-        (code >= 0x0001EE79 && code <= 0x0001EE7C)
-            || (code == 0x0001EE7E)
-            || (code >= 0x0001EE80 && code <= 0x0001EE89)
-            || (code >= 0x0001EE8B && code <= 0x0001EE9B)
-            || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
-            || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
-            || (code >= 0x0001EEAB && code <= 0x0001EEBB)
-            || (code == 0x00020000)
-            || (code == 0x0002A6DF)
-            || (code == 0x0002A700)
+    else if l 0x0002B737 then
+        r 0x0001EE79 0x0001EE7C
+            || e 0x0001EE7E
+            || r 0x0001EE80 0x0001EE89
+            || r 0x0001EE8B 0x0001EE9B
+            || r 0x0001EEA1 0x0001EEA3
+            || r 0x0001EEA5 0x0001EEA9
+            || r 0x0001EEAB 0x0001EEBB
+            || e 0x00020000
+            || e 0x0002A6DF
+            || e 0x0002A700
 
     else
-        (code == 0x0002B738)
-            || (code == 0x0002B740)
-            || (code == 0x0002B81D)
-            || (code == 0x0002B820)
-            || (code == 0x0002CEA1)
-            || (code == 0x0002CEB0)
-            || (code == 0x0002EBE0)
-            || (code >= 0x0002F800 && code <= 0x0002FA1D)
-            || (code == 0x00030000)
-            || (code == 0x0003134A)
+        e 0x0002B738
+            || e 0x0002B740
+            || e 0x0002B81D
+            || e 0x0002B820
+            || e 0x0002CEA1
+            || e 0x0002CEB0
+            || e 0x0002EBE0
+            || r 0x0002F800 0x0002FA1D
+            || e 0x00030000
+            || e 0x0003134A
 
 
 {-| Detect digits (Unicode categories Nd, Nl, No)
@@ -1050,183 +1053,189 @@ isAlpha c =
 isDigit : Char -> Bool
 isDigit c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         code =
             Char.toCode c
     in
-    if code < 0x0100 then
-        (code >= 0x30 && code <= 0x39)
-            || (code >= 0xB2 && code <= 0xB3)
-            || (code == 0xB9)
-            || (code >= 0xBC && code <= 0xBE)
+    if l 0x0100 then
+        r 0x30 0x39 || r 0xB2 0xB3 || e 0xB9 || r 0xBC 0xBE
 
-    else if code < 0x00010189 then
-        if code < 0x1BAF then
-            if code < 0x0DE5 then
-                if code < 0x0B65 then
-                    (code >= 0x0660 && code <= 0x0669)
-                        || (code >= 0x06F0 && code <= 0x06F9)
-                        || (code >= 0x07C0 && code <= 0x07C9)
-                        || (code >= 0x0966 && code <= 0x096F)
-                        || (code >= 0x09E6 && code <= 0x09EF)
-                        || (code >= 0x09F4 && code <= 0x09F9)
-                        || (code >= 0x0A66 && code <= 0x0A6F)
-                        || (code >= 0x0AE6 && code <= 0x0AEF)
+    else if l 0x00010189 then
+        if l 0x1BAF then
+            if l 0x0DE5 then
+                if l 0x0B65 then
+                    r 0x0660 0x0669
+                        || r 0x06F0 0x06F9
+                        || r 0x07C0 0x07C9
+                        || r 0x0966 0x096F
+                        || r 0x09E6 0x09EF
+                        || r 0x09F4 0x09F9
+                        || r 0x0A66 0x0A6F
+                        || r 0x0AE6 0x0AEF
 
                 else
-                    (code >= 0x0B66 && code <= 0x0B6F)
-                        || (code >= 0x0B72 && code <= 0x0B77)
-                        || (code >= 0x0BE6 && code <= 0x0BF2)
-                        || (code >= 0x0C66 && code <= 0x0C6F)
-                        || (code >= 0x0C78 && code <= 0x0C7E)
-                        || (code >= 0x0CE6 && code <= 0x0CEF)
-                        || (code >= 0x0D58 && code <= 0x0D5E)
-                        || (code >= 0x0D66 && code <= 0x0D78)
+                    r 0x0B66 0x0B6F
+                        || r 0x0B72 0x0B77
+                        || r 0x0BE6 0x0BF2
+                        || r 0x0C66 0x0C6F
+                        || r 0x0C78 0x0C7E
+                        || r 0x0CE6 0x0CEF
+                        || r 0x0D58 0x0D5E
+                        || r 0x0D66 0x0D78
 
-            else if code < 0x17DF then
-                (code >= 0x0DE6 && code <= 0x0DEF)
-                    || (code >= 0x0E50 && code <= 0x0E59)
-                    || (code >= 0x0ED0 && code <= 0x0ED9)
-                    || (code >= 0x0F20 && code <= 0x0F33)
-                    || (code >= 0x1040 && code <= 0x1049)
-                    || (code >= 0x1090 && code <= 0x1099)
-                    || (code >= 0x1369 && code <= 0x137C)
-                    || (code >= 0x16EE && code <= 0x16F0)
-
-            else
-                (code >= 0x17E0 && code <= 0x17E9)
-                    || (code >= 0x17F0 && code <= 0x17F9)
-                    || (code >= 0x1810 && code <= 0x1819)
-                    || (code >= 0x1946 && code <= 0x194F)
-                    || (code >= 0x19D0 && code <= 0x19DA)
-                    || (code >= 0x1A80 && code <= 0x1A89)
-                    || (code >= 0x1A90 && code <= 0x1A99)
-                    || (code >= 0x1B50 && code <= 0x1B59)
-
-        else if code < 0x321F then
-            if code < 0x245F then
-                (code >= 0x1BB0 && code <= 0x1BB9)
-                    || (code >= 0x1C40 && code <= 0x1C49)
-                    || (code >= 0x1C50 && code <= 0x1C59)
-                    || (code == 0x2070)
-                    || (code >= 0x2074 && code <= 0x2079)
-                    || (code >= 0x2080 && code <= 0x2089)
-                    || (code >= 0x2150 && code <= 0x2182)
-                    || (code >= 0x2185 && code <= 0x2189)
+            else if l 0x17DF then
+                r 0x0DE6 0x0DEF
+                    || r 0x0E50 0x0E59
+                    || r 0x0ED0 0x0ED9
+                    || r 0x0F20 0x0F33
+                    || r 0x1040 0x1049
+                    || r 0x1090 0x1099
+                    || r 0x1369 0x137C
+                    || r 0x16EE 0x16F0
 
             else
-                (code >= 0x2460 && code <= 0x249B)
-                    || (code >= 0x24EA && code <= 0x24FF)
-                    || (code >= 0x2776 && code <= 0x2793)
-                    || (code == 0x2CFD)
-                    || (code == 0x3007)
-                    || (code >= 0x3021 && code <= 0x3029)
-                    || (code >= 0x3038 && code <= 0x303A)
-                    || (code >= 0x3192 && code <= 0x3195)
+                r 0x17E0 0x17E9
+                    || r 0x17F0 0x17F9
+                    || r 0x1810 0x1819
+                    || r 0x1946 0x194F
+                    || r 0x19D0 0x19DA
+                    || r 0x1A80 0x1A89
+                    || r 0x1A90 0x1A99
+                    || r 0x1B50 0x1B59
 
-        else if code < 0xA8CF then
-            (code >= 0x3220 && code <= 0x3229)
-                || (code >= 0x3248 && code <= 0x324F)
-                || (code >= 0x3251 && code <= 0x325F)
-                || (code >= 0x3280 && code <= 0x3289)
-                || (code >= 0x32B1 && code <= 0x32BF)
-                || (code >= 0xA620 && code <= 0xA629)
-                || (code >= 0xA6E6 && code <= 0xA6EF)
-                || (code >= 0xA830 && code <= 0xA835)
-
-        else
-            (code >= 0xA8D0 && code <= 0xA8D9)
-                || (code >= 0xA900 && code <= 0xA909)
-                || (code >= 0xA9D0 && code <= 0xA9D9)
-                || (code >= 0xA9F0 && code <= 0xA9F9)
-                || (code >= 0xAA50 && code <= 0xAA59)
-                || (code >= 0xABF0 && code <= 0xABF9)
-                || (code >= 0xFF10 && code <= 0xFF19)
-                || (code >= 0x00010107 && code <= 0x00010133)
-                || (code >= 0x00010140 && code <= 0x00010178)
-
-    else if code < 0x000111E0 then
-        if code < 0x00010A7C then
-            if code < 0x00010878 then
-                (code >= 0x0001018A && code <= 0x0001018B)
-                    || (code >= 0x000102E1 && code <= 0x000102FB)
-                    || (code >= 0x00010320 && code <= 0x00010323)
-                    || (code == 0x00010341)
-                    || (code == 0x0001034A)
-                    || (code >= 0x000103D1 && code <= 0x000103D5)
-                    || (code >= 0x000104A0 && code <= 0x000104A9)
-                    || (code >= 0x00010858 && code <= 0x0001085F)
+        else if l 0x321F then
+            if l 0x245F then
+                r 0x1BB0 0x1BB9
+                    || r 0x1C40 0x1C49
+                    || r 0x1C50 0x1C59
+                    || e 0x2070
+                    || r 0x2074 0x2079
+                    || r 0x2080 0x2089
+                    || r 0x2150 0x2182
+                    || r 0x2185 0x2189
 
             else
-                (code >= 0x00010879 && code <= 0x0001087F)
-                    || (code >= 0x000108A7 && code <= 0x000108AF)
-                    || (code >= 0x000108FB && code <= 0x000108FF)
-                    || (code >= 0x00010916 && code <= 0x0001091B)
-                    || (code >= 0x000109BC && code <= 0x000109BD)
-                    || (code >= 0x000109C0 && code <= 0x000109CF)
-                    || (code >= 0x000109D2 && code <= 0x000109FF)
-                    || (code >= 0x00010A40 && code <= 0x00010A48)
+                r 0x2460 0x249B
+                    || r 0x24EA 0x24FF
+                    || r 0x2776 0x2793
+                    || e 0x2CFD
+                    || e 0x3007
+                    || r 0x3021 0x3029
+                    || r 0x3038 0x303A
+                    || r 0x3192 0x3195
 
-        else if code < 0x00010E5F then
-            (code >= 0x00010A7D && code <= 0x00010A7E)
-                || (code >= 0x00010A9D && code <= 0x00010A9F)
-                || (code >= 0x00010AEB && code <= 0x00010AEF)
-                || (code >= 0x00010B58 && code <= 0x00010B5F)
-                || (code >= 0x00010B78 && code <= 0x00010B7F)
-                || (code >= 0x00010BA9 && code <= 0x00010BAF)
-                || (code >= 0x00010CFA && code <= 0x00010CFF)
-                || (code >= 0x00010D30 && code <= 0x00010D39)
-
-        else
-            (code >= 0x00010E60 && code <= 0x00010E7E)
-                || (code >= 0x00010F1D && code <= 0x00010F26)
-                || (code >= 0x00010F51 && code <= 0x00010F54)
-                || (code >= 0x00010FC5 && code <= 0x00010FCB)
-                || (code >= 0x00011052 && code <= 0x0001106F)
-                || (code >= 0x000110F0 && code <= 0x000110F9)
-                || (code >= 0x00011136 && code <= 0x0001113F)
-                || (code >= 0x000111D0 && code <= 0x000111D9)
-
-    else if code < 0x00016B4F then
-        if code < 0x0001194F then
-            (code >= 0x000111E1 && code <= 0x000111F4)
-                || (code >= 0x000112F0 && code <= 0x000112F9)
-                || (code >= 0x00011450 && code <= 0x00011459)
-                || (code >= 0x000114D0 && code <= 0x000114D9)
-                || (code >= 0x00011650 && code <= 0x00011659)
-                || (code >= 0x000116C0 && code <= 0x000116C9)
-                || (code >= 0x00011730 && code <= 0x0001173B)
-                || (code >= 0x000118E0 && code <= 0x000118F2)
+        else if l 0xA8CF then
+            r 0x3220 0x3229
+                || r 0x3248 0x324F
+                || r 0x3251 0x325F
+                || r 0x3280 0x3289
+                || r 0x32B1 0x32BF
+                || r 0xA620 0xA629
+                || r 0xA6E6 0xA6EF
+                || r 0xA830 0xA835
 
         else
-            (code >= 0x00011950 && code <= 0x00011959)
-                || (code >= 0x00011C50 && code <= 0x00011C6C)
-                || (code >= 0x00011D50 && code <= 0x00011D59)
-                || (code >= 0x00011DA0 && code <= 0x00011DA9)
-                || (code >= 0x00011FC0 && code <= 0x00011FD4)
-                || (code >= 0x00012400 && code <= 0x0001246E)
-                || (code >= 0x00016A60 && code <= 0x00016A69)
-                || (code >= 0x00016AC0 && code <= 0x00016AC9)
+            r 0xA8D0 0xA8D9
+                || r 0xA900 0xA909
+                || r 0xA9D0 0xA9D9
+                || r 0xA9F0 0xA9F9
+                || r 0xAA50 0xAA59
+                || r 0xABF0 0xABF9
+                || r 0xFF10 0xFF19
+                || r 0x00010107 0x00010133
+                || r 0x00010140 0x00010178
 
-    else if code < 0x0001E8C6 then
-        (code >= 0x00016B50 && code <= 0x00016B59)
-            || (code >= 0x00016B5B && code <= 0x00016B61)
-            || (code >= 0x00016E80 && code <= 0x00016E96)
-            || (code >= 0x0001D2E0 && code <= 0x0001D2F3)
-            || (code >= 0x0001D360 && code <= 0x0001D378)
-            || (code >= 0x0001D7CE && code <= 0x0001D7FF)
-            || (code >= 0x0001E140 && code <= 0x0001E149)
-            || (code >= 0x0001E2F0 && code <= 0x0001E2F9)
+    else if l 0x000111E0 then
+        if l 0x00010A7C then
+            if l 0x00010878 then
+                r 0x0001018A 0x0001018B
+                    || r 0x000102E1 0x000102FB
+                    || r 0x00010320 0x00010323
+                    || e 0x00010341
+                    || e 0x0001034A
+                    || r 0x000103D1 0x000103D5
+                    || r 0x000104A0 0x000104A9
+                    || r 0x00010858 0x0001085F
+
+            else
+                r 0x00010879 0x0001087F
+                    || r 0x000108A7 0x000108AF
+                    || r 0x000108FB 0x000108FF
+                    || r 0x00010916 0x0001091B
+                    || r 0x000109BC 0x000109BD
+                    || r 0x000109C0 0x000109CF
+                    || r 0x000109D2 0x000109FF
+                    || r 0x00010A40 0x00010A48
+
+        else if l 0x00010E5F then
+            r 0x00010A7D 0x00010A7E
+                || r 0x00010A9D 0x00010A9F
+                || r 0x00010AEB 0x00010AEF
+                || r 0x00010B58 0x00010B5F
+                || r 0x00010B78 0x00010B7F
+                || r 0x00010BA9 0x00010BAF
+                || r 0x00010CFA 0x00010CFF
+                || r 0x00010D30 0x00010D39
+
+        else
+            r 0x00010E60 0x00010E7E
+                || r 0x00010F1D 0x00010F26
+                || r 0x00010F51 0x00010F54
+                || r 0x00010FC5 0x00010FCB
+                || r 0x00011052 0x0001106F
+                || r 0x000110F0 0x000110F9
+                || r 0x00011136 0x0001113F
+                || r 0x000111D0 0x000111D9
+
+    else if l 0x00016B4F then
+        if l 0x0001194F then
+            r 0x000111E1 0x000111F4
+                || r 0x000112F0 0x000112F9
+                || r 0x00011450 0x00011459
+                || r 0x000114D0 0x000114D9
+                || r 0x00011650 0x00011659
+                || r 0x000116C0 0x000116C9
+                || r 0x00011730 0x0001173B
+                || r 0x000118E0 0x000118F2
+
+        else
+            r 0x00011950 0x00011959
+                || r 0x00011C50 0x00011C6C
+                || r 0x00011D50 0x00011D59
+                || r 0x00011DA0 0x00011DA9
+                || r 0x00011FC0 0x00011FD4
+                || r 0x00012400 0x0001246E
+                || r 0x00016A60 0x00016A69
+                || r 0x00016AC0 0x00016AC9
+
+    else if l 0x0001E8C6 then
+        r 0x00016B50 0x00016B59
+            || r 0x00016B5B 0x00016B61
+            || r 0x00016E80 0x00016E96
+            || r 0x0001D2E0 0x0001D2F3
+            || r 0x0001D360 0x0001D378
+            || r 0x0001D7CE 0x0001D7FF
+            || r 0x0001E140 0x0001E149
+            || r 0x0001E2F0 0x0001E2F9
 
     else
-        (code >= 0x0001E8C7 && code <= 0x0001E8CF)
-            || (code >= 0x0001E950 && code <= 0x0001E959)
-            || (code >= 0x0001EC71 && code <= 0x0001ECAB)
-            || (code >= 0x0001ECAD && code <= 0x0001ECAF)
-            || (code >= 0x0001ECB1 && code <= 0x0001ECB4)
-            || (code >= 0x0001ED01 && code <= 0x0001ED2D)
-            || (code >= 0x0001ED2F && code <= 0x0001ED3D)
-            || (code >= 0x0001F100 && code <= 0x0001F10C)
-            || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
+        r 0x0001E8C7 0x0001E8CF
+            || r 0x0001E950 0x0001E959
+            || r 0x0001EC71 0x0001ECAB
+            || r 0x0001ECAD 0x0001ECAF
+            || r 0x0001ECB1 0x0001ECB4
+            || r 0x0001ED01 0x0001ED2D
+            || r 0x0001ED2F 0x0001ED3D
+            || r 0x0001F100 0x0001F10C
+            || r 0x0001FBF0 0x0001FBF9
 
 
 {-| Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)
@@ -1234,920 +1243,915 @@ isDigit c =
 isAlphaNum : Char -> Bool
 isAlphaNum c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         code =
             Char.toCode c
     in
-    if code < 0x0100 then
-        (code >= 0x30 && code <= 0x39)
-            || (code >= 0x41 && code <= 0x5A)
-            || (code >= 0x61 && code <= 0x7A)
-            || (code == 0xAA)
-            || (code >= 0xB2 && code <= 0xB3)
-            || (code == 0xB5)
-            || (code >= 0xB9 && code <= 0xBA)
-            || (code >= 0xBC && code <= 0xBE)
-            || (code >= 0xC0 && code <= 0xD6)
-            || (code >= 0xD8 && code <= 0xF6)
-            || (code >= 0xF8 && code <= 0xFF)
+    if l 0x0100 then
+        r 0x30 0x39
+            || r 0x41 0x5A
+            || r 0x61 0x7A
+            || e 0xAA
+            || r 0xB2 0xB3
+            || e 0xB5
+            || r 0xB9 0xBA
+            || r 0xBC 0xBE
+            || r 0xC0 0xD6
+            || r 0xD8 0xF6
+            || r 0xF8 0xFF
 
-    else if code < 0xAA5F then
-        if code < 0x10CF then
-            if code < 0x0B31 then
-                if code < 0x093C then
-                    if code < 0x0670 then
-                        if code < 0x03A2 then
-                            (code >= 0x0100 && code <= 0x02C1)
-                                || (code >= 0x02C6 && code <= 0x02D1)
-                                || (code >= 0x02E0 && code <= 0x02E4)
-                                || (code >= 0x0370 && code <= 0x0374)
-                                || (code >= 0x0376 && code <= 0x0377)
-                                || (code >= 0x037A && code <= 0x037D)
-                                || (code == 0x037F)
-                                || (code == 0x0386)
-                                || (code >= 0x0388 && code <= 0x038A)
-                                || (code == 0x038C)
-                                || (code >= 0x038E && code <= 0x03A1)
-                                || ((modBy 2 code == 0)
-                                        && (code >= 0x02EC && code <= 0x02EE)
-                                   )
+    else if l 0xAA5F then
+        if l 0x10CF then
+            if l 0x0B31 then
+                if l 0x093C then
+                    if l 0x0670 then
+                        if l 0x03A2 then
+                            r 0x0100 0x02C1
+                                || r 0x02C6 0x02D1
+                                || r 0x02E0 0x02E4
+                                || r 0x0370 0x0374
+                                || r 0x0376 0x0377
+                                || r 0x037A 0x037D
+                                || e 0x037F
+                                || e 0x0386
+                                || r 0x0388 0x038A
+                                || e 0x038C
+                                || r 0x038E 0x03A1
+                                || ((modBy 2 code == 0) && r 0x02EC 0x02EE)
 
                         else
-                            (code >= 0x03A3 && code <= 0x03F5)
-                                || (code >= 0x03F7 && code <= 0x0481)
-                                || (code >= 0x048A && code <= 0x052F)
-                                || (code >= 0x0531 && code <= 0x0556)
-                                || (code == 0x0559)
-                                || (code >= 0x0560 && code <= 0x0588)
-                                || (code >= 0x05D0 && code <= 0x05EA)
-                                || (code >= 0x05EF && code <= 0x05F2)
-                                || (code >= 0x0620 && code <= 0x064A)
-                                || (code >= 0x0660 && code <= 0x0669)
-                                || (code >= 0x066E && code <= 0x066F)
+                            r 0x03A3 0x03F5
+                                || r 0x03F7 0x0481
+                                || r 0x048A 0x052F
+                                || r 0x0531 0x0556
+                                || e 0x0559
+                                || r 0x0560 0x0588
+                                || r 0x05D0 0x05EA
+                                || r 0x05EF 0x05F2
+                                || r 0x0620 0x064A
+                                || r 0x0660 0x0669
+                                || r 0x066E 0x066F
 
-                    else if code < 0x07F9 then
-                        (code >= 0x0671 && code <= 0x06D3)
-                            || (code == 0x06D5)
-                            || (code >= 0x06E5 && code <= 0x06E6)
-                            || (code >= 0x06EE && code <= 0x06FC)
-                            || (code == 0x06FF)
-                            || (code == 0x0710)
-                            || (code >= 0x0712 && code <= 0x072F)
-                            || (code >= 0x074D && code <= 0x07A5)
-                            || (code == 0x07B1)
-                            || (code >= 0x07C0 && code <= 0x07EA)
-                            || (code >= 0x07F4 && code <= 0x07F5)
-
-                    else
-                        (code == 0x07FA)
-                            || (code >= 0x0800 && code <= 0x0815)
-                            || (code == 0x081A)
-                            || (code == 0x0824)
-                            || (code == 0x0828)
-                            || (code >= 0x0840 && code <= 0x0858)
-                            || (code >= 0x0860 && code <= 0x086A)
-                            || (code >= 0x0870 && code <= 0x0887)
-                            || (code >= 0x0889 && code <= 0x088E)
-                            || (code >= 0x08A0 && code <= 0x08C9)
-                            || (code >= 0x0904 && code <= 0x0939)
-
-                else if code < 0x0A31 then
-                    if code < 0x09BC then
-                        (code == 0x093D)
-                            || (code == 0x0950)
-                            || (code >= 0x0958 && code <= 0x0961)
-                            || (code >= 0x0966 && code <= 0x096F)
-                            || (code >= 0x0971 && code <= 0x0980)
-                            || (code >= 0x0985 && code <= 0x098C)
-                            || (code >= 0x098F && code <= 0x0990)
-                            || (code >= 0x0993 && code <= 0x09A8)
-                            || (code >= 0x09AA && code <= 0x09B0)
-                            || (code == 0x09B2)
-                            || (code >= 0x09B6 && code <= 0x09B9)
+                    else if l 0x07F9 then
+                        r 0x0671 0x06D3
+                            || e 0x06D5
+                            || r 0x06E5 0x06E6
+                            || r 0x06EE 0x06FC
+                            || e 0x06FF
+                            || e 0x0710
+                            || r 0x0712 0x072F
+                            || r 0x074D 0x07A5
+                            || e 0x07B1
+                            || r 0x07C0 0x07EA
+                            || r 0x07F4 0x07F5
 
                     else
-                        (code == 0x09BD)
-                            || (code == 0x09CE)
-                            || (code >= 0x09DC && code <= 0x09DD)
-                            || (code >= 0x09DF && code <= 0x09E1)
-                            || (code >= 0x09E6 && code <= 0x09F1)
-                            || (code >= 0x09F4 && code <= 0x09F9)
-                            || (code == 0x09FC)
-                            || (code >= 0x0A05 && code <= 0x0A0A)
-                            || (code >= 0x0A0F && code <= 0x0A10)
-                            || (code >= 0x0A13 && code <= 0x0A28)
-                            || (code >= 0x0A2A && code <= 0x0A30)
+                        e 0x07FA
+                            || r 0x0800 0x0815
+                            || e 0x081A
+                            || e 0x0824
+                            || e 0x0828
+                            || r 0x0840 0x0858
+                            || r 0x0860 0x086A
+                            || r 0x0870 0x0887
+                            || r 0x0889 0x088E
+                            || r 0x08A0 0x08C9
+                            || r 0x0904 0x0939
 
-                else if code < 0x0AB1 then
-                    (code >= 0x0A32 && code <= 0x0A33)
-                        || (code >= 0x0A35 && code <= 0x0A36)
-                        || (code >= 0x0A38 && code <= 0x0A39)
-                        || (code >= 0x0A59 && code <= 0x0A5C)
-                        || (code == 0x0A5E)
-                        || (code >= 0x0A66 && code <= 0x0A6F)
-                        || (code >= 0x0A72 && code <= 0x0A74)
-                        || (code >= 0x0A85 && code <= 0x0A8D)
-                        || (code >= 0x0A8F && code <= 0x0A91)
-                        || (code >= 0x0A93 && code <= 0x0AA8)
-                        || (code >= 0x0AAA && code <= 0x0AB0)
-
-                else
-                    (code >= 0x0AB2 && code <= 0x0AB3)
-                        || (code >= 0x0AB5 && code <= 0x0AB9)
-                        || (code == 0x0ABD)
-                        || (code == 0x0AD0)
-                        || (code >= 0x0AE0 && code <= 0x0AE1)
-                        || (code >= 0x0AE6 && code <= 0x0AEF)
-                        || (code == 0x0AF9)
-                        || (code >= 0x0B05 && code <= 0x0B0C)
-                        || (code >= 0x0B0F && code <= 0x0B10)
-                        || (code >= 0x0B13 && code <= 0x0B28)
-                        || (code >= 0x0B2A && code <= 0x0B30)
-
-            else if code < 0x0D4D then
-                if code < 0x0C29 then
-                    if code < 0x0B98 then
-                        (code >= 0x0B32 && code <= 0x0B33)
-                            || (code >= 0x0B35 && code <= 0x0B39)
-                            || (code == 0x0B3D)
-                            || (code >= 0x0B5C && code <= 0x0B5D)
-                            || (code >= 0x0B5F && code <= 0x0B61)
-                            || (code >= 0x0B66 && code <= 0x0B6F)
-                            || (code >= 0x0B71 && code <= 0x0B77)
-                            || (code == 0x0B83)
-                            || (code >= 0x0B85 && code <= 0x0B8A)
-                            || (code >= 0x0B8E && code <= 0x0B90)
-                            || (code >= 0x0B92 && code <= 0x0B95)
+                else if l 0x0A31 then
+                    if l 0x09BC then
+                        e 0x093D
+                            || e 0x0950
+                            || r 0x0958 0x0961
+                            || r 0x0966 0x096F
+                            || r 0x0971 0x0980
+                            || r 0x0985 0x098C
+                            || r 0x098F 0x0990
+                            || r 0x0993 0x09A8
+                            || r 0x09AA 0x09B0
+                            || e 0x09B2
+                            || r 0x09B6 0x09B9
 
                     else
-                        (code >= 0x0B99 && code <= 0x0B9A)
-                            || (code == 0x0B9C)
-                            || (code >= 0x0B9E && code <= 0x0B9F)
-                            || (code >= 0x0BA3 && code <= 0x0BA4)
-                            || (code >= 0x0BA8 && code <= 0x0BAA)
-                            || (code >= 0x0BAE && code <= 0x0BB9)
-                            || (code == 0x0BD0)
-                            || (code >= 0x0BE6 && code <= 0x0BF2)
-                            || (code >= 0x0C05 && code <= 0x0C0C)
-                            || (code >= 0x0C0E && code <= 0x0C10)
-                            || (code >= 0x0C12 && code <= 0x0C28)
+                        e 0x09BD
+                            || e 0x09CE
+                            || r 0x09DC 0x09DD
+                            || r 0x09DF 0x09E1
+                            || r 0x09E6 0x09F1
+                            || r 0x09F4 0x09F9
+                            || e 0x09FC
+                            || r 0x0A05 0x0A0A
+                            || r 0x0A0F 0x0A10
+                            || r 0x0A13 0x0A28
+                            || r 0x0A2A 0x0A30
 
-                else if code < 0x0CA9 then
-                    (code >= 0x0C2A && code <= 0x0C39)
-                        || (code == 0x0C3D)
-                        || (code >= 0x0C58 && code <= 0x0C5A)
-                        || (code == 0x0C5D)
-                        || (code >= 0x0C60 && code <= 0x0C61)
-                        || (code >= 0x0C66 && code <= 0x0C6F)
-                        || (code >= 0x0C78 && code <= 0x0C7E)
-                        || (code == 0x0C80)
-                        || (code >= 0x0C85 && code <= 0x0C8C)
-                        || (code >= 0x0C8E && code <= 0x0C90)
-                        || (code >= 0x0C92 && code <= 0x0CA8)
-
-                else
-                    (code >= 0x0CAA && code <= 0x0CB3)
-                        || (code >= 0x0CB5 && code <= 0x0CB9)
-                        || (code == 0x0CBD)
-                        || (code >= 0x0CDD && code <= 0x0CDE)
-                        || (code >= 0x0CE0 && code <= 0x0CE1)
-                        || (code >= 0x0CE6 && code <= 0x0CEF)
-                        || (code >= 0x0CF1 && code <= 0x0CF2)
-                        || (code >= 0x0D04 && code <= 0x0D0C)
-                        || (code >= 0x0D0E && code <= 0x0D10)
-                        || (code >= 0x0D12 && code <= 0x0D3A)
-                        || (code == 0x0D3D)
-
-            else if code < 0x0EBC then
-                if code < 0x0E00 then
-                    (code == 0x0D4E)
-                        || (code >= 0x0D54 && code <= 0x0D56)
-                        || (code >= 0x0D58 && code <= 0x0D61)
-                        || (code >= 0x0D66 && code <= 0x0D78)
-                        || (code >= 0x0D7A && code <= 0x0D7F)
-                        || (code >= 0x0D85 && code <= 0x0D96)
-                        || (code >= 0x0D9A && code <= 0x0DB1)
-                        || (code >= 0x0DB3 && code <= 0x0DBB)
-                        || (code == 0x0DBD)
-                        || (code >= 0x0DC0 && code <= 0x0DC6)
-                        || (code >= 0x0DE6 && code <= 0x0DEF)
+                else if l 0x0AB1 then
+                    r 0x0A32 0x0A33
+                        || r 0x0A35 0x0A36
+                        || r 0x0A38 0x0A39
+                        || r 0x0A59 0x0A5C
+                        || e 0x0A5E
+                        || r 0x0A66 0x0A6F
+                        || r 0x0A72 0x0A74
+                        || r 0x0A85 0x0A8D
+                        || r 0x0A8F 0x0A91
+                        || r 0x0A93 0x0AA8
+                        || r 0x0AAA 0x0AB0
 
                 else
-                    (code >= 0x0E01 && code <= 0x0E30)
-                        || (code >= 0x0E32 && code <= 0x0E33)
-                        || (code >= 0x0E40 && code <= 0x0E46)
-                        || (code >= 0x0E50 && code <= 0x0E59)
-                        || (code >= 0x0E81 && code <= 0x0E82)
-                        || (code == 0x0E84)
-                        || (code >= 0x0E86 && code <= 0x0E8A)
-                        || (code >= 0x0E8C && code <= 0x0EA3)
-                        || (code == 0x0EA5)
-                        || (code >= 0x0EA7 && code <= 0x0EB0)
-                        || (code >= 0x0EB2 && code <= 0x0EB3)
+                    r 0x0AB2 0x0AB3
+                        || r 0x0AB5 0x0AB9
+                        || e 0x0ABD
+                        || e 0x0AD0
+                        || r 0x0AE0 0x0AE1
+                        || r 0x0AE6 0x0AEF
+                        || e 0x0AF9
+                        || r 0x0B05 0x0B0C
+                        || r 0x0B0F 0x0B10
+                        || r 0x0B13 0x0B28
+                        || r 0x0B2A 0x0B30
 
-            else if code < 0x103E then
-                (code == 0x0EBD)
-                    || (code >= 0x0EC0 && code <= 0x0EC4)
-                    || (code == 0x0EC6)
-                    || (code >= 0x0ED0 && code <= 0x0ED9)
-                    || (code >= 0x0EDC && code <= 0x0EDF)
-                    || (code == 0x0F00)
-                    || (code >= 0x0F20 && code <= 0x0F33)
-                    || (code >= 0x0F40 && code <= 0x0F47)
-                    || (code >= 0x0F49 && code <= 0x0F6C)
-                    || (code >= 0x0F88 && code <= 0x0F8C)
-                    || (code >= 0x1000 && code <= 0x102A)
-
-            else
-                (code >= 0x103F && code <= 0x1049)
-                    || (code >= 0x1050 && code <= 0x1055)
-                    || (code >= 0x105A && code <= 0x105D)
-                    || (code == 0x1061)
-                    || (code >= 0x1065 && code <= 0x1066)
-                    || (code >= 0x106E && code <= 0x1070)
-                    || (code >= 0x1075 && code <= 0x1081)
-                    || (code == 0x108E)
-                    || (code >= 0x1090 && code <= 0x1099)
-                    || (code >= 0x10A0 && code <= 0x10C5)
-                    || (code == 0x10C7)
-                    || (code == 0x10CD)
-
-        else if code < 0x208F then
-            if code < 0x196F then
-                if code < 0x166E then
-                    if code < 0x12BF then
-                        (code >= 0x10D0 && code <= 0x10FA)
-                            || (code >= 0x10FC && code <= 0x1248)
-                            || (code >= 0x124A && code <= 0x124D)
-                            || (code >= 0x1250 && code <= 0x1256)
-                            || (code == 0x1258)
-                            || (code >= 0x125A && code <= 0x125D)
-                            || (code >= 0x1260 && code <= 0x1288)
-                            || (code >= 0x128A && code <= 0x128D)
-                            || (code >= 0x1290 && code <= 0x12B0)
-                            || (code >= 0x12B2 && code <= 0x12B5)
-                            || (code >= 0x12B8 && code <= 0x12BE)
+            else if l 0x0D4D then
+                if l 0x0C29 then
+                    if l 0x0B98 then
+                        r 0x0B32 0x0B33
+                            || r 0x0B35 0x0B39
+                            || e 0x0B3D
+                            || r 0x0B5C 0x0B5D
+                            || r 0x0B5F 0x0B61
+                            || r 0x0B66 0x0B6F
+                            || r 0x0B71 0x0B77
+                            || e 0x0B83
+                            || r 0x0B85 0x0B8A
+                            || r 0x0B8E 0x0B90
+                            || r 0x0B92 0x0B95
 
                     else
-                        (code == 0x12C0)
-                            || (code >= 0x12C2 && code <= 0x12C5)
-                            || (code >= 0x12C8 && code <= 0x12D6)
-                            || (code >= 0x12D8 && code <= 0x1310)
-                            || (code >= 0x1312 && code <= 0x1315)
-                            || (code >= 0x1318 && code <= 0x135A)
-                            || (code >= 0x1369 && code <= 0x137C)
-                            || (code >= 0x1380 && code <= 0x138F)
-                            || (code >= 0x13A0 && code <= 0x13F5)
-                            || (code >= 0x13F8 && code <= 0x13FD)
-                            || (code >= 0x1401 && code <= 0x166C)
+                        r 0x0B99 0x0B9A
+                            || e 0x0B9C
+                            || r 0x0B9E 0x0B9F
+                            || r 0x0BA3 0x0BA4
+                            || r 0x0BA8 0x0BAA
+                            || r 0x0BAE 0x0BB9
+                            || e 0x0BD0
+                            || r 0x0BE6 0x0BF2
+                            || r 0x0C05 0x0C0C
+                            || r 0x0C0E 0x0C10
+                            || r 0x0C12 0x0C28
 
-                else if code < 0x17DB then
-                    (code >= 0x166F && code <= 0x167F)
-                        || (code >= 0x1681 && code <= 0x169A)
-                        || (code >= 0x16A0 && code <= 0x16EA)
-                        || (code >= 0x16EE && code <= 0x16F8)
-                        || (code >= 0x1700 && code <= 0x1711)
-                        || (code >= 0x171F && code <= 0x1731)
-                        || (code >= 0x1740 && code <= 0x1751)
-                        || (code >= 0x1760 && code <= 0x176C)
-                        || (code >= 0x176E && code <= 0x1770)
-                        || (code >= 0x1780 && code <= 0x17B3)
-                        || (code == 0x17D7)
-
-                else
-                    (code == 0x17DC)
-                        || (code >= 0x17E0 && code <= 0x17E9)
-                        || (code >= 0x17F0 && code <= 0x17F9)
-                        || (code >= 0x1810 && code <= 0x1819)
-                        || (code >= 0x1820 && code <= 0x1878)
-                        || (code >= 0x1880 && code <= 0x1884)
-                        || (code >= 0x1887 && code <= 0x18A8)
-                        || (code == 0x18AA)
-                        || (code >= 0x18B0 && code <= 0x18F5)
-                        || (code >= 0x1900 && code <= 0x191E)
-                        || (code >= 0x1946 && code <= 0x196D)
-
-            else if code < 0x1CF4 then
-                if code < 0x1B4F then
-                    (code >= 0x1970 && code <= 0x1974)
-                        || (code >= 0x1980 && code <= 0x19AB)
-                        || (code >= 0x19B0 && code <= 0x19C9)
-                        || (code >= 0x19D0 && code <= 0x19DA)
-                        || (code >= 0x1A00 && code <= 0x1A16)
-                        || (code >= 0x1A20 && code <= 0x1A54)
-                        || (code >= 0x1A80 && code <= 0x1A89)
-                        || (code >= 0x1A90 && code <= 0x1A99)
-                        || (code == 0x1AA7)
-                        || (code >= 0x1B05 && code <= 0x1B33)
-                        || (code >= 0x1B45 && code <= 0x1B4C)
+                else if l 0x0CA9 then
+                    r 0x0C2A 0x0C39
+                        || e 0x0C3D
+                        || r 0x0C58 0x0C5A
+                        || e 0x0C5D
+                        || r 0x0C60 0x0C61
+                        || r 0x0C66 0x0C6F
+                        || r 0x0C78 0x0C7E
+                        || e 0x0C80
+                        || r 0x0C85 0x0C8C
+                        || r 0x0C8E 0x0C90
+                        || r 0x0C92 0x0CA8
 
                 else
-                    (code >= 0x1B50 && code <= 0x1B59)
-                        || (code >= 0x1B83 && code <= 0x1BA0)
-                        || (code >= 0x1BAE && code <= 0x1BE5)
-                        || (code >= 0x1C00 && code <= 0x1C23)
-                        || (code >= 0x1C40 && code <= 0x1C49)
-                        || (code >= 0x1C4D && code <= 0x1C7D)
-                        || (code >= 0x1C80 && code <= 0x1C88)
-                        || (code >= 0x1C90 && code <= 0x1CBA)
-                        || (code >= 0x1CBD && code <= 0x1CBF)
-                        || (code >= 0x1CE9 && code <= 0x1CEC)
-                        || (code >= 0x1CEE && code <= 0x1CF3)
+                    r 0x0CAA 0x0CB3
+                        || r 0x0CB5 0x0CB9
+                        || e 0x0CBD
+                        || r 0x0CDD 0x0CDE
+                        || r 0x0CE0 0x0CE1
+                        || r 0x0CE6 0x0CEF
+                        || r 0x0CF1 0x0CF2
+                        || r 0x0D04 0x0D0C
+                        || r 0x0D0E 0x0D10
+                        || r 0x0D12 0x0D3A
+                        || e 0x0D3D
 
-            else if code < 0x1FBD then
-                (code >= 0x1CF5 && code <= 0x1CF6)
-                    || (code == 0x1CFA)
-                    || (code >= 0x1D00 && code <= 0x1DBF)
-                    || (code >= 0x1E00 && code <= 0x1F15)
-                    || (code >= 0x1F18 && code <= 0x1F1D)
-                    || (code >= 0x1F20 && code <= 0x1F45)
-                    || (code >= 0x1F48 && code <= 0x1F4D)
-                    || (code >= 0x1F50 && code <= 0x1F57)
-                    || (code >= 0x1F60 && code <= 0x1F7D)
-                    || (code >= 0x1F80 && code <= 0x1FB4)
-                    || (code >= 0x1FB6 && code <= 0x1FBC)
-                    || ((modBy 2 code == 1)
-                            && (code >= 0x1F59 && code <= 0x1F5F)
-                       )
-
-            else
-                (code == 0x1FBE)
-                    || (code >= 0x1FC2 && code <= 0x1FC4)
-                    || (code >= 0x1FC6 && code <= 0x1FCC)
-                    || (code >= 0x1FD0 && code <= 0x1FD3)
-                    || (code >= 0x1FD6 && code <= 0x1FDB)
-                    || (code >= 0x1FE0 && code <= 0x1FEC)
-                    || (code >= 0x1FF2 && code <= 0x1FF4)
-                    || (code >= 0x1FF6 && code <= 0x1FFC)
-                    || (code >= 0x2070 && code <= 0x2071)
-                    || (code >= 0x2074 && code <= 0x2079)
-                    || (code >= 0x207F && code <= 0x2089)
-
-        else if code < 0x3191 then
-            if code < 0x2D2F then
-                if code < 0x214F then
-                    (code >= 0x2090 && code <= 0x209C)
-                        || (code == 0x2102)
-                        || (code == 0x2107)
-                        || (code >= 0x210A && code <= 0x2113)
-                        || (code == 0x2115)
-                        || (code >= 0x2119 && code <= 0x211D)
-                        || (code >= 0x212A && code <= 0x212D)
-                        || (code >= 0x212F && code <= 0x2139)
-                        || (code >= 0x213C && code <= 0x213F)
-                        || (code >= 0x2145 && code <= 0x2149)
-                        || (code == 0x214E)
-                        || ((modBy 2 code == 0)
-                                && (code >= 0x2124 && code <= 0x2128)
-                           )
+            else if l 0x0EBC then
+                if l 0x0E00 then
+                    e 0x0D4E
+                        || r 0x0D54 0x0D56
+                        || r 0x0D58 0x0D61
+                        || r 0x0D66 0x0D78
+                        || r 0x0D7A 0x0D7F
+                        || r 0x0D85 0x0D96
+                        || r 0x0D9A 0x0DB1
+                        || r 0x0DB3 0x0DBB
+                        || e 0x0DBD
+                        || r 0x0DC0 0x0DC6
+                        || r 0x0DE6 0x0DEF
 
                 else
-                    (code >= 0x2150 && code <= 0x2189)
-                        || (code >= 0x2460 && code <= 0x249B)
-                        || (code >= 0x24EA && code <= 0x24FF)
-                        || (code >= 0x2776 && code <= 0x2793)
-                        || (code >= 0x2C00 && code <= 0x2CE4)
-                        || (code >= 0x2CEB && code <= 0x2CEE)
-                        || (code >= 0x2CF2 && code <= 0x2CF3)
-                        || (code == 0x2CFD)
-                        || (code >= 0x2D00 && code <= 0x2D25)
-                        || (code == 0x2D27)
-                        || (code == 0x2D2D)
+                    r 0x0E01 0x0E30
+                        || r 0x0E32 0x0E33
+                        || r 0x0E40 0x0E46
+                        || r 0x0E50 0x0E59
+                        || r 0x0E81 0x0E82
+                        || e 0x0E84
+                        || r 0x0E86 0x0E8A
+                        || r 0x0E8C 0x0EA3
+                        || e 0x0EA5
+                        || r 0x0EA7 0x0EB0
+                        || r 0x0EB2 0x0EB3
 
-            else if code < 0x2E2E then
-                (code >= 0x2D30 && code <= 0x2D67)
-                    || (code == 0x2D6F)
-                    || (code >= 0x2D80 && code <= 0x2D96)
-                    || (code >= 0x2DA0 && code <= 0x2DA6)
-                    || (code >= 0x2DA8 && code <= 0x2DAE)
-                    || (code >= 0x2DB0 && code <= 0x2DB6)
-                    || (code >= 0x2DB8 && code <= 0x2DBE)
-                    || (code >= 0x2DC0 && code <= 0x2DC6)
-                    || (code >= 0x2DC8 && code <= 0x2DCE)
-                    || (code >= 0x2DD0 && code <= 0x2DD6)
-                    || (code >= 0x2DD8 && code <= 0x2DDE)
-
-            else
-                (code == 0x2E2F)
-                    || (code >= 0x3005 && code <= 0x3007)
-                    || (code >= 0x3021 && code <= 0x3029)
-                    || (code >= 0x3031 && code <= 0x3035)
-                    || (code >= 0x3038 && code <= 0x303C)
-                    || (code >= 0x3041 && code <= 0x3096)
-                    || (code >= 0x309D && code <= 0x309F)
-                    || (code >= 0x30A1 && code <= 0x30FA)
-                    || (code >= 0x30FC && code <= 0x30FF)
-                    || (code >= 0x3105 && code <= 0x312F)
-                    || (code >= 0x3131 && code <= 0x318E)
-
-        else if code < 0xA7D5 then
-            if code < 0x9FFE then
-                (code >= 0x3192 && code <= 0x3195)
-                    || (code >= 0x31A0 && code <= 0x31BF)
-                    || (code >= 0x31F0 && code <= 0x31FF)
-                    || (code >= 0x3220 && code <= 0x3229)
-                    || (code >= 0x3248 && code <= 0x324F)
-                    || (code >= 0x3251 && code <= 0x325F)
-                    || (code >= 0x3280 && code <= 0x3289)
-                    || (code >= 0x32B1 && code <= 0x32BF)
-                    || (code == 0x3400)
-                    || (code == 0x4DBF)
-                    || (code == 0x4E00)
+            else if l 0x103E then
+                e 0x0EBD
+                    || r 0x0EC0 0x0EC4
+                    || e 0x0EC6
+                    || r 0x0ED0 0x0ED9
+                    || r 0x0EDC 0x0EDF
+                    || e 0x0F00
+                    || r 0x0F20 0x0F33
+                    || r 0x0F40 0x0F47
+                    || r 0x0F49 0x0F6C
+                    || r 0x0F88 0x0F8C
+                    || r 0x1000 0x102A
 
             else
-                (code >= 0x9FFF && code <= 0xA48C)
-                    || (code >= 0xA4D0 && code <= 0xA4FD)
-                    || (code >= 0xA500 && code <= 0xA60C)
-                    || (code >= 0xA610 && code <= 0xA62B)
-                    || (code >= 0xA640 && code <= 0xA66E)
-                    || (code >= 0xA67F && code <= 0xA69D)
-                    || (code >= 0xA6A0 && code <= 0xA6EF)
-                    || (code >= 0xA717 && code <= 0xA71F)
-                    || (code >= 0xA722 && code <= 0xA788)
-                    || (code >= 0xA78B && code <= 0xA7CA)
-                    || (code >= 0xA7D0 && code <= 0xA7D1)
-                    || ((modBy 2 code == 1)
-                            && (code >= 0xA7D3 && code <= 0xA7D4)
-                       )
+                r 0x103F 0x1049
+                    || r 0x1050 0x1055
+                    || r 0x105A 0x105D
+                    || e 0x1061
+                    || r 0x1065 0x1066
+                    || r 0x106E 0x1070
+                    || r 0x1075 0x1081
+                    || e 0x108E
+                    || r 0x1090 0x1099
+                    || r 0x10A0 0x10C5
+                    || e 0x10C7
+                    || e 0x10CD
 
-        else if code < 0xA8FC then
-            (code >= 0xA7D6 && code <= 0xA7D9)
-                || (code >= 0xA7F2 && code <= 0xA801)
-                || (code >= 0xA803 && code <= 0xA805)
-                || (code >= 0xA807 && code <= 0xA80A)
-                || (code >= 0xA80C && code <= 0xA822)
-                || (code >= 0xA830 && code <= 0xA835)
-                || (code >= 0xA840 && code <= 0xA873)
-                || (code >= 0xA882 && code <= 0xA8B3)
-                || (code >= 0xA8D0 && code <= 0xA8D9)
-                || (code >= 0xA8F2 && code <= 0xA8F7)
-                || (code == 0xA8FB)
-                || ((modBy 2 code == 1) && (code == 0xA7D5))
+        else if l 0x208F then
+            if l 0x196F then
+                if l 0x166E then
+                    if l 0x12BF then
+                        r 0x10D0 0x10FA
+                            || r 0x10FC 0x1248
+                            || r 0x124A 0x124D
+                            || r 0x1250 0x1256
+                            || e 0x1258
+                            || r 0x125A 0x125D
+                            || r 0x1260 0x1288
+                            || r 0x128A 0x128D
+                            || r 0x1290 0x12B0
+                            || r 0x12B2 0x12B5
+                            || r 0x12B8 0x12BE
+
+                    else
+                        e 0x12C0
+                            || r 0x12C2 0x12C5
+                            || r 0x12C8 0x12D6
+                            || r 0x12D8 0x1310
+                            || r 0x1312 0x1315
+                            || r 0x1318 0x135A
+                            || r 0x1369 0x137C
+                            || r 0x1380 0x138F
+                            || r 0x13A0 0x13F5
+                            || r 0x13F8 0x13FD
+                            || r 0x1401 0x166C
+
+                else if l 0x17DB then
+                    r 0x166F 0x167F
+                        || r 0x1681 0x169A
+                        || r 0x16A0 0x16EA
+                        || r 0x16EE 0x16F8
+                        || r 0x1700 0x1711
+                        || r 0x171F 0x1731
+                        || r 0x1740 0x1751
+                        || r 0x1760 0x176C
+                        || r 0x176E 0x1770
+                        || r 0x1780 0x17B3
+                        || e 0x17D7
+
+                else
+                    e 0x17DC
+                        || r 0x17E0 0x17E9
+                        || r 0x17F0 0x17F9
+                        || r 0x1810 0x1819
+                        || r 0x1820 0x1878
+                        || r 0x1880 0x1884
+                        || r 0x1887 0x18A8
+                        || e 0x18AA
+                        || r 0x18B0 0x18F5
+                        || r 0x1900 0x191E
+                        || r 0x1946 0x196D
+
+            else if l 0x1CF4 then
+                if l 0x1B4F then
+                    r 0x1970 0x1974
+                        || r 0x1980 0x19AB
+                        || r 0x19B0 0x19C9
+                        || r 0x19D0 0x19DA
+                        || r 0x1A00 0x1A16
+                        || r 0x1A20 0x1A54
+                        || r 0x1A80 0x1A89
+                        || r 0x1A90 0x1A99
+                        || e 0x1AA7
+                        || r 0x1B05 0x1B33
+                        || r 0x1B45 0x1B4C
+
+                else
+                    r 0x1B50 0x1B59
+                        || r 0x1B83 0x1BA0
+                        || r 0x1BAE 0x1BE5
+                        || r 0x1C00 0x1C23
+                        || r 0x1C40 0x1C49
+                        || r 0x1C4D 0x1C7D
+                        || r 0x1C80 0x1C88
+                        || r 0x1C90 0x1CBA
+                        || r 0x1CBD 0x1CBF
+                        || r 0x1CE9 0x1CEC
+                        || r 0x1CEE 0x1CF3
+
+            else if l 0x1FBD then
+                r 0x1CF5 0x1CF6
+                    || e 0x1CFA
+                    || r 0x1D00 0x1DBF
+                    || r 0x1E00 0x1F15
+                    || r 0x1F18 0x1F1D
+                    || r 0x1F20 0x1F45
+                    || r 0x1F48 0x1F4D
+                    || r 0x1F50 0x1F57
+                    || r 0x1F60 0x1F7D
+                    || r 0x1F80 0x1FB4
+                    || r 0x1FB6 0x1FBC
+                    || ((modBy 2 code == 1) && r 0x1F59 0x1F5F)
+
+            else
+                e 0x1FBE
+                    || r 0x1FC2 0x1FC4
+                    || r 0x1FC6 0x1FCC
+                    || r 0x1FD0 0x1FD3
+                    || r 0x1FD6 0x1FDB
+                    || r 0x1FE0 0x1FEC
+                    || r 0x1FF2 0x1FF4
+                    || r 0x1FF6 0x1FFC
+                    || r 0x2070 0x2071
+                    || r 0x2074 0x2079
+                    || r 0x207F 0x2089
+
+        else if l 0x3191 then
+            if l 0x2D2F then
+                if l 0x214F then
+                    r 0x2090 0x209C
+                        || e 0x2102
+                        || e 0x2107
+                        || r 0x210A 0x2113
+                        || e 0x2115
+                        || r 0x2119 0x211D
+                        || r 0x212A 0x212D
+                        || r 0x212F 0x2139
+                        || r 0x213C 0x213F
+                        || r 0x2145 0x2149
+                        || e 0x214E
+                        || ((modBy 2 code == 0) && r 0x2124 0x2128)
+
+                else
+                    r 0x2150 0x2189
+                        || r 0x2460 0x249B
+                        || r 0x24EA 0x24FF
+                        || r 0x2776 0x2793
+                        || r 0x2C00 0x2CE4
+                        || r 0x2CEB 0x2CEE
+                        || r 0x2CF2 0x2CF3
+                        || e 0x2CFD
+                        || r 0x2D00 0x2D25
+                        || e 0x2D27
+                        || e 0x2D2D
+
+            else if l 0x2E2E then
+                r 0x2D30 0x2D67
+                    || e 0x2D6F
+                    || r 0x2D80 0x2D96
+                    || r 0x2DA0 0x2DA6
+                    || r 0x2DA8 0x2DAE
+                    || r 0x2DB0 0x2DB6
+                    || r 0x2DB8 0x2DBE
+                    || r 0x2DC0 0x2DC6
+                    || r 0x2DC8 0x2DCE
+                    || r 0x2DD0 0x2DD6
+                    || r 0x2DD8 0x2DDE
+
+            else
+                e 0x2E2F
+                    || r 0x3005 0x3007
+                    || r 0x3021 0x3029
+                    || r 0x3031 0x3035
+                    || r 0x3038 0x303C
+                    || r 0x3041 0x3096
+                    || r 0x309D 0x309F
+                    || r 0x30A1 0x30FA
+                    || r 0x30FC 0x30FF
+                    || r 0x3105 0x312F
+                    || r 0x3131 0x318E
+
+        else if l 0xA7D5 then
+            if l 0x9FFE then
+                r 0x3192 0x3195
+                    || r 0x31A0 0x31BF
+                    || r 0x31F0 0x31FF
+                    || r 0x3220 0x3229
+                    || r 0x3248 0x324F
+                    || r 0x3251 0x325F
+                    || r 0x3280 0x3289
+                    || r 0x32B1 0x32BF
+                    || e 0x3400
+                    || e 0x4DBF
+                    || e 0x4E00
+
+            else
+                r 0x9FFF 0xA48C
+                    || r 0xA4D0 0xA4FD
+                    || r 0xA500 0xA60C
+                    || r 0xA610 0xA62B
+                    || r 0xA640 0xA66E
+                    || r 0xA67F 0xA69D
+                    || r 0xA6A0 0xA6EF
+                    || r 0xA717 0xA71F
+                    || r 0xA722 0xA788
+                    || r 0xA78B 0xA7CA
+                    || r 0xA7D0 0xA7D1
+                    || ((modBy 2 code == 1) && r 0xA7D3 0xA7D4)
+
+        else if l 0xA8FC then
+            r 0xA7D6 0xA7D9
+                || r 0xA7F2 0xA801
+                || r 0xA803 0xA805
+                || r 0xA807 0xA80A
+                || r 0xA80C 0xA822
+                || r 0xA830 0xA835
+                || r 0xA840 0xA873
+                || r 0xA882 0xA8B3
+                || r 0xA8D0 0xA8D9
+                || r 0xA8F2 0xA8F7
+                || e 0xA8FB
+                || ((modBy 2 code == 1) && e 0xA7D5)
 
         else
-            (code >= 0xA8FD && code <= 0xA8FE)
-                || (code >= 0xA900 && code <= 0xA925)
-                || (code >= 0xA930 && code <= 0xA946)
-                || (code >= 0xA960 && code <= 0xA97C)
-                || (code >= 0xA984 && code <= 0xA9B2)
-                || (code >= 0xA9CF && code <= 0xA9D9)
-                || (code >= 0xA9E0 && code <= 0xA9E4)
-                || (code >= 0xA9E6 && code <= 0xA9FE)
-                || (code >= 0xAA00 && code <= 0xAA28)
-                || (code >= 0xAA40 && code <= 0xAA42)
-                || (code >= 0xAA44 && code <= 0xAA4B)
-                || (code >= 0xAA50 && code <= 0xAA59)
+            r 0xA8FD 0xA8FE
+                || r 0xA900 0xA925
+                || r 0xA930 0xA946
+                || r 0xA960 0xA97C
+                || r 0xA984 0xA9B2
+                || r 0xA9CF 0xA9D9
+                || r 0xA9E0 0xA9E4
+                || r 0xA9E6 0xA9FE
+                || r 0xAA00 0xAA28
+                || r 0xAA40 0xAA42
+                || r 0xAA44 0xAA4B
+                || r 0xAA50 0xAA59
 
-    else if code < 0x000115D7 then
-        if code < 0x000107FF then
-            if code < 0xFFC1 then
-                if code < 0xF8FF then
-                    if code < 0xAB10 then
-                        (code >= 0xAA60 && code <= 0xAA76)
-                            || (code == 0xAA7A)
-                            || (code >= 0xAA7E && code <= 0xAAAF)
-                            || (code == 0xAAB1)
-                            || (code >= 0xAAB5 && code <= 0xAAB6)
-                            || (code >= 0xAAB9 && code <= 0xAABD)
-                            || (code >= 0xAADB && code <= 0xAADD)
-                            || (code >= 0xAAE0 && code <= 0xAAEA)
-                            || (code >= 0xAAF2 && code <= 0xAAF4)
-                            || (code >= 0xAB01 && code <= 0xAB06)
-                            || (code >= 0xAB09 && code <= 0xAB0E)
-                            || ((modBy 2 code == 0)
-                                    && (code >= 0xAAC0 && code <= 0xAAC2)
-                               )
+    else if l 0x000115D7 then
+        if l 0x000107FF then
+            if l 0xFFC1 then
+                if l 0xF8FF then
+                    if l 0xAB10 then
+                        r 0xAA60 0xAA76
+                            || e 0xAA7A
+                            || r 0xAA7E 0xAAAF
+                            || e 0xAAB1
+                            || r 0xAAB5 0xAAB6
+                            || r 0xAAB9 0xAABD
+                            || r 0xAADB 0xAADD
+                            || r 0xAAE0 0xAAEA
+                            || r 0xAAF2 0xAAF4
+                            || r 0xAB01 0xAB06
+                            || r 0xAB09 0xAB0E
+                            || ((modBy 2 code == 0) && r 0xAAC0 0xAAC2)
 
                     else
-                        (code >= 0xAB11 && code <= 0xAB16)
-                            || (code >= 0xAB20 && code <= 0xAB26)
-                            || (code >= 0xAB28 && code <= 0xAB2E)
-                            || (code >= 0xAB30 && code <= 0xAB5A)
-                            || (code >= 0xAB5C && code <= 0xAB69)
-                            || (code >= 0xAB70 && code <= 0xABE2)
-                            || (code >= 0xABF0 && code <= 0xABF9)
-                            || (code == 0xAC00)
-                            || (code == 0xD7A3)
-                            || (code >= 0xD7B0 && code <= 0xD7C6)
-                            || (code >= 0xD7CB && code <= 0xD7FB)
+                        r 0xAB11 0xAB16
+                            || r 0xAB20 0xAB26
+                            || r 0xAB28 0xAB2E
+                            || r 0xAB30 0xAB5A
+                            || r 0xAB5C 0xAB69
+                            || r 0xAB70 0xABE2
+                            || r 0xABF0 0xABF9
+                            || e 0xAC00
+                            || e 0xD7A3
+                            || r 0xD7B0 0xD7C6
+                            || r 0xD7CB 0xD7FB
 
-                else if code < 0xFB45 then
-                    (code >= 0xF900 && code <= 0xFA6D)
-                        || (code >= 0xFA70 && code <= 0xFAD9)
-                        || (code >= 0xFB00 && code <= 0xFB06)
-                        || (code >= 0xFB13 && code <= 0xFB17)
-                        || (code == 0xFB1D)
-                        || (code >= 0xFB1F && code <= 0xFB28)
-                        || (code >= 0xFB2A && code <= 0xFB36)
-                        || (code >= 0xFB38 && code <= 0xFB3C)
-                        || (code == 0xFB3E)
-                        || (code >= 0xFB40 && code <= 0xFB41)
-                        || (code >= 0xFB43 && code <= 0xFB44)
-
-                else
-                    (code >= 0xFB46 && code <= 0xFBB1)
-                        || (code >= 0xFBD3 && code <= 0xFD3D)
-                        || (code >= 0xFD50 && code <= 0xFD8F)
-                        || (code >= 0xFD92 && code <= 0xFDC7)
-                        || (code >= 0xFDF0 && code <= 0xFDFB)
-                        || (code >= 0xFE70 && code <= 0xFE74)
-                        || (code >= 0xFE76 && code <= 0xFEFC)
-                        || (code >= 0xFF10 && code <= 0xFF19)
-                        || (code >= 0xFF21 && code <= 0xFF3A)
-                        || (code >= 0xFF41 && code <= 0xFF5A)
-                        || (code >= 0xFF66 && code <= 0xFFBE)
-
-            else if code < 0x000103C7 then
-                if code < 0x00010106 then
-                    (code >= 0xFFC2 && code <= 0xFFC7)
-                        || (code >= 0xFFCA && code <= 0xFFCF)
-                        || (code >= 0xFFD2 && code <= 0xFFD7)
-                        || (code >= 0xFFDA && code <= 0xFFDC)
-                        || (code >= 0x00010000 && code <= 0x0001000B)
-                        || (code >= 0x0001000D && code <= 0x00010026)
-                        || (code >= 0x00010028 && code <= 0x0001003A)
-                        || (code >= 0x0001003C && code <= 0x0001003D)
-                        || (code >= 0x0001003F && code <= 0x0001004D)
-                        || (code >= 0x00010050 && code <= 0x0001005D)
-                        || (code >= 0x00010080 && code <= 0x000100FA)
+                else if l 0xFB45 then
+                    r 0xF900 0xFA6D
+                        || r 0xFA70 0xFAD9
+                        || r 0xFB00 0xFB06
+                        || r 0xFB13 0xFB17
+                        || e 0xFB1D
+                        || r 0xFB1F 0xFB28
+                        || r 0xFB2A 0xFB36
+                        || r 0xFB38 0xFB3C
+                        || e 0xFB3E
+                        || r 0xFB40 0xFB41
+                        || r 0xFB43 0xFB44
 
                 else
-                    (code >= 0x00010107 && code <= 0x00010133)
-                        || (code >= 0x00010140 && code <= 0x00010178)
-                        || (code >= 0x0001018A && code <= 0x0001018B)
-                        || (code >= 0x00010280 && code <= 0x0001029C)
-                        || (code >= 0x000102A0 && code <= 0x000102D0)
-                        || (code >= 0x000102E1 && code <= 0x000102FB)
-                        || (code >= 0x00010300 && code <= 0x00010323)
-                        || (code >= 0x0001032D && code <= 0x0001034A)
-                        || (code >= 0x00010350 && code <= 0x00010375)
-                        || (code >= 0x00010380 && code <= 0x0001039D)
-                        || (code >= 0x000103A0 && code <= 0x000103C3)
+                    r 0xFB46 0xFBB1
+                        || r 0xFBD3 0xFD3D
+                        || r 0xFD50 0xFD8F
+                        || r 0xFD92 0xFDC7
+                        || r 0xFDF0 0xFDFB
+                        || r 0xFE70 0xFE74
+                        || r 0xFE76 0xFEFC
+                        || r 0xFF10 0xFF19
+                        || r 0xFF21 0xFF3A
+                        || r 0xFF41 0xFF5A
+                        || r 0xFF66 0xFFBE
 
-            else if code < 0x00010593 then
-                (code >= 0x000103C8 && code <= 0x000103CF)
-                    || (code >= 0x000103D1 && code <= 0x000103D5)
-                    || (code >= 0x00010400 && code <= 0x0001049D)
-                    || (code >= 0x000104A0 && code <= 0x000104A9)
-                    || (code >= 0x000104B0 && code <= 0x000104D3)
-                    || (code >= 0x000104D8 && code <= 0x000104FB)
-                    || (code >= 0x00010500 && code <= 0x00010527)
-                    || (code >= 0x00010530 && code <= 0x00010563)
-                    || (code >= 0x00010570 && code <= 0x0001057A)
-                    || (code >= 0x0001057C && code <= 0x0001058A)
-                    || (code >= 0x0001058C && code <= 0x00010592)
-
-            else
-                (code >= 0x00010594 && code <= 0x00010595)
-                    || (code >= 0x00010597 && code <= 0x000105A1)
-                    || (code >= 0x000105A3 && code <= 0x000105B1)
-                    || (code >= 0x000105B3 && code <= 0x000105B9)
-                    || (code >= 0x000105BB && code <= 0x000105BC)
-                    || (code >= 0x00010600 && code <= 0x00010736)
-                    || (code >= 0x00010740 && code <= 0x00010755)
-                    || (code >= 0x00010760 && code <= 0x00010767)
-                    || (code >= 0x00010780 && code <= 0x00010785)
-                    || (code >= 0x00010787 && code <= 0x000107B0)
-                    || (code >= 0x000107B2 && code <= 0x000107BA)
-
-        else if code < 0x00011002 then
-            if code < 0x00010ABF then
-                if code < 0x000108FA then
-                    (code >= 0x00010800 && code <= 0x00010805)
-                        || (code == 0x00010808)
-                        || (code >= 0x0001080A && code <= 0x00010835)
-                        || (code >= 0x00010837 && code <= 0x00010838)
-                        || (code == 0x0001083C)
-                        || (code >= 0x0001083F && code <= 0x00010855)
-                        || (code >= 0x00010858 && code <= 0x00010876)
-                        || (code >= 0x00010879 && code <= 0x0001089E)
-                        || (code >= 0x000108A7 && code <= 0x000108AF)
-                        || (code >= 0x000108E0 && code <= 0x000108F2)
-                        || (code >= 0x000108F4 && code <= 0x000108F5)
+            else if l 0x000103C7 then
+                if l 0x00010106 then
+                    r 0xFFC2 0xFFC7
+                        || r 0xFFCA 0xFFCF
+                        || r 0xFFD2 0xFFD7
+                        || r 0xFFDA 0xFFDC
+                        || r 0x00010000 0x0001000B
+                        || r 0x0001000D 0x00010026
+                        || r 0x00010028 0x0001003A
+                        || r 0x0001003C 0x0001003D
+                        || r 0x0001003F 0x0001004D
+                        || r 0x00010050 0x0001005D
+                        || r 0x00010080 0x000100FA
 
                 else
-                    (code >= 0x000108FB && code <= 0x0001091B)
-                        || (code >= 0x00010920 && code <= 0x00010939)
-                        || (code >= 0x00010980 && code <= 0x000109B7)
-                        || (code >= 0x000109BC && code <= 0x000109CF)
-                        || (code >= 0x000109D2 && code <= 0x00010A00)
-                        || (code >= 0x00010A10 && code <= 0x00010A13)
-                        || (code >= 0x00010A15 && code <= 0x00010A17)
-                        || (code >= 0x00010A19 && code <= 0x00010A35)
-                        || (code >= 0x00010A40 && code <= 0x00010A48)
-                        || (code >= 0x00010A60 && code <= 0x00010A7E)
-                        || (code >= 0x00010A80 && code <= 0x00010A9F)
+                    r 0x00010107 0x00010133
+                        || r 0x00010140 0x00010178
+                        || r 0x0001018A 0x0001018B
+                        || r 0x00010280 0x0001029C
+                        || r 0x000102A0 0x000102D0
+                        || r 0x000102E1 0x000102FB
+                        || r 0x00010300 0x00010323
+                        || r 0x0001032D 0x0001034A
+                        || r 0x00010350 0x00010375
+                        || r 0x00010380 0x0001039D
+                        || r 0x000103A0 0x000103C3
 
-            else if code < 0x00010CF9 then
-                (code >= 0x00010AC0 && code <= 0x00010AC7)
-                    || (code >= 0x00010AC9 && code <= 0x00010AE4)
-                    || (code >= 0x00010AEB && code <= 0x00010AEF)
-                    || (code >= 0x00010B00 && code <= 0x00010B35)
-                    || (code >= 0x00010B40 && code <= 0x00010B55)
-                    || (code >= 0x00010B58 && code <= 0x00010B72)
-                    || (code >= 0x00010B78 && code <= 0x00010B91)
-                    || (code >= 0x00010BA9 && code <= 0x00010BAF)
-                    || (code >= 0x00010C00 && code <= 0x00010C48)
-                    || (code >= 0x00010C80 && code <= 0x00010CB2)
-                    || (code >= 0x00010CC0 && code <= 0x00010CF2)
-
-            else
-                (code >= 0x00010CFA && code <= 0x00010D23)
-                    || (code >= 0x00010D30 && code <= 0x00010D39)
-                    || (code >= 0x00010E60 && code <= 0x00010E7E)
-                    || (code >= 0x00010E80 && code <= 0x00010EA9)
-                    || (code >= 0x00010EB0 && code <= 0x00010EB1)
-                    || (code >= 0x00010F00 && code <= 0x00010F27)
-                    || (code >= 0x00010F30 && code <= 0x00010F45)
-                    || (code >= 0x00010F51 && code <= 0x00010F54)
-                    || (code >= 0x00010F70 && code <= 0x00010F81)
-                    || (code >= 0x00010FB0 && code <= 0x00010FCB)
-                    || (code >= 0x00010FE0 && code <= 0x00010FF6)
-
-        else if code < 0x00011289 then
-            if code < 0x0001114F then
-                (code >= 0x00011003 && code <= 0x00011037)
-                    || (code >= 0x00011052 && code <= 0x0001106F)
-                    || (code >= 0x00011071 && code <= 0x00011072)
-                    || (code == 0x00011075)
-                    || (code >= 0x00011083 && code <= 0x000110AF)
-                    || (code >= 0x000110D0 && code <= 0x000110E8)
-                    || (code >= 0x000110F0 && code <= 0x000110F9)
-                    || (code >= 0x00011103 && code <= 0x00011126)
-                    || (code >= 0x00011136 && code <= 0x0001113F)
-                    || (code == 0x00011144)
-                    || (code == 0x00011147)
+            else if l 0x00010593 then
+                r 0x000103C8 0x000103CF
+                    || r 0x000103D1 0x000103D5
+                    || r 0x00010400 0x0001049D
+                    || r 0x000104A0 0x000104A9
+                    || r 0x000104B0 0x000104D3
+                    || r 0x000104D8 0x000104FB
+                    || r 0x00010500 0x00010527
+                    || r 0x00010530 0x00010563
+                    || r 0x00010570 0x0001057A
+                    || r 0x0001057C 0x0001058A
+                    || r 0x0001058C 0x00010592
 
             else
-                (code >= 0x00011150 && code <= 0x00011172)
-                    || (code == 0x00011176)
-                    || (code >= 0x00011183 && code <= 0x000111B2)
-                    || (code >= 0x000111C1 && code <= 0x000111C4)
-                    || (code >= 0x000111D0 && code <= 0x000111DA)
-                    || (code == 0x000111DC)
-                    || (code >= 0x000111E1 && code <= 0x000111F4)
-                    || (code >= 0x00011200 && code <= 0x00011211)
-                    || (code >= 0x00011213 && code <= 0x0001122B)
-                    || (code >= 0x00011280 && code <= 0x00011286)
-                    || (code == 0x00011288)
+                r 0x00010594 0x00010595
+                    || r 0x00010597 0x000105A1
+                    || r 0x000105A3 0x000105B1
+                    || r 0x000105B3 0x000105B9
+                    || r 0x000105BB 0x000105BC
+                    || r 0x00010600 0x00010736
+                    || r 0x00010740 0x00010755
+                    || r 0x00010760 0x00010767
+                    || r 0x00010780 0x00010785
+                    || r 0x00010787 0x000107B0
+                    || r 0x000107B2 0x000107BA
 
-        else if code < 0x0001133C then
-            (code >= 0x0001128A && code <= 0x0001128D)
-                || (code >= 0x0001128F && code <= 0x0001129D)
-                || (code >= 0x0001129F && code <= 0x000112A8)
-                || (code >= 0x000112B0 && code <= 0x000112DE)
-                || (code >= 0x000112F0 && code <= 0x000112F9)
-                || (code >= 0x00011305 && code <= 0x0001130C)
-                || (code >= 0x0001130F && code <= 0x00011310)
-                || (code >= 0x00011313 && code <= 0x00011328)
-                || (code >= 0x0001132A && code <= 0x00011330)
-                || (code >= 0x00011332 && code <= 0x00011333)
-                || (code >= 0x00011335 && code <= 0x00011339)
+        else if l 0x00011002 then
+            if l 0x00010ABF then
+                if l 0x000108FA then
+                    r 0x00010800 0x00010805
+                        || e 0x00010808
+                        || r 0x0001080A 0x00010835
+                        || r 0x00010837 0x00010838
+                        || e 0x0001083C
+                        || r 0x0001083F 0x00010855
+                        || r 0x00010858 0x00010876
+                        || r 0x00010879 0x0001089E
+                        || r 0x000108A7 0x000108AF
+                        || r 0x000108E0 0x000108F2
+                        || r 0x000108F4 0x000108F5
+
+                else
+                    r 0x000108FB 0x0001091B
+                        || r 0x00010920 0x00010939
+                        || r 0x00010980 0x000109B7
+                        || r 0x000109BC 0x000109CF
+                        || r 0x000109D2 0x00010A00
+                        || r 0x00010A10 0x00010A13
+                        || r 0x00010A15 0x00010A17
+                        || r 0x00010A19 0x00010A35
+                        || r 0x00010A40 0x00010A48
+                        || r 0x00010A60 0x00010A7E
+                        || r 0x00010A80 0x00010A9F
+
+            else if l 0x00010CF9 then
+                r 0x00010AC0 0x00010AC7
+                    || r 0x00010AC9 0x00010AE4
+                    || r 0x00010AEB 0x00010AEF
+                    || r 0x00010B00 0x00010B35
+                    || r 0x00010B40 0x00010B55
+                    || r 0x00010B58 0x00010B72
+                    || r 0x00010B78 0x00010B91
+                    || r 0x00010BA9 0x00010BAF
+                    || r 0x00010C00 0x00010C48
+                    || r 0x00010C80 0x00010CB2
+                    || r 0x00010CC0 0x00010CF2
+
+            else
+                r 0x00010CFA 0x00010D23
+                    || r 0x00010D30 0x00010D39
+                    || r 0x00010E60 0x00010E7E
+                    || r 0x00010E80 0x00010EA9
+                    || r 0x00010EB0 0x00010EB1
+                    || r 0x00010F00 0x00010F27
+                    || r 0x00010F30 0x00010F45
+                    || r 0x00010F51 0x00010F54
+                    || r 0x00010F70 0x00010F81
+                    || r 0x00010FB0 0x00010FCB
+                    || r 0x00010FE0 0x00010FF6
+
+        else if l 0x00011289 then
+            if l 0x0001114F then
+                r 0x00011003 0x00011037
+                    || r 0x00011052 0x0001106F
+                    || r 0x00011071 0x00011072
+                    || e 0x00011075
+                    || r 0x00011083 0x000110AF
+                    || r 0x000110D0 0x000110E8
+                    || r 0x000110F0 0x000110F9
+                    || r 0x00011103 0x00011126
+                    || r 0x00011136 0x0001113F
+                    || e 0x00011144
+                    || e 0x00011147
+
+            else
+                r 0x00011150 0x00011172
+                    || e 0x00011176
+                    || r 0x00011183 0x000111B2
+                    || r 0x000111C1 0x000111C4
+                    || r 0x000111D0 0x000111DA
+                    || e 0x000111DC
+                    || r 0x000111E1 0x000111F4
+                    || r 0x00011200 0x00011211
+                    || r 0x00011213 0x0001122B
+                    || r 0x00011280 0x00011286
+                    || e 0x00011288
+
+        else if l 0x0001133C then
+            r 0x0001128A 0x0001128D
+                || r 0x0001128F 0x0001129D
+                || r 0x0001129F 0x000112A8
+                || r 0x000112B0 0x000112DE
+                || r 0x000112F0 0x000112F9
+                || r 0x00011305 0x0001130C
+                || r 0x0001130F 0x00011310
+                || r 0x00011313 0x00011328
+                || r 0x0001132A 0x00011330
+                || r 0x00011332 0x00011333
+                || r 0x00011335 0x00011339
 
         else
-            (code == 0x0001133D)
-                || (code == 0x00011350)
-                || (code >= 0x0001135D && code <= 0x00011361)
-                || (code >= 0x00011400 && code <= 0x00011434)
-                || (code >= 0x00011447 && code <= 0x0001144A)
-                || (code >= 0x00011450 && code <= 0x00011459)
-                || (code >= 0x0001145F && code <= 0x00011461)
-                || (code >= 0x00011480 && code <= 0x000114AF)
-                || (code >= 0x000114C4 && code <= 0x000114C5)
-                || (code == 0x000114C7)
-                || (code >= 0x000114D0 && code <= 0x000114D9)
-                || (code >= 0x00011580 && code <= 0x000115AE)
+            e 0x0001133D
+                || e 0x00011350
+                || r 0x0001135D 0x00011361
+                || r 0x00011400 0x00011434
+                || r 0x00011447 0x0001144A
+                || r 0x00011450 0x00011459
+                || r 0x0001145F 0x00011461
+                || r 0x00011480 0x000114AF
+                || r 0x000114C4 0x000114C5
+                || e 0x000114C7
+                || r 0x000114D0 0x000114D9
+                || r 0x00011580 0x000115AE
 
-    else if code < 0x0001D49D then
-        if code < 0x00011FBF then
-            if code < 0x00011A39 then
-                if code < 0x0001189F then
-                    (code >= 0x000115D8 && code <= 0x000115DB)
-                        || (code >= 0x00011600 && code <= 0x0001162F)
-                        || (code == 0x00011644)
-                        || (code >= 0x00011650 && code <= 0x00011659)
-                        || (code >= 0x00011680 && code <= 0x000116AA)
-                        || (code == 0x000116B8)
-                        || (code >= 0x000116C0 && code <= 0x000116C9)
-                        || (code >= 0x00011700 && code <= 0x0001171A)
-                        || (code >= 0x00011730 && code <= 0x0001173B)
-                        || (code >= 0x00011740 && code <= 0x00011746)
-                        || (code >= 0x00011800 && code <= 0x0001182B)
+    else if l 0x0001D49D then
+        if l 0x00011FBF then
+            if l 0x00011A39 then
+                if l 0x0001189F then
+                    r 0x000115D8 0x000115DB
+                        || r 0x00011600 0x0001162F
+                        || e 0x00011644
+                        || r 0x00011650 0x00011659
+                        || r 0x00011680 0x000116AA
+                        || e 0x000116B8
+                        || r 0x000116C0 0x000116C9
+                        || r 0x00011700 0x0001171A
+                        || r 0x00011730 0x0001173B
+                        || r 0x00011740 0x00011746
+                        || r 0x00011800 0x0001182B
 
                 else
-                    (code >= 0x000118A0 && code <= 0x000118F2)
-                        || (code >= 0x000118FF && code <= 0x00011906)
-                        || (code == 0x00011909)
-                        || (code >= 0x0001190C && code <= 0x00011913)
-                        || (code >= 0x00011915 && code <= 0x00011916)
-                        || (code >= 0x00011918 && code <= 0x0001192F)
-                        || (code >= 0x00011950 && code <= 0x00011959)
-                        || (code >= 0x000119A0 && code <= 0x000119A7)
-                        || (code >= 0x000119AA && code <= 0x000119D0)
-                        || (code == 0x00011A00)
-                        || (code >= 0x00011A0B && code <= 0x00011A32)
+                    r 0x000118A0 0x000118F2
+                        || r 0x000118FF 0x00011906
+                        || e 0x00011909
+                        || r 0x0001190C 0x00011913
+                        || r 0x00011915 0x00011916
+                        || r 0x00011918 0x0001192F
+                        || r 0x00011950 0x00011959
+                        || r 0x000119A0 0x000119A7
+                        || r 0x000119AA 0x000119D0
+                        || e 0x00011A00
+                        || r 0x00011A0B 0x00011A32
                         || ((modBy 2 code == 1)
-                                && ((code >= 0x0001193F && code <= 0x00011941)
-                                        || (code
-                                                >= 0x000119E1
-                                                && code
-                                                <= 0x000119E3
-                                           )
+                                && (r 0x0001193F 0x00011941
+                                        || r 0x000119E1 0x000119E3
                                    )
                            )
 
-            else if code < 0x00011D07 then
-                (code == 0x00011A3A)
-                    || (code == 0x00011A50)
-                    || (code >= 0x00011A5C && code <= 0x00011A89)
-                    || (code == 0x00011A9D)
-                    || (code >= 0x00011AB0 && code <= 0x00011AF8)
-                    || (code >= 0x00011C00 && code <= 0x00011C08)
-                    || (code >= 0x00011C0A && code <= 0x00011C2E)
-                    || (code == 0x00011C40)
-                    || (code >= 0x00011C50 && code <= 0x00011C6C)
-                    || (code >= 0x00011C72 && code <= 0x00011C8F)
-                    || (code >= 0x00011D00 && code <= 0x00011D06)
+            else if l 0x00011D07 then
+                e 0x00011A3A
+                    || e 0x00011A50
+                    || r 0x00011A5C 0x00011A89
+                    || e 0x00011A9D
+                    || r 0x00011AB0 0x00011AF8
+                    || r 0x00011C00 0x00011C08
+                    || r 0x00011C0A 0x00011C2E
+                    || e 0x00011C40
+                    || r 0x00011C50 0x00011C6C
+                    || r 0x00011C72 0x00011C8F
+                    || r 0x00011D00 0x00011D06
 
             else
-                (code >= 0x00011D08 && code <= 0x00011D09)
-                    || (code >= 0x00011D0B && code <= 0x00011D30)
-                    || (code == 0x00011D46)
-                    || (code >= 0x00011D50 && code <= 0x00011D59)
-                    || (code >= 0x00011D60 && code <= 0x00011D65)
-                    || (code >= 0x00011D67 && code <= 0x00011D68)
-                    || (code >= 0x00011D6A && code <= 0x00011D89)
-                    || (code == 0x00011D98)
-                    || (code >= 0x00011DA0 && code <= 0x00011DA9)
-                    || (code >= 0x00011EE0 && code <= 0x00011EF2)
-                    || (code == 0x00011FB0)
+                r 0x00011D08 0x00011D09
+                    || r 0x00011D0B 0x00011D30
+                    || e 0x00011D46
+                    || r 0x00011D50 0x00011D59
+                    || r 0x00011D60 0x00011D65
+                    || r 0x00011D67 0x00011D68
+                    || r 0x00011D6A 0x00011D89
+                    || e 0x00011D98
+                    || r 0x00011DA0 0x00011DA9
+                    || r 0x00011EE0 0x00011EF2
+                    || e 0x00011FB0
 
-        else if code < 0x00016F92 then
-            if code < 0x00016ABF then
-                (code >= 0x00011FC0 && code <= 0x00011FD4)
-                    || (code >= 0x00012000 && code <= 0x00012399)
-                    || (code >= 0x00012400 && code <= 0x0001246E)
-                    || (code >= 0x00012480 && code <= 0x00012543)
-                    || (code >= 0x00012F90 && code <= 0x00012FF0)
-                    || (code >= 0x00013000 && code <= 0x0001342E)
-                    || (code >= 0x00014400 && code <= 0x00014646)
-                    || (code >= 0x00016800 && code <= 0x00016A38)
-                    || (code >= 0x00016A40 && code <= 0x00016A5E)
-                    || (code >= 0x00016A60 && code <= 0x00016A69)
-                    || (code >= 0x00016A70 && code <= 0x00016ABE)
-
-            else
-                (code >= 0x00016AC0 && code <= 0x00016AC9)
-                    || (code >= 0x00016AD0 && code <= 0x00016AED)
-                    || (code >= 0x00016B00 && code <= 0x00016B2F)
-                    || (code >= 0x00016B40 && code <= 0x00016B43)
-                    || (code >= 0x00016B50 && code <= 0x00016B59)
-                    || (code >= 0x00016B5B && code <= 0x00016B61)
-                    || (code >= 0x00016B63 && code <= 0x00016B77)
-                    || (code >= 0x00016B7D && code <= 0x00016B8F)
-                    || (code >= 0x00016E40 && code <= 0x00016E96)
-                    || (code >= 0x00016F00 && code <= 0x00016F4A)
-                    || (code == 0x00016F50)
-
-        else if code < 0x0001AFFF then
-            (code >= 0x00016F93 && code <= 0x00016F9F)
-                || (code >= 0x00016FE0 && code <= 0x00016FE1)
-                || (code == 0x00016FE3)
-                || (code == 0x00017000)
-                || (code == 0x000187F7)
-                || (code >= 0x00018800 && code <= 0x00018CD5)
-                || (code == 0x00018D00)
-                || (code == 0x00018D08)
-                || (code >= 0x0001AFF0 && code <= 0x0001AFF3)
-                || (code >= 0x0001AFF5 && code <= 0x0001AFFB)
-                || (code >= 0x0001AFFD && code <= 0x0001AFFE)
-
-        else
-            (code >= 0x0001B000 && code <= 0x0001B122)
-                || (code >= 0x0001B150 && code <= 0x0001B152)
-                || (code >= 0x0001B164 && code <= 0x0001B167)
-                || (code >= 0x0001B170 && code <= 0x0001B2FB)
-                || (code >= 0x0001BC00 && code <= 0x0001BC6A)
-                || (code >= 0x0001BC70 && code <= 0x0001BC7C)
-                || (code >= 0x0001BC80 && code <= 0x0001BC88)
-                || (code >= 0x0001BC90 && code <= 0x0001BC99)
-                || (code >= 0x0001D2E0 && code <= 0x0001D2F3)
-                || (code >= 0x0001D360 && code <= 0x0001D378)
-                || (code >= 0x0001D400 && code <= 0x0001D454)
-                || (code >= 0x0001D456 && code <= 0x0001D49C)
-
-    else if code < 0x0001E94A then
-        if code < 0x0001D735 then
-            if code < 0x0001D51D then
-                (code >= 0x0001D49E && code <= 0x0001D49F)
-                    || (code == 0x0001D4A2)
-                    || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                    || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-                    || (code >= 0x0001D4AE && code <= 0x0001D4B9)
-                    || (code == 0x0001D4BB)
-                    || (code >= 0x0001D4BD && code <= 0x0001D4C3)
-                    || (code >= 0x0001D4C5 && code <= 0x0001D505)
-                    || (code >= 0x0001D507 && code <= 0x0001D50A)
-                    || (code >= 0x0001D50D && code <= 0x0001D514)
-                    || (code >= 0x0001D516 && code <= 0x0001D51C)
+        else if l 0x00016F92 then
+            if l 0x00016ABF then
+                r 0x00011FC0 0x00011FD4
+                    || r 0x00012000 0x00012399
+                    || r 0x00012400 0x0001246E
+                    || r 0x00012480 0x00012543
+                    || r 0x00012F90 0x00012FF0
+                    || r 0x00013000 0x0001342E
+                    || r 0x00014400 0x00014646
+                    || r 0x00016800 0x00016A38
+                    || r 0x00016A40 0x00016A5E
+                    || r 0x00016A60 0x00016A69
+                    || r 0x00016A70 0x00016ABE
 
             else
-                (code >= 0x0001D51E && code <= 0x0001D539)
-                    || (code >= 0x0001D53B && code <= 0x0001D53E)
-                    || (code >= 0x0001D540 && code <= 0x0001D544)
-                    || (code == 0x0001D546)
-                    || (code >= 0x0001D54A && code <= 0x0001D550)
-                    || (code >= 0x0001D552 && code <= 0x0001D6A5)
-                    || (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                    || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                    || (code >= 0x0001D6DC && code <= 0x0001D6FA)
-                    || (code >= 0x0001D6FC && code <= 0x0001D714)
-                    || (code >= 0x0001D716 && code <= 0x0001D734)
+                r 0x00016AC0 0x00016AC9
+                    || r 0x00016AD0 0x00016AED
+                    || r 0x00016B00 0x00016B2F
+                    || r 0x00016B40 0x00016B43
+                    || r 0x00016B50 0x00016B59
+                    || r 0x00016B5B 0x00016B61
+                    || r 0x00016B63 0x00016B77
+                    || r 0x00016B7D 0x00016B8F
+                    || r 0x00016E40 0x00016E96
+                    || r 0x00016F00 0x00016F4A
+                    || e 0x00016F50
 
-        else if code < 0x0001E14D then
-            (code >= 0x0001D736 && code <= 0x0001D74E)
-                || (code >= 0x0001D750 && code <= 0x0001D76E)
-                || (code >= 0x0001D770 && code <= 0x0001D788)
-                || (code >= 0x0001D78A && code <= 0x0001D7A8)
-                || (code >= 0x0001D7AA && code <= 0x0001D7C2)
-                || (code >= 0x0001D7C4 && code <= 0x0001D7CB)
-                || (code >= 0x0001D7CE && code <= 0x0001D7FF)
-                || (code >= 0x0001DF00 && code <= 0x0001DF1E)
-                || (code >= 0x0001E100 && code <= 0x0001E12C)
-                || (code >= 0x0001E137 && code <= 0x0001E13D)
-                || (code >= 0x0001E140 && code <= 0x0001E149)
-
-        else
-            (code == 0x0001E14E)
-                || (code >= 0x0001E290 && code <= 0x0001E2AD)
-                || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
-                || (code >= 0x0001E2F0 && code <= 0x0001E2F9)
-                || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
-                || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
-                || (code >= 0x0001E7ED && code <= 0x0001E7EE)
-                || (code >= 0x0001E7F0 && code <= 0x0001E7FE)
-                || (code >= 0x0001E800 && code <= 0x0001E8C4)
-                || (code >= 0x0001E8C7 && code <= 0x0001E8CF)
-                || (code >= 0x0001E900 && code <= 0x0001E943)
-
-    else if code < 0x0001EE73 then
-        if code < 0x0001EE26 then
-            (code == 0x0001E94B)
-                || (code >= 0x0001E950 && code <= 0x0001E959)
-                || (code >= 0x0001EC71 && code <= 0x0001ECAB)
-                || (code >= 0x0001ECAD && code <= 0x0001ECAF)
-                || (code >= 0x0001ECB1 && code <= 0x0001ECB4)
-                || (code >= 0x0001ED01 && code <= 0x0001ED2D)
-                || (code >= 0x0001ED2F && code <= 0x0001ED3D)
-                || (code >= 0x0001EE00 && code <= 0x0001EE03)
-                || (code >= 0x0001EE05 && code <= 0x0001EE1F)
-                || (code >= 0x0001EE21 && code <= 0x0001EE22)
-                || (code == 0x0001EE24)
+        else if l 0x0001AFFF then
+            r 0x00016F93 0x00016F9F
+                || r 0x00016FE0 0x00016FE1
+                || e 0x00016FE3
+                || e 0x00017000
+                || e 0x000187F7
+                || r 0x00018800 0x00018CD5
+                || e 0x00018D00
+                || e 0x00018D08
+                || r 0x0001AFF0 0x0001AFF3
+                || r 0x0001AFF5 0x0001AFFB
+                || r 0x0001AFFD 0x0001AFFE
 
         else
-            (code == 0x0001EE27)
-                || (code >= 0x0001EE29 && code <= 0x0001EE32)
-                || (code >= 0x0001EE34 && code <= 0x0001EE37)
-                || (code == 0x0001EE42)
-                || (code >= 0x0001EE4D && code <= 0x0001EE4F)
-                || (code >= 0x0001EE51 && code <= 0x0001EE52)
-                || (code == 0x0001EE54)
-                || (code >= 0x0001EE61 && code <= 0x0001EE62)
-                || (code == 0x0001EE64)
-                || (code >= 0x0001EE67 && code <= 0x0001EE6A)
-                || (code >= 0x0001EE6C && code <= 0x0001EE72)
+            r 0x0001B000 0x0001B122
+                || r 0x0001B150 0x0001B152
+                || r 0x0001B164 0x0001B167
+                || r 0x0001B170 0x0001B2FB
+                || r 0x0001BC00 0x0001BC6A
+                || r 0x0001BC70 0x0001BC7C
+                || r 0x0001BC80 0x0001BC88
+                || r 0x0001BC90 0x0001BC99
+                || r 0x0001D2E0 0x0001D2F3
+                || r 0x0001D360 0x0001D378
+                || r 0x0001D400 0x0001D454
+                || r 0x0001D456 0x0001D49C
+
+    else if l 0x0001E94A then
+        if l 0x0001D735 then
+            if l 0x0001D51D then
+                r 0x0001D49E 0x0001D49F
+                    || e 0x0001D4A2
+                    || r 0x0001D4A5 0x0001D4A6
+                    || r 0x0001D4A9 0x0001D4AC
+                    || r 0x0001D4AE 0x0001D4B9
+                    || e 0x0001D4BB
+                    || r 0x0001D4BD 0x0001D4C3
+                    || r 0x0001D4C5 0x0001D505
+                    || r 0x0001D507 0x0001D50A
+                    || r 0x0001D50D 0x0001D514
+                    || r 0x0001D516 0x0001D51C
+
+            else
+                r 0x0001D51E 0x0001D539
+                    || r 0x0001D53B 0x0001D53E
+                    || r 0x0001D540 0x0001D544
+                    || e 0x0001D546
+                    || r 0x0001D54A 0x0001D550
+                    || r 0x0001D552 0x0001D6A5
+                    || r 0x0001D6A8 0x0001D6C0
+                    || r 0x0001D6C2 0x0001D6DA
+                    || r 0x0001D6DC 0x0001D6FA
+                    || r 0x0001D6FC 0x0001D714
+                    || r 0x0001D716 0x0001D734
+
+        else if l 0x0001E14D then
+            r 0x0001D736 0x0001D74E
+                || r 0x0001D750 0x0001D76E
+                || r 0x0001D770 0x0001D788
+                || r 0x0001D78A 0x0001D7A8
+                || r 0x0001D7AA 0x0001D7C2
+                || r 0x0001D7C4 0x0001D7CB
+                || r 0x0001D7CE 0x0001D7FF
+                || r 0x0001DF00 0x0001DF1E
+                || r 0x0001E100 0x0001E12C
+                || r 0x0001E137 0x0001E13D
+                || r 0x0001E140 0x0001E149
+
+        else
+            e 0x0001E14E
+                || r 0x0001E290 0x0001E2AD
+                || r 0x0001E2C0 0x0001E2EB
+                || r 0x0001E2F0 0x0001E2F9
+                || r 0x0001E7E0 0x0001E7E6
+                || r 0x0001E7E8 0x0001E7EB
+                || r 0x0001E7ED 0x0001E7EE
+                || r 0x0001E7F0 0x0001E7FE
+                || r 0x0001E800 0x0001E8C4
+                || r 0x0001E8C7 0x0001E8CF
+                || r 0x0001E900 0x0001E943
+
+    else if l 0x0001EE73 then
+        if l 0x0001EE26 then
+            e 0x0001E94B
+                || r 0x0001E950 0x0001E959
+                || r 0x0001EC71 0x0001ECAB
+                || r 0x0001ECAD 0x0001ECAF
+                || r 0x0001ECB1 0x0001ECB4
+                || r 0x0001ED01 0x0001ED2D
+                || r 0x0001ED2F 0x0001ED3D
+                || r 0x0001EE00 0x0001EE03
+                || r 0x0001EE05 0x0001EE1F
+                || r 0x0001EE21 0x0001EE22
+                || e 0x0001EE24
+
+        else
+            e 0x0001EE27
+                || r 0x0001EE29 0x0001EE32
+                || r 0x0001EE34 0x0001EE37
+                || e 0x0001EE42
+                || r 0x0001EE4D 0x0001EE4F
+                || r 0x0001EE51 0x0001EE52
+                || e 0x0001EE54
+                || r 0x0001EE61 0x0001EE62
+                || e 0x0001EE64
+                || r 0x0001EE67 0x0001EE6A
+                || r 0x0001EE6C 0x0001EE72
                 || ((modBy 2 code == 1)
-                        && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
-                                || (code >= 0x0001EE47 && code <= 0x0001EE4B)
-                                || (code >= 0x0001EE57 && code <= 0x0001EE5F)
+                        && (r 0x0001EE39 0x0001EE3B
+                                || r 0x0001EE47 0x0001EE4B
+                                || r 0x0001EE57 0x0001EE5F
                            )
                    )
 
-    else if code < 0x0002A6DE then
-        (code >= 0x0001EE74 && code <= 0x0001EE77)
-            || (code >= 0x0001EE79 && code <= 0x0001EE7C)
-            || (code == 0x0001EE7E)
-            || (code >= 0x0001EE80 && code <= 0x0001EE89)
-            || (code >= 0x0001EE8B && code <= 0x0001EE9B)
-            || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
-            || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
-            || (code >= 0x0001EEAB && code <= 0x0001EEBB)
-            || (code >= 0x0001F100 && code <= 0x0001F10C)
-            || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
-            || (code == 0x00020000)
+    else if l 0x0002A6DE then
+        r 0x0001EE74 0x0001EE77
+            || r 0x0001EE79 0x0001EE7C
+            || e 0x0001EE7E
+            || r 0x0001EE80 0x0001EE89
+            || r 0x0001EE8B 0x0001EE9B
+            || r 0x0001EEA1 0x0001EEA3
+            || r 0x0001EEA5 0x0001EEA9
+            || r 0x0001EEAB 0x0001EEBB
+            || r 0x0001F100 0x0001F10C
+            || r 0x0001FBF0 0x0001FBF9
+            || e 0x00020000
 
     else
-        (code == 0x0002A6DF)
-            || (code == 0x0002A700)
-            || (code == 0x0002B738)
-            || (code == 0x0002B740)
-            || (code == 0x0002B81D)
-            || (code == 0x0002B820)
-            || (code == 0x0002CEA1)
-            || (code == 0x0002CEB0)
-            || (code == 0x0002EBE0)
-            || (code >= 0x0002F800 && code <= 0x0002FA1D)
-            || (code == 0x00030000)
-            || (code == 0x0003134A)
+        e 0x0002A6DF
+            || e 0x0002A700
+            || e 0x0002B738
+            || e 0x0002B740
+            || e 0x0002B81D
+            || e 0x0002B820
+            || e 0x0002CEA1
+            || e 0x0002CEB0
+            || e 0x0002EBE0
+            || r 0x0002F800 0x0002FA1D
+            || e 0x00030000
+            || e 0x0003134A
 
 
 {-| A category as defined by the Unicode standard.
@@ -2190,8421 +2194,6932 @@ type Category
 getCategory : Char.Char -> Maybe Category
 getCategory c =
     let
+        r =
+            \from to -> from <= code && code <= to
+
+        e =
+            (==) code
+
+        l =
+            \hex -> code < hex
+
         code =
             Char.toCode c
     in
-    if code < 0x0100 then
-        if code < 0xA0 then
-            if code < 0x3B then
-                if code < 0x29 then
-                    if code >= 0x00 && code <= 0x1F then
+    if l 0x0100 then
+        if l 0xA0 then
+            if l 0x3B then
+                if l 0x29 then
+                    if code <= 0x1F then
                         Just OtherControl
 
-                    else if code == 0x20 then
+                    else if e 0x20 then
                         Just SeparatorSpace
 
-                    else if
-                        (code >= 0x21 && code <= 0x23)
-                            || (code >= 0x25 && code <= 0x27)
-                    then
+                    else if r 0x21 0x23 || r 0x25 0x27 then
                         Just PunctuationOther
 
-                    else if code == 0x24 then
+                    else if e 0x24 then
                         Just SymbolCurrency
 
-                    else if code == 0x28 then
+                    else if e 0x28 then
                         Just PunctuationOpen
 
                     else
                         Nothing
 
-                else if code == 0x29 then
+                else if e 0x29 then
                     Just PunctuationClose
 
-                else if
-                    (code == 0x2A)
-                        || (code == 0x2C)
-                        || (code >= 0x2E && code <= 0x2F)
-                        || (code == 0x3A)
-                then
+                else if e 0x2A || e 0x2C || r 0x2E 0x2F || e 0x3A then
                     Just PunctuationOther
 
-                else if code == 0x2B then
+                else if e 0x2B then
                     Just SymbolMath
 
-                else if code == 0x2D then
+                else if e 0x2D then
                     Just PunctuationDash
 
-                else if code >= 0x30 && code <= 0x39 then
+                else if r 0x30 0x39 then
                     Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if code < 0x5E then
-                if
-                    (code == 0x3B)
-                        || (code >= 0x3F && code <= 0x40)
-                        || (code == 0x5C)
-                then
+            else if l 0x5E then
+                if e 0x3B || r 0x3F 0x40 || e 0x5C then
                     Just PunctuationOther
 
-                else if code >= 0x3C && code <= 0x3E then
+                else if r 0x3C 0x3E then
                     Just SymbolMath
 
-                else if code >= 0x41 && code <= 0x5A then
+                else if r 0x41 0x5A then
                     Just LetterUppercase
 
-                else if code == 0x5B then
+                else if e 0x5B then
                     Just PunctuationOpen
 
-                else if code == 0x5D then
+                else if e 0x5D then
                     Just PunctuationClose
 
                 else
                     Nothing
 
-            else if (code == 0x5E) || (code == 0x60) then
+            else if e 0x5E || e 0x60 then
                 Just SymbolModifier
 
-            else if code == 0x5F then
+            else if e 0x5F then
                 Just PunctuationConnector
 
-            else if code >= 0x61 && code <= 0x7A then
+            else if r 0x61 0x7A then
                 Just LetterLowercase
 
-            else if code == 0x7B then
+            else if e 0x7B then
                 Just PunctuationOpen
 
-            else if (code == 0x7C) || (code == 0x7E) then
+            else if e 0x7C || e 0x7E then
                 Just SymbolMath
 
-            else if code == 0x7D then
+            else if e 0x7D then
                 Just PunctuationClose
 
-            else if code >= 0x7F && code <= 0x9F then
+            else if r 0x7F 0x9F then
                 Just OtherControl
 
             else
                 Nothing
 
-        else if code < 0xB1 then
-            if code < 0xA9 then
-                if code == 0xA0 then
+        else if l 0xB1 then
+            if l 0xA9 then
+                if e 0xA0 then
                     Just SeparatorSpace
 
-                else if (code == 0xA1) || (code == 0xA7) then
+                else if e 0xA1 || e 0xA7 then
                     Just PunctuationOther
 
-                else if code >= 0xA2 && code <= 0xA5 then
+                else if r 0xA2 0xA5 then
                     Just SymbolCurrency
 
-                else if code == 0xA6 then
+                else if e 0xA6 then
                     Just SymbolOther
 
-                else if code == 0xA8 then
+                else if e 0xA8 then
                     Just SymbolModifier
 
                 else
                     Nothing
 
-            else if (code == 0xA9) || (code == 0xAE) || (code == 0xB0) then
+            else if e 0xA9 || e 0xAE || e 0xB0 then
                 Just SymbolOther
 
-            else if code == 0xAA then
+            else if e 0xAA then
                 Just LetterOther
 
-            else if code == 0xAB then
+            else if e 0xAB then
                 Just PunctuationInitialQuote
 
-            else if code == 0xAC then
+            else if e 0xAC then
                 Just SymbolMath
 
-            else if code == 0xAD then
+            else if e 0xAD then
                 Just OtherFormat
 
-            else if code == 0xAF then
+            else if e 0xAF then
                 Just SymbolModifier
 
             else
                 Nothing
 
-        else if code < 0xBA then
-            if code == 0xB1 then
+        else if l 0xBA then
+            if e 0xB1 then
                 Just SymbolMath
 
-            else if (code >= 0xB2 && code <= 0xB3) || (code == 0xB9) then
+            else if r 0xB2 0xB3 || e 0xB9 then
                 Just NumberOther
 
-            else if (code == 0xB4) || (code == 0xB8) then
+            else if e 0xB4 || e 0xB8 then
                 Just SymbolModifier
 
-            else if code == 0xB5 then
+            else if e 0xB5 then
                 Just LetterLowercase
 
-            else if code >= 0xB6 && code <= 0xB7 then
+            else if r 0xB6 0xB7 then
                 Just PunctuationOther
 
             else
                 Nothing
 
-        else if code == 0xBA then
+        else if e 0xBA then
             Just LetterOther
 
-        else if code == 0xBB then
+        else if e 0xBB then
             Just PunctuationFinalQuote
 
-        else if code >= 0xBC && code <= 0xBE then
+        else if r 0xBC 0xBE then
             Just NumberOther
 
-        else if code == 0xBF then
+        else if e 0xBF then
             Just PunctuationOther
 
-        else if (code >= 0xC0 && code <= 0xD6) || (code >= 0xD8 && code <= 0xDE) then
+        else if r 0xC0 0xD6 || r 0xD8 0xDE then
             Just LetterUppercase
 
-        else if (code == 0xD7) || (code == 0xF7) then
+        else if e 0xD7 || e 0xF7 then
             Just SymbolMath
 
-        else if (code >= 0xDF && code <= 0xF6) || (code >= 0xF8 && code <= 0xFF) then
+        else if r 0xDF 0xF6 || r 0xF8 0xFF then
             Just LetterLowercase
 
         else
             Nothing
 
-    else if code < 0x231F then
-        if code < 0x0C00 then
-            if code < 0x048C then
-                if code < 0x01E7 then
-                    if code < 0x0164 then
-                        if code < 0x0130 then
-                            if code < 0x0117 then
-                                if code < 0x010A then
+    else if l 0x231F then
+        if l 0x0C00 then
+            if l 0x048C then
+                if l 0x01E7 then
+                    if l 0x0164 then
+                        if l 0x0130 then
+                            if l 0x0117 then
+                                if l 0x010A then
                                     if
-                                        (code == 0x0100)
-                                            || (code == 0x0102)
-                                            || (code == 0x0104)
-                                            || (code == 0x0106)
-                                            || (code == 0x0108)
+                                        e 0x0100
+                                            || e 0x0102
+                                            || e 0x0104
+                                            || e 0x0106
+                                            || e 0x0108
                                     then
                                         Just LetterUppercase
 
                                     else if
-                                        (code == 0x0101)
-                                            || (code == 0x0103)
-                                            || (code == 0x0105)
-                                            || (code == 0x0107)
-                                            || (code == 0x0109)
+                                        e 0x0101
+                                            || e 0x0103
+                                            || e 0x0105
+                                            || e 0x0107
+                                            || e 0x0109
                                     then
                                         Just LetterLowercase
 
                                     else
                                         Nothing
 
-                                else if code < 0x010F then
-                                    if
-                                        (code == 0x010A)
-                                            || (code == 0x010C)
-                                            || (code == 0x010E)
-                                    then
+                                else if l 0x010F then
+                                    if e 0x010A || e 0x010C || e 0x010E then
                                         Just LetterUppercase
 
-                                    else if (code == 0x010B) || (code == 0x010D) then
+                                    else if e 0x010B || e 0x010D then
                                         Just LetterLowercase
 
                                     else
                                         Nothing
 
-                                else if
-                                    (code == 0x010F)
-                                        || (code == 0x0111)
-                                        || (code == 0x0113)
-                                        || (code == 0x0115)
-                                then
+                                else if e 0x010F || e 0x0111 || e 0x0113 || e 0x0115 then
                                     Just LetterLowercase
 
-                                else if
-                                    (code == 0x0110)
-                                        || (code == 0x0112)
-                                        || (code == 0x0114)
-                                        || (code == 0x0116)
-                                then
+                                else if e 0x0110 || e 0x0112 || e 0x0114 || e 0x0116 then
                                     Just LetterUppercase
 
                                 else
                                     Nothing
 
-                            else if code < 0x0122 then
+                            else if l 0x0122 then
                                 if
-                                    (code == 0x0117)
-                                        || (code == 0x0119)
-                                        || (code == 0x011B)
-                                        || (code == 0x011D)
-                                        || (code == 0x011F)
-                                        || (code == 0x0121)
+                                    e 0x0117
+                                        || e 0x0119
+                                        || e 0x011B
+                                        || e 0x011D
+                                        || e 0x011F
+                                        || e 0x0121
                                 then
                                     Just LetterLowercase
 
                                 else if
-                                    (code == 0x0118)
-                                        || (code == 0x011A)
-                                        || (code == 0x011C)
-                                        || (code == 0x011E)
-                                        || (code == 0x0120)
+                                    e 0x0118
+                                        || e 0x011A
+                                        || e 0x011C
+                                        || e 0x011E
+                                        || e 0x0120
                                 then
                                     Just LetterUppercase
 
                                 else
                                     Nothing
 
-                            else if code < 0x0128 then
+                            else if l 0x0128 then
+                                if e 0x0122 || e 0x0124 || e 0x0126 then
+                                    Just LetterUppercase
+
+                                else if e 0x0123 || e 0x0125 || e 0x0127 then
+                                    Just LetterLowercase
+
+                                else
+                                    Nothing
+
+                            else if e 0x0128 || e 0x012A || e 0x012C || e 0x012E then
+                                Just LetterUppercase
+
+                            else if e 0x0129 || e 0x012B || e 0x012D || e 0x012F then
+                                Just LetterLowercase
+
+                            else
+                                Nothing
+
+                        else if l 0x014A then
+                            if l 0x013C then
                                 if
-                                    (code == 0x0122)
-                                        || (code == 0x0124)
-                                        || (code == 0x0126)
+                                    e 0x0130
+                                        || e 0x0132
+                                        || e 0x0134
+                                        || e 0x0136
+                                        || e 0x0139
+                                        || e 0x013B
                                 then
                                     Just LetterUppercase
 
                                 else if
-                                    (code == 0x0123)
-                                        || (code == 0x0125)
-                                        || (code == 0x0127)
+                                    e 0x0131
+                                        || e 0x0133
+                                        || e 0x0135
+                                        || r 0x0137 0x0138
+                                        || e 0x013A
                                 then
                                     Just LetterLowercase
 
                                 else
                                     Nothing
 
-                            else if
-                                (code == 0x0128)
-                                    || (code == 0x012A)
-                                    || (code == 0x012C)
-                                    || (code == 0x012E)
-                            then
+                            else if l 0x0141 then
+                                if e 0x013C || e 0x013E || e 0x0140 then
+                                    Just LetterLowercase
+
+                                else if e 0x013D || e 0x013F then
+                                    Just LetterUppercase
+
+                                else
+                                    Nothing
+
+                            else if e 0x0141 || e 0x0143 || e 0x0145 || e 0x0147 then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x0129)
-                                    || (code == 0x012B)
-                                    || (code == 0x012D)
-                                    || (code == 0x012F)
+                                e 0x0142
+                                    || e 0x0144
+                                    || e 0x0146
+                                    || r 0x0148 0x0149
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x014A then
-                            if code < 0x013C then
-                                if
-                                    (code == 0x0130)
-                                        || (code == 0x0132)
-                                        || (code == 0x0134)
-                                        || (code == 0x0136)
-                                        || (code == 0x0139)
-                                        || (code == 0x013B)
-                                then
-                                    Just LetterUppercase
-
-                                else if
-                                    (code == 0x0131)
-                                        || (code == 0x0133)
-                                        || (code == 0x0135)
-                                        || (code >= 0x0137 && code <= 0x0138)
-                                        || (code == 0x013A)
-                                then
-                                    Just LetterLowercase
-
-                                else
-                                    Nothing
-
-                            else if code < 0x0141 then
-                                if
-                                    (code == 0x013C)
-                                        || (code == 0x013E)
-                                        || (code == 0x0140)
-                                then
-                                    Just LetterLowercase
-
-                                else if (code == 0x013D) || (code == 0x013F) then
-                                    Just LetterUppercase
-
-                                else
-                                    Nothing
-
-                            else if
-                                (code == 0x0141)
-                                    || (code == 0x0143)
-                                    || (code == 0x0145)
-                                    || (code == 0x0147)
-                            then
-                                Just LetterUppercase
-
-                            else if
-                                (code == 0x0142)
-                                    || (code == 0x0144)
-                                    || (code == 0x0146)
-                                    || (code >= 0x0148 && code <= 0x0149)
-                            then
-                                Just LetterLowercase
-
-                            else
-                                Nothing
-
-                        else if code < 0x0156 then
+                        else if l 0x0156 then
                             if
-                                (code == 0x014A)
-                                    || (code == 0x014C)
-                                    || (code == 0x014E)
-                                    || (code == 0x0150)
-                                    || (code == 0x0152)
-                                    || (code == 0x0154)
+                                e 0x014A
+                                    || e 0x014C
+                                    || e 0x014E
+                                    || e 0x0150
+                                    || e 0x0152
+                                    || e 0x0154
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x014B)
-                                    || (code == 0x014D)
-                                    || (code == 0x014F)
-                                    || (code == 0x0151)
-                                    || (code == 0x0153)
-                                    || (code == 0x0155)
+                                e 0x014B
+                                    || e 0x014D
+                                    || e 0x014F
+                                    || e 0x0151
+                                    || e 0x0153
+                                    || e 0x0155
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x015C then
-                            if
-                                (code == 0x0156)
-                                    || (code == 0x0158)
-                                    || (code == 0x015A)
-                            then
+                        else if l 0x015C then
+                            if e 0x0156 || e 0x0158 || e 0x015A then
                                 Just LetterUppercase
 
-                            else if
-                                (code == 0x0157)
-                                    || (code == 0x0159)
-                                    || (code == 0x015B)
-                            then
+                            else if e 0x0157 || e 0x0159 || e 0x015B then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x015C)
-                                || (code == 0x015E)
-                                || (code == 0x0160)
-                                || (code == 0x0162)
-                        then
+                        else if e 0x015C || e 0x015E || e 0x0160 || e 0x0162 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x015D)
-                                || (code == 0x015F)
-                                || (code == 0x0161)
-                                || (code == 0x0163)
-                        then
+                        else if e 0x015D || e 0x015F || e 0x0161 || e 0x0163 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x01A8 then
-                        if code < 0x017C then
-                            if code < 0x016E then
+                    else if l 0x01A8 then
+                        if l 0x017C then
+                            if l 0x016E then
                                 if
-                                    (code == 0x0164)
-                                        || (code == 0x0166)
-                                        || (code == 0x0168)
-                                        || (code == 0x016A)
-                                        || (code == 0x016C)
+                                    e 0x0164
+                                        || e 0x0166
+                                        || e 0x0168
+                                        || e 0x016A
+                                        || e 0x016C
                                 then
                                     Just LetterUppercase
 
                                 else if
-                                    (code == 0x0165)
-                                        || (code == 0x0167)
-                                        || (code == 0x0169)
-                                        || (code == 0x016B)
-                                        || (code == 0x016D)
+                                    e 0x0165
+                                        || e 0x0167
+                                        || e 0x0169
+                                        || e 0x016B
+                                        || e 0x016D
                                 then
                                     Just LetterLowercase
 
                                 else
                                     Nothing
 
-                            else if code < 0x0173 then
-                                if
-                                    (code == 0x016E)
-                                        || (code == 0x0170)
-                                        || (code == 0x0172)
-                                then
+                            else if l 0x0173 then
+                                if e 0x016E || e 0x0170 || e 0x0172 then
                                     Just LetterUppercase
 
-                                else if (code == 0x016F) || (code == 0x0171) then
+                                else if e 0x016F || e 0x0171 then
                                     Just LetterLowercase
 
                                 else
                                     Nothing
 
-                            else if
-                                (code == 0x0173)
-                                    || (code == 0x0175)
-                                    || (code == 0x0177)
-                                    || (code == 0x017A)
-                            then
+                            else if e 0x0173 || e 0x0175 || e 0x0177 || e 0x017A then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x0174)
-                                    || (code == 0x0176)
-                                    || (code >= 0x0178 && code <= 0x0179)
-                                    || (code == 0x017B)
+                                e 0x0174
+                                    || e 0x0176
+                                    || r 0x0178 0x0179
+                                    || e 0x017B
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x0192 then
+                        else if l 0x0192 then
                             if
-                                (code == 0x017C)
-                                    || (code >= 0x017E && code <= 0x0180)
-                                    || (code == 0x0183)
-                                    || (code == 0x0185)
-                                    || (code == 0x0188)
-                                    || (code >= 0x018C && code <= 0x018D)
+                                e 0x017C
+                                    || r 0x017E 0x0180
+                                    || e 0x0183
+                                    || e 0x0185
+                                    || e 0x0188
+                                    || r 0x018C 0x018D
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x017D)
-                                    || (code >= 0x0181 && code <= 0x0182)
-                                    || (code == 0x0184)
-                                    || (code >= 0x0186 && code <= 0x0187)
-                                    || (code >= 0x0189 && code <= 0x018B)
-                                    || (code >= 0x018E && code <= 0x0191)
+                                e 0x017D
+                                    || r 0x0181 0x0182
+                                    || e 0x0184
+                                    || r 0x0186 0x0187
+                                    || r 0x0189 0x018B
+                                    || r 0x018E 0x0191
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x019E then
-                            if
-                                (code == 0x0192)
-                                    || (code == 0x0195)
-                                    || (code >= 0x0199 && code <= 0x019B)
-                            then
+                        else if l 0x019E then
+                            if e 0x0192 || e 0x0195 || r 0x0199 0x019B then
                                 Just LetterLowercase
 
                             else if
-                                (code >= 0x0193 && code <= 0x0194)
-                                    || (code >= 0x0196 && code <= 0x0198)
-                                    || (code >= 0x019C && code <= 0x019D)
+                                r 0x0193 0x0194
+                                    || r 0x0196 0x0198
+                                    || r 0x019C 0x019D
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x019E)
-                                || (code == 0x01A1)
-                                || (code == 0x01A3)
-                                || (code == 0x01A5)
-                        then
+                        else if e 0x019E || e 0x01A1 || e 0x01A3 || e 0x01A5 then
                             Just LetterLowercase
 
                         else if
-                            (code >= 0x019F && code <= 0x01A0)
-                                || (code == 0x01A2)
-                                || (code == 0x01A4)
-                                || (code >= 0x01A6 && code <= 0x01A7)
+                            r 0x019F 0x01A0
+                                || e 0x01A2
+                                || e 0x01A4
+                                || r 0x01A6 0x01A7
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x01CB then
-                        if code < 0x01B8 then
+                    else if l 0x01CB then
+                        if l 0x01B8 then
                             if
-                                (code == 0x01A8)
-                                    || (code >= 0x01AA && code <= 0x01AB)
-                                    || (code == 0x01AD)
-                                    || (code == 0x01B0)
-                                    || (code == 0x01B4)
-                                    || (code == 0x01B6)
+                                e 0x01A8
+                                    || r 0x01AA 0x01AB
+                                    || e 0x01AD
+                                    || e 0x01B0
+                                    || e 0x01B4
+                                    || e 0x01B6
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x01A9)
-                                    || (code == 0x01AC)
-                                    || (code >= 0x01AE && code <= 0x01AF)
-                                    || (code >= 0x01B1 && code <= 0x01B3)
-                                    || (code == 0x01B5)
-                                    || (code == 0x01B7)
+                                e 0x01A9
+                                    || e 0x01AC
+                                    || r 0x01AE 0x01AF
+                                    || r 0x01B1 0x01B3
+                                    || e 0x01B5
+                                    || e 0x01B7
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x01C3 then
-                            if (code == 0x01B8) || (code == 0x01BC) then
+                        else if l 0x01C3 then
+                            if e 0x01B8 || e 0x01BC then
                                 Just LetterUppercase
 
-                            else if
-                                (code >= 0x01B9 && code <= 0x01BA)
-                                    || (code >= 0x01BD && code <= 0x01BF)
-                            then
+                            else if r 0x01B9 0x01BA || r 0x01BD 0x01BF then
                                 Just LetterLowercase
 
-                            else if
-                                (code == 0x01BB)
-                                    || (code >= 0x01C0 && code <= 0x01C2)
-                            then
+                            else if e 0x01BB || r 0x01C0 0x01C2 then
                                 Just LetterOther
 
                             else
                                 Nothing
 
-                        else if code == 0x01C3 then
+                        else if e 0x01C3 then
                             Just LetterOther
 
-                        else if
-                            (code == 0x01C4)
-                                || (code == 0x01C7)
-                                || (code == 0x01CA)
-                        then
+                        else if e 0x01C4 || e 0x01C7 || e 0x01CA then
                             Just LetterUppercase
 
-                        else if (code == 0x01C5) || (code == 0x01C8) then
+                        else if e 0x01C5 || e 0x01C8 then
                             Just LetterTitlecase
 
-                        else if (code == 0x01C6) || (code == 0x01C9) then
+                        else if e 0x01C6 || e 0x01C9 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x01D7 then
-                        if code == 0x01CB then
+                    else if l 0x01D7 then
+                        if e 0x01CB then
                             Just LetterTitlecase
 
                         else if
-                            (code == 0x01CC)
-                                || (code == 0x01CE)
-                                || (code == 0x01D0)
-                                || (code == 0x01D2)
-                                || (code == 0x01D4)
-                                || (code == 0x01D6)
+                            e 0x01CC
+                                || e 0x01CE
+                                || e 0x01D0
+                                || e 0x01D2
+                                || e 0x01D4
+                                || e 0x01D6
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0x01CD)
-                                || (code == 0x01CF)
-                                || (code == 0x01D1)
-                                || (code == 0x01D3)
-                                || (code == 0x01D5)
+                            e 0x01CD
+                                || e 0x01CF
+                                || e 0x01D1
+                                || e 0x01D3
+                                || e 0x01D5
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x01DE then
-                        if
-                            (code == 0x01D7)
-                                || (code == 0x01D9)
-                                || (code == 0x01DB)
-                        then
+                    else if l 0x01DE then
+                        if e 0x01D7 || e 0x01D9 || e 0x01DB then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x01D8)
-                                || (code == 0x01DA)
-                                || (code >= 0x01DC && code <= 0x01DD)
-                        then
+                        else if e 0x01D8 || e 0x01DA || r 0x01DC 0x01DD then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x01DE)
-                            || (code == 0x01E0)
-                            || (code == 0x01E2)
-                            || (code == 0x01E4)
-                            || (code == 0x01E6)
-                    then
+                    else if e 0x01DE || e 0x01E0 || e 0x01E2 || e 0x01E4 || e 0x01E6 then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x01DF)
-                            || (code == 0x01E1)
-                            || (code == 0x01E3)
-                            || (code == 0x01E5)
-                    then
+                    else if e 0x01DF || e 0x01E1 || e 0x01E3 || e 0x01E5 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x02ED then
-                    if code < 0x021A then
-                        if code < 0x0201 then
-                            if code < 0x01F2 then
+                else if l 0x02ED then
+                    if l 0x021A then
+                        if l 0x0201 then
+                            if l 0x01F2 then
                                 if
-                                    (code == 0x01E7)
-                                        || (code == 0x01E9)
-                                        || (code == 0x01EB)
-                                        || (code == 0x01ED)
-                                        || (code >= 0x01EF && code <= 0x01F0)
+                                    e 0x01E7
+                                        || e 0x01E9
+                                        || e 0x01EB
+                                        || e 0x01ED
+                                        || r 0x01EF 0x01F0
                                 then
                                     Just LetterLowercase
 
                                 else if
-                                    (code == 0x01E8)
-                                        || (code == 0x01EA)
-                                        || (code == 0x01EC)
-                                        || (code == 0x01EE)
-                                        || (code == 0x01F1)
+                                    e 0x01E8
+                                        || e 0x01EA
+                                        || e 0x01EC
+                                        || e 0x01EE
+                                        || e 0x01F1
                                 then
                                     Just LetterUppercase
 
                                 else
                                     Nothing
 
-                            else if code < 0x01F9 then
-                                if code == 0x01F2 then
+                            else if l 0x01F9 then
+                                if e 0x01F2 then
                                     Just LetterTitlecase
 
-                                else if (code == 0x01F3) || (code == 0x01F5) then
+                                else if e 0x01F3 || e 0x01F5 then
                                     Just LetterLowercase
 
-                                else if
-                                    (code == 0x01F4)
-                                        || (code >= 0x01F6 && code <= 0x01F8)
-                                then
+                                else if e 0x01F4 || r 0x01F6 0x01F8 then
                                     Just LetterUppercase
 
                                 else
                                     Nothing
 
-                            else if
-                                (code == 0x01F9)
-                                    || (code == 0x01FB)
-                                    || (code == 0x01FD)
-                                    || (code == 0x01FF)
-                            then
+                            else if e 0x01F9 || e 0x01FB || e 0x01FD || e 0x01FF then
                                 Just LetterLowercase
 
-                            else if
-                                (code == 0x01FA)
-                                    || (code == 0x01FC)
-                                    || (code == 0x01FE)
-                                    || (code == 0x0200)
-                            then
+                            else if e 0x01FA || e 0x01FC || e 0x01FE || e 0x0200 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x020C then
+                        else if l 0x020C then
                             if
-                                (code == 0x0201)
-                                    || (code == 0x0203)
-                                    || (code == 0x0205)
-                                    || (code == 0x0207)
-                                    || (code == 0x0209)
-                                    || (code == 0x020B)
+                                e 0x0201
+                                    || e 0x0203
+                                    || e 0x0205
+                                    || e 0x0207
+                                    || e 0x0209
+                                    || e 0x020B
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x0202)
-                                    || (code == 0x0204)
-                                    || (code == 0x0206)
-                                    || (code == 0x0208)
-                                    || (code == 0x020A)
+                                e 0x0202
+                                    || e 0x0204
+                                    || e 0x0206
+                                    || e 0x0208
+                                    || e 0x020A
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x0212 then
-                            if
-                                (code == 0x020C)
-                                    || (code == 0x020E)
-                                    || (code == 0x0210)
-                            then
+                        else if l 0x0212 then
+                            if e 0x020C || e 0x020E || e 0x0210 then
                                 Just LetterUppercase
 
-                            else if
-                                (code == 0x020D)
-                                    || (code == 0x020F)
-                                    || (code == 0x0211)
-                            then
+                            else if e 0x020D || e 0x020F || e 0x0211 then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x0212)
-                                || (code == 0x0214)
-                                || (code == 0x0216)
-                                || (code == 0x0218)
-                        then
+                        else if e 0x0212 || e 0x0214 || e 0x0216 || e 0x0218 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x0213)
-                                || (code == 0x0215)
-                                || (code == 0x0217)
-                                || (code == 0x0219)
-                        then
+                        else if e 0x0213 || e 0x0215 || e 0x0217 || e 0x0219 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x0232 then
-                        if code < 0x0225 then
+                    else if l 0x0232 then
+                        if l 0x0225 then
                             if
-                                (code == 0x021A)
-                                    || (code == 0x021C)
-                                    || (code == 0x021E)
-                                    || (code == 0x0220)
-                                    || (code == 0x0222)
-                                    || (code == 0x0224)
+                                e 0x021A
+                                    || e 0x021C
+                                    || e 0x021E
+                                    || e 0x0220
+                                    || e 0x0222
+                                    || e 0x0224
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x021B)
-                                    || (code == 0x021D)
-                                    || (code == 0x021F)
-                                    || (code == 0x0221)
-                                    || (code == 0x0223)
+                                e 0x021B
+                                    || e 0x021D
+                                    || e 0x021F
+                                    || e 0x0221
+                                    || e 0x0223
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x022A then
-                            if
-                                (code == 0x0225)
-                                    || (code == 0x0227)
-                                    || (code == 0x0229)
-                            then
+                        else if l 0x022A then
+                            if e 0x0225 || e 0x0227 || e 0x0229 then
                                 Just LetterLowercase
 
-                            else if (code == 0x0226) || (code == 0x0228) then
+                            else if e 0x0226 || e 0x0228 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x022A)
-                                || (code == 0x022C)
-                                || (code == 0x022E)
-                                || (code == 0x0230)
-                        then
+                        else if e 0x022A || e 0x022C || e 0x022E || e 0x0230 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x022B)
-                                || (code == 0x022D)
-                                || (code == 0x022F)
-                                || (code == 0x0231)
-                        then
+                        else if e 0x022B || e 0x022D || e 0x022F || e 0x0231 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x024A then
+                    else if l 0x024A then
                         if
-                            (code == 0x0232)
-                                || (code >= 0x023A && code <= 0x023B)
-                                || (code >= 0x023D && code <= 0x023E)
-                                || (code == 0x0241)
-                                || (code >= 0x0243 && code <= 0x0246)
-                                || (code == 0x0248)
+                            e 0x0232
+                                || r 0x023A 0x023B
+                                || r 0x023D 0x023E
+                                || e 0x0241
+                                || r 0x0243 0x0246
+                                || e 0x0248
                         then
                             Just LetterUppercase
 
                         else if
-                            (code >= 0x0233 && code <= 0x0239)
-                                || (code == 0x023C)
-                                || (code >= 0x023F && code <= 0x0240)
-                                || (code == 0x0242)
-                                || (code == 0x0247)
-                                || (code == 0x0249)
+                            r 0x0233 0x0239
+                                || e 0x023C
+                                || r 0x023F 0x0240
+                                || e 0x0242
+                                || e 0x0247
+                                || e 0x0249
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x0294 then
-                        if
-                            (code == 0x024A)
-                                || (code == 0x024C)
-                                || (code == 0x024E)
-                        then
+                    else if l 0x0294 then
+                        if e 0x024A || e 0x024C || e 0x024E then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x024B)
-                                || (code == 0x024D)
-                                || (code >= 0x024F && code <= 0x0293)
-                        then
+                        else if e 0x024B || e 0x024D || r 0x024F 0x0293 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code == 0x0294 then
+                    else if e 0x0294 then
                         Just LetterOther
 
-                    else if code >= 0x0295 && code <= 0x02AF then
+                    else if r 0x0295 0x02AF then
                         Just LetterLowercase
 
                     else if
-                        (code >= 0x02B0 && code <= 0x02C1)
-                            || (code >= 0x02C6 && code <= 0x02D1)
-                            || (code >= 0x02E0 && code <= 0x02E4)
-                            || (code == 0x02EC)
+                        r 0x02B0 0x02C1
+                            || r 0x02C6 0x02D1
+                            || r 0x02E0 0x02E4
+                            || e 0x02EC
                     then
                         Just LetterModifier
 
-                    else if
-                        (code >= 0x02C2 && code <= 0x02C5)
-                            || (code >= 0x02D2 && code <= 0x02DF)
-                            || (code >= 0x02E5 && code <= 0x02EB)
-                    then
+                    else if r 0x02C2 0x02C5 || r 0x02D2 0x02DF || r 0x02E5 0x02EB then
                         Just SymbolModifier
 
                     else
                         Nothing
 
-                else if code < 0x03EC then
-                    if code < 0x03AB then
-                        if code < 0x0379 then
-                            if
-                                (code == 0x02ED)
-                                    || (code >= 0x02EF && code <= 0x02FF)
-                                    || (code == 0x0375)
-                            then
+                else if l 0x03EC then
+                    if l 0x03AB then
+                        if l 0x0379 then
+                            if e 0x02ED || r 0x02EF 0x02FF || e 0x0375 then
                                 Just SymbolModifier
 
-                            else if (code == 0x02EE) || (code == 0x0374) then
+                            else if e 0x02EE || e 0x0374 then
                                 Just LetterModifier
 
-                            else if code >= 0x0300 && code <= 0x036F then
+                            else if r 0x0300 0x036F then
                                 Just MarkNonSpacing
 
-                            else if
-                                (code == 0x0370)
-                                    || (code == 0x0372)
-                                    || (code == 0x0376)
-                            then
+                            else if e 0x0370 || e 0x0372 || e 0x0376 then
                                 Just LetterUppercase
 
-                            else if
-                                (code == 0x0371)
-                                    || (code == 0x0373)
-                                    || (code == 0x0377)
-                            then
+                            else if e 0x0371 || e 0x0373 || e 0x0377 then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x0386 then
-                            if code == 0x037A then
+                        else if l 0x0386 then
+                            if e 0x037A then
                                 Just LetterModifier
 
-                            else if code >= 0x037B && code <= 0x037D then
+                            else if r 0x037B 0x037D then
                                 Just LetterLowercase
 
-                            else if code == 0x037E then
+                            else if e 0x037E then
                                 Just PunctuationOther
 
-                            else if code == 0x037F then
+                            else if e 0x037F then
                                 Just LetterUppercase
 
-                            else if code >= 0x0384 && code <= 0x0385 then
+                            else if r 0x0384 0x0385 then
                                 Just SymbolModifier
 
                             else
                                 Nothing
 
                         else if
-                            (code == 0x0386)
-                                || (code >= 0x0388 && code <= 0x038A)
-                                || (code == 0x038C)
-                                || (code >= 0x038E && code <= 0x038F)
-                                || (code >= 0x0391 && code <= 0x03A1)
-                                || (code >= 0x03A3 && code <= 0x03AA)
+                            e 0x0386
+                                || r 0x0388 0x038A
+                                || e 0x038C
+                                || r 0x038E 0x038F
+                                || r 0x0391 0x03A1
+                                || r 0x03A3 0x03AA
                         then
                             Just LetterUppercase
 
-                        else if code == 0x0387 then
+                        else if e 0x0387 then
                             Just PunctuationOther
 
-                        else if code == 0x0390 then
+                        else if e 0x0390 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x03DE then
+                    else if l 0x03DE then
                         if
-                            (code == 0x03AB)
-                                || (code == 0x03CF)
-                                || (code >= 0x03D2 && code <= 0x03D4)
-                                || (code == 0x03D8)
-                                || (code == 0x03DA)
-                                || (code == 0x03DC)
+                            e 0x03AB
+                                || e 0x03CF
+                                || r 0x03D2 0x03D4
+                                || e 0x03D8
+                                || e 0x03DA
+                                || e 0x03DC
                         then
                             Just LetterUppercase
 
                         else if
-                            (code >= 0x03AC && code <= 0x03CE)
-                                || (code >= 0x03D0 && code <= 0x03D1)
-                                || (code >= 0x03D5 && code <= 0x03D7)
-                                || (code == 0x03D9)
-                                || (code == 0x03DB)
-                                || (code == 0x03DD)
+                            r 0x03AC 0x03CE
+                                || r 0x03D0 0x03D1
+                                || r 0x03D5 0x03D7
+                                || e 0x03D9
+                                || e 0x03DB
+                                || e 0x03DD
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x03E4 then
-                        if
-                            (code == 0x03DE)
-                                || (code == 0x03E0)
-                                || (code == 0x03E2)
-                        then
+                    else if l 0x03E4 then
+                        if e 0x03DE || e 0x03E0 || e 0x03E2 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x03DF)
-                                || (code == 0x03E1)
-                                || (code == 0x03E3)
-                        then
+                        else if e 0x03DF || e 0x03E1 || e 0x03E3 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x03E4)
-                            || (code == 0x03E6)
-                            || (code == 0x03E8)
-                            || (code == 0x03EA)
-                    then
+                    else if e 0x03E4 || e 0x03E6 || e 0x03E8 || e 0x03EA then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x03E5)
-                            || (code == 0x03E7)
-                            || (code == 0x03E9)
-                            || (code == 0x03EB)
-                    then
+                    else if e 0x03E5 || e 0x03E7 || e 0x03E9 || e 0x03EB then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x046C then
-                    if code < 0x042F then
+                else if l 0x046C then
+                    if l 0x042F then
                         if
-                            (code == 0x03EC)
-                                || (code == 0x03EE)
-                                || (code == 0x03F4)
-                                || (code == 0x03F7)
-                                || (code >= 0x03F9 && code <= 0x03FA)
-                                || (code >= 0x03FD && code <= 0x042E)
+                            e 0x03EC
+                                || e 0x03EE
+                                || e 0x03F4
+                                || e 0x03F7
+                                || r 0x03F9 0x03FA
+                                || r 0x03FD 0x042E
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x03ED)
-                                || (code >= 0x03EF && code <= 0x03F3)
-                                || (code == 0x03F5)
-                                || (code == 0x03F8)
-                                || (code >= 0x03FB && code <= 0x03FC)
+                            e 0x03ED
+                                || r 0x03EF 0x03F3
+                                || e 0x03F5
+                                || e 0x03F8
+                                || r 0x03FB 0x03FC
                         then
                             Just LetterLowercase
 
-                        else if code == 0x03F6 then
+                        else if e 0x03F6 then
                             Just SymbolMath
 
                         else
                             Nothing
 
-                    else if code < 0x0464 then
-                        if
-                            (code == 0x042F)
-                                || (code == 0x0460)
-                                || (code == 0x0462)
-                        then
+                    else if l 0x0464 then
+                        if e 0x042F || e 0x0460 || e 0x0462 then
                             Just LetterUppercase
 
-                        else if
-                            (code >= 0x0430 && code <= 0x045F)
-                                || (code == 0x0461)
-                                || (code == 0x0463)
-                        then
+                        else if r 0x0430 0x045F || e 0x0461 || e 0x0463 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x0464)
-                            || (code == 0x0466)
-                            || (code == 0x0468)
-                            || (code == 0x046A)
-                    then
+                    else if e 0x0464 || e 0x0466 || e 0x0468 || e 0x046A then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x0465)
-                            || (code == 0x0467)
-                            || (code == 0x0469)
-                            || (code == 0x046B)
-                    then
+                    else if e 0x0465 || e 0x0467 || e 0x0469 || e 0x046B then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x0478 then
+                else if l 0x0478 then
                     if
-                        (code == 0x046C)
-                            || (code == 0x046E)
-                            || (code == 0x0470)
-                            || (code == 0x0472)
-                            || (code == 0x0474)
-                            || (code == 0x0476)
+                        e 0x046C
+                            || e 0x046E
+                            || e 0x0470
+                            || e 0x0472
+                            || e 0x0474
+                            || e 0x0476
                     then
                         Just LetterUppercase
 
                     else if
-                        (code == 0x046D)
-                            || (code == 0x046F)
-                            || (code == 0x0471)
-                            || (code == 0x0473)
-                            || (code == 0x0475)
-                            || (code == 0x0477)
+                        e 0x046D
+                            || e 0x046F
+                            || e 0x0471
+                            || e 0x0473
+                            || e 0x0475
+                            || e 0x0477
                     then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x047E then
-                    if (code == 0x0478) || (code == 0x047A) || (code == 0x047C) then
+                else if l 0x047E then
+                    if e 0x0478 || e 0x047A || e 0x047C then
                         Just LetterUppercase
 
-                    else if (code == 0x0479) || (code == 0x047B) || (code == 0x047D) then
+                    else if e 0x0479 || e 0x047B || e 0x047D then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if (code == 0x047E) || (code == 0x0480) || (code == 0x048A) then
+                else if e 0x047E || e 0x0480 || e 0x048A then
                     Just LetterUppercase
 
-                else if (code == 0x047F) || (code == 0x0481) || (code == 0x048B) then
+                else if e 0x047F || e 0x0481 || e 0x048B then
                     Just LetterLowercase
 
-                else if code == 0x0482 then
+                else if e 0x0482 then
                     Just SymbolOther
 
-                else if code >= 0x0483 && code <= 0x0487 then
+                else if r 0x0483 0x0487 then
                     Just MarkNonSpacing
 
-                else if code >= 0x0488 && code <= 0x0489 then
+                else if r 0x0488 0x0489 then
                     Just MarkEnclosing
 
                 else
                     Nothing
 
-            else if code < 0x06D3 then
-                if code < 0x04F1 then
-                    if code < 0x04BC then
-                        if code < 0x04A3 then
-                            if code < 0x0496 then
+            else if l 0x06D3 then
+                if l 0x04F1 then
+                    if l 0x04BC then
+                        if l 0x04A3 then
+                            if l 0x0496 then
                                 if
-                                    (code == 0x048C)
-                                        || (code == 0x048E)
-                                        || (code == 0x0490)
-                                        || (code == 0x0492)
-                                        || (code == 0x0494)
+                                    e 0x048C
+                                        || e 0x048E
+                                        || e 0x0490
+                                        || e 0x0492
+                                        || e 0x0494
                                 then
                                     Just LetterUppercase
 
                                 else if
-                                    (code == 0x048D)
-                                        || (code == 0x048F)
-                                        || (code == 0x0491)
-                                        || (code == 0x0493)
-                                        || (code == 0x0495)
+                                    e 0x048D
+                                        || e 0x048F
+                                        || e 0x0491
+                                        || e 0x0493
+                                        || e 0x0495
                                 then
                                     Just LetterLowercase
 
                                 else
                                     Nothing
 
-                            else if code < 0x049B then
-                                if
-                                    (code == 0x0496)
-                                        || (code == 0x0498)
-                                        || (code == 0x049A)
-                                then
+                            else if l 0x049B then
+                                if e 0x0496 || e 0x0498 || e 0x049A then
                                     Just LetterUppercase
 
-                                else if (code == 0x0497) || (code == 0x0499) then
+                                else if e 0x0497 || e 0x0499 then
                                     Just LetterLowercase
 
                                 else
                                     Nothing
 
-                            else if
-                                (code == 0x049B)
-                                    || (code == 0x049D)
-                                    || (code == 0x049F)
-                                    || (code == 0x04A1)
-                            then
+                            else if e 0x049B || e 0x049D || e 0x049F || e 0x04A1 then
                                 Just LetterLowercase
 
-                            else if
-                                (code == 0x049C)
-                                    || (code == 0x049E)
-                                    || (code == 0x04A0)
-                                    || (code == 0x04A2)
-                            then
+                            else if e 0x049C || e 0x049E || e 0x04A0 || e 0x04A2 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x04AE then
+                        else if l 0x04AE then
                             if
-                                (code == 0x04A3)
-                                    || (code == 0x04A5)
-                                    || (code == 0x04A7)
-                                    || (code == 0x04A9)
-                                    || (code == 0x04AB)
-                                    || (code == 0x04AD)
+                                e 0x04A3
+                                    || e 0x04A5
+                                    || e 0x04A7
+                                    || e 0x04A9
+                                    || e 0x04AB
+                                    || e 0x04AD
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x04A4)
-                                    || (code == 0x04A6)
-                                    || (code == 0x04A8)
-                                    || (code == 0x04AA)
-                                    || (code == 0x04AC)
+                                e 0x04A4
+                                    || e 0x04A6
+                                    || e 0x04A8
+                                    || e 0x04AA
+                                    || e 0x04AC
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x04B4 then
-                            if
-                                (code == 0x04AE)
-                                    || (code == 0x04B0)
-                                    || (code == 0x04B2)
-                            then
+                        else if l 0x04B4 then
+                            if e 0x04AE || e 0x04B0 || e 0x04B2 then
                                 Just LetterUppercase
 
-                            else if
-                                (code == 0x04AF)
-                                    || (code == 0x04B1)
-                                    || (code == 0x04B3)
-                            then
+                            else if e 0x04AF || e 0x04B1 || e 0x04B3 then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x04B4)
-                                || (code == 0x04B6)
-                                || (code == 0x04B8)
-                                || (code == 0x04BA)
-                        then
+                        else if e 0x04B4 || e 0x04B6 || e 0x04B8 || e 0x04BA then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x04B5)
-                                || (code == 0x04B7)
-                                || (code == 0x04B9)
-                                || (code == 0x04BB)
-                        then
+                        else if e 0x04B5 || e 0x04B7 || e 0x04B9 || e 0x04BB then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x04D6 then
-                        if code < 0x04C8 then
+                    else if l 0x04D6 then
+                        if l 0x04C8 then
                             if
-                                (code == 0x04BC)
-                                    || (code == 0x04BE)
-                                    || (code >= 0x04C0 && code <= 0x04C1)
-                                    || (code == 0x04C3)
-                                    || (code == 0x04C5)
-                                    || (code == 0x04C7)
+                                e 0x04BC
+                                    || e 0x04BE
+                                    || r 0x04C0 0x04C1
+                                    || e 0x04C3
+                                    || e 0x04C5
+                                    || e 0x04C7
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x04BD)
-                                    || (code == 0x04BF)
-                                    || (code == 0x04C2)
-                                    || (code == 0x04C4)
-                                    || (code == 0x04C6)
+                                e 0x04BD
+                                    || e 0x04BF
+                                    || e 0x04C2
+                                    || e 0x04C4
+                                    || e 0x04C6
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x04CD then
-                            if
-                                (code == 0x04C8)
-                                    || (code == 0x04CA)
-                                    || (code == 0x04CC)
-                            then
+                        else if l 0x04CD then
+                            if e 0x04C8 || e 0x04CA || e 0x04CC then
                                 Just LetterLowercase
 
-                            else if (code == 0x04C9) || (code == 0x04CB) then
+                            else if e 0x04C9 || e 0x04CB then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x04CD)
-                                || (code == 0x04D0)
-                                || (code == 0x04D2)
-                                || (code == 0x04D4)
-                        then
+                        else if e 0x04CD || e 0x04D0 || e 0x04D2 || e 0x04D4 then
                             Just LetterUppercase
 
-                        else if
-                            (code >= 0x04CE && code <= 0x04CF)
-                                || (code == 0x04D1)
-                                || (code == 0x04D3)
-                                || (code == 0x04D5)
-                        then
+                        else if r 0x04CE 0x04CF || e 0x04D1 || e 0x04D3 || e 0x04D5 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x04E2 then
+                    else if l 0x04E2 then
                         if
-                            (code == 0x04D6)
-                                || (code == 0x04D8)
-                                || (code == 0x04DA)
-                                || (code == 0x04DC)
-                                || (code == 0x04DE)
-                                || (code == 0x04E0)
+                            e 0x04D6
+                                || e 0x04D8
+                                || e 0x04DA
+                                || e 0x04DC
+                                || e 0x04DE
+                                || e 0x04E0
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x04D7)
-                                || (code == 0x04D9)
-                                || (code == 0x04DB)
-                                || (code == 0x04DD)
-                                || (code == 0x04DF)
-                                || (code == 0x04E1)
+                            e 0x04D7
+                                || e 0x04D9
+                                || e 0x04DB
+                                || e 0x04DD
+                                || e 0x04DF
+                                || e 0x04E1
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x04E8 then
-                        if
-                            (code == 0x04E2)
-                                || (code == 0x04E4)
-                                || (code == 0x04E6)
-                        then
+                    else if l 0x04E8 then
+                        if e 0x04E2 || e 0x04E4 || e 0x04E6 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x04E3)
-                                || (code == 0x04E5)
-                                || (code == 0x04E7)
-                        then
+                        else if e 0x04E3 || e 0x04E5 || e 0x04E7 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x04E8)
-                            || (code == 0x04EA)
-                            || (code == 0x04EC)
-                            || (code == 0x04EE)
-                            || (code == 0x04F0)
-                    then
+                    else if e 0x04E8 || e 0x04EA || e 0x04EC || e 0x04EE || e 0x04F0 then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x04E9)
-                            || (code == 0x04EB)
-                            || (code == 0x04ED)
-                            || (code == 0x04EF)
-                    then
+                    else if e 0x04E9 || e 0x04EB || e 0x04ED || e 0x04EF then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x0523 then
-                    if code < 0x0509 then
-                        if code < 0x04FC then
+                else if l 0x0523 then
+                    if l 0x0509 then
+                        if l 0x04FC then
                             if
-                                (code == 0x04F1)
-                                    || (code == 0x04F3)
-                                    || (code == 0x04F5)
-                                    || (code == 0x04F7)
-                                    || (code == 0x04F9)
-                                    || (code == 0x04FB)
+                                e 0x04F1
+                                    || e 0x04F3
+                                    || e 0x04F5
+                                    || e 0x04F7
+                                    || e 0x04F9
+                                    || e 0x04FB
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x04F2)
-                                    || (code == 0x04F4)
-                                    || (code == 0x04F6)
-                                    || (code == 0x04F8)
-                                    || (code == 0x04FA)
+                                e 0x04F2
+                                    || e 0x04F4
+                                    || e 0x04F6
+                                    || e 0x04F8
+                                    || e 0x04FA
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x0501 then
-                            if
-                                (code == 0x04FC)
-                                    || (code == 0x04FE)
-                                    || (code == 0x0500)
-                            then
+                        else if l 0x0501 then
+                            if e 0x04FC || e 0x04FE || e 0x0500 then
                                 Just LetterUppercase
 
-                            else if (code == 0x04FD) || (code == 0x04FF) then
+                            else if e 0x04FD || e 0x04FF then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x0501)
-                                || (code == 0x0503)
-                                || (code == 0x0505)
-                                || (code == 0x0507)
-                        then
+                        else if e 0x0501 || e 0x0503 || e 0x0505 || e 0x0507 then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0x0502)
-                                || (code == 0x0504)
-                                || (code == 0x0506)
-                                || (code == 0x0508)
-                        then
+                        else if e 0x0502 || e 0x0504 || e 0x0506 || e 0x0508 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x0515 then
+                    else if l 0x0515 then
                         if
-                            (code == 0x0509)
-                                || (code == 0x050B)
-                                || (code == 0x050D)
-                                || (code == 0x050F)
-                                || (code == 0x0511)
-                                || (code == 0x0513)
+                            e 0x0509
+                                || e 0x050B
+                                || e 0x050D
+                                || e 0x050F
+                                || e 0x0511
+                                || e 0x0513
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0x050A)
-                                || (code == 0x050C)
-                                || (code == 0x050E)
-                                || (code == 0x0510)
-                                || (code == 0x0512)
-                                || (code == 0x0514)
+                            e 0x050A
+                                || e 0x050C
+                                || e 0x050E
+                                || e 0x0510
+                                || e 0x0512
+                                || e 0x0514
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x051B then
-                        if
-                            (code == 0x0515)
-                                || (code == 0x0517)
-                                || (code == 0x0519)
-                        then
+                    else if l 0x051B then
+                        if e 0x0515 || e 0x0517 || e 0x0519 then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0x0516)
-                                || (code == 0x0518)
-                                || (code == 0x051A)
-                        then
+                        else if e 0x0516 || e 0x0518 || e 0x051A then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x051B)
-                            || (code == 0x051D)
-                            || (code == 0x051F)
-                            || (code == 0x0521)
-                    then
+                    else if e 0x051B || e 0x051D || e 0x051F || e 0x0521 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x051C)
-                            || (code == 0x051E)
-                            || (code == 0x0520)
-                            || (code == 0x0522)
-                    then
+                    else if e 0x051C || e 0x051E || e 0x0520 || e 0x0522 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x05C2 then
-                    if code < 0x0530 then
-                        if code < 0x0528 then
-                            if
-                                (code == 0x0523)
-                                    || (code == 0x0525)
-                                    || (code == 0x0527)
-                            then
+                else if l 0x05C2 then
+                    if l 0x0530 then
+                        if l 0x0528 then
+                            if e 0x0523 || e 0x0525 || e 0x0527 then
                                 Just LetterLowercase
 
-                            else if (code == 0x0524) || (code == 0x0526) then
+                            else if e 0x0524 || e 0x0526 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x0528)
-                                || (code == 0x052A)
-                                || (code == 0x052C)
-                                || (code == 0x052E)
-                        then
+                        else if e 0x0528 || e 0x052A || e 0x052C || e 0x052E then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x0529)
-                                || (code == 0x052B)
-                                || (code == 0x052D)
-                                || (code == 0x052F)
-                        then
+                        else if e 0x0529 || e 0x052B || e 0x052D || e 0x052F then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x058C then
-                        if code >= 0x0531 && code <= 0x0556 then
+                    else if l 0x058C then
+                        if r 0x0531 0x0556 then
                             Just LetterUppercase
 
-                        else if code == 0x0559 then
+                        else if e 0x0559 then
                             Just LetterModifier
 
-                        else if
-                            (code >= 0x055A && code <= 0x055F)
-                                || (code == 0x0589)
-                        then
+                        else if r 0x055A 0x055F || e 0x0589 then
                             Just PunctuationOther
 
-                        else if code >= 0x0560 && code <= 0x0588 then
+                        else if r 0x0560 0x0588 then
                             Just LetterLowercase
 
-                        else if code == 0x058A then
+                        else if e 0x058A then
                             Just PunctuationDash
 
                         else
                             Nothing
 
-                    else if code >= 0x058D && code <= 0x058E then
+                    else if r 0x058D 0x058E then
                         Just SymbolOther
 
-                    else if code == 0x058F then
+                    else if e 0x058F then
                         Just SymbolCurrency
 
-                    else if
-                        (code >= 0x0591 && code <= 0x05BD)
-                            || (code == 0x05BF)
-                            || (code == 0x05C1)
-                    then
+                    else if r 0x0591 0x05BD || e 0x05BF || e 0x05C1 then
                         Just MarkNonSpacing
 
-                    else if code == 0x05BE then
+                    else if e 0x05BE then
                         Just PunctuationDash
 
-                    else if code == 0x05C0 then
+                    else if e 0x05C0 then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if code < 0x060D then
-                    if code < 0x05EE then
-                        if
-                            (code == 0x05C2)
-                                || (code >= 0x05C4 && code <= 0x05C5)
-                                || (code == 0x05C7)
-                        then
+                else if l 0x060D then
+                    if l 0x05EE then
+                        if e 0x05C2 || r 0x05C4 0x05C5 || e 0x05C7 then
                             Just MarkNonSpacing
 
-                        else if (code == 0x05C3) || (code == 0x05C6) then
+                        else if e 0x05C3 || e 0x05C6 then
                             Just PunctuationOther
 
-                        else if code >= 0x05D0 && code <= 0x05EA then
+                        else if r 0x05D0 0x05EA then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if code >= 0x05EF && code <= 0x05F2 then
+                    else if r 0x05EF 0x05F2 then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x05F3 && code <= 0x05F4)
-                            || (code >= 0x0609 && code <= 0x060A)
-                            || (code == 0x060C)
-                    then
+                    else if r 0x05F3 0x05F4 || r 0x0609 0x060A || e 0x060C then
                         Just PunctuationOther
 
-                    else if code >= 0x0600 && code <= 0x0605 then
+                    else if r 0x0600 0x0605 then
                         Just OtherFormat
 
-                    else if code >= 0x0606 && code <= 0x0608 then
+                    else if r 0x0606 0x0608 then
                         Just SymbolMath
 
-                    else if code == 0x060B then
+                    else if e 0x060B then
                         Just SymbolCurrency
 
                     else
                         Nothing
 
-                else if code < 0x063F then
-                    if
-                        (code == 0x060D)
-                            || (code == 0x061B)
-                            || (code >= 0x061D && code <= 0x061F)
-                    then
+                else if l 0x063F then
+                    if e 0x060D || e 0x061B || r 0x061D 0x061F then
                         Just PunctuationOther
 
-                    else if code >= 0x060E && code <= 0x060F then
+                    else if r 0x060E 0x060F then
                         Just SymbolOther
 
-                    else if code >= 0x0610 && code <= 0x061A then
+                    else if r 0x0610 0x061A then
                         Just MarkNonSpacing
 
-                    else if code == 0x061C then
+                    else if e 0x061C then
                         Just OtherFormat
 
-                    else if code >= 0x0620 && code <= 0x063E then
+                    else if r 0x0620 0x063E then
                         Just LetterOther
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x063F)
-                        || (code >= 0x0641 && code <= 0x064A)
-                        || (code >= 0x066E && code <= 0x066F)
-                        || (code >= 0x0671 && code <= 0x06D2)
+                    e 0x063F
+                        || r 0x0641 0x064A
+                        || r 0x066E 0x066F
+                        || r 0x0671 0x06D2
                 then
                     Just LetterOther
 
-                else if code == 0x0640 then
+                else if e 0x0640 then
                     Just LetterModifier
 
-                else if (code >= 0x064B && code <= 0x065F) || (code == 0x0670) then
+                else if r 0x064B 0x065F || e 0x0670 then
                     Just MarkNonSpacing
 
-                else if code >= 0x0660 && code <= 0x0669 then
+                else if r 0x0660 0x0669 then
                     Just NumberDecimalDigit
 
-                else if code >= 0x066A && code <= 0x066D then
+                else if r 0x066A 0x066D then
                     Just PunctuationOther
 
                 else
                     Nothing
 
-            else if code < 0x09F9 then
-                if code < 0x088F then
-                    if code < 0x07BF then
-                        if code < 0x06EF then
-                            if
-                                (code == 0x06D3)
-                                    || (code == 0x06D5)
-                                    || (code == 0x06EE)
-                            then
+            else if l 0x09F9 then
+                if l 0x088F then
+                    if l 0x07BF then
+                        if l 0x06EF then
+                            if e 0x06D3 || e 0x06D5 || e 0x06EE then
                                 Just LetterOther
 
-                            else if code == 0x06D4 then
+                            else if e 0x06D4 then
                                 Just PunctuationOther
 
                             else if
-                                (code >= 0x06D6 && code <= 0x06DC)
-                                    || (code >= 0x06DF && code <= 0x06E4)
-                                    || (code >= 0x06E7 && code <= 0x06E8)
-                                    || (code >= 0x06EA && code <= 0x06ED)
+                                r 0x06D6 0x06DC
+                                    || r 0x06DF 0x06E4
+                                    || r 0x06E7 0x06E8
+                                    || r 0x06EA 0x06ED
                             then
                                 Just MarkNonSpacing
 
-                            else if code == 0x06DD then
+                            else if e 0x06DD then
                                 Just OtherFormat
 
-                            else if (code == 0x06DE) || (code == 0x06E9) then
+                            else if e 0x06DE || e 0x06E9 then
                                 Just SymbolOther
 
-                            else if code >= 0x06E5 && code <= 0x06E6 then
+                            else if r 0x06E5 0x06E6 then
                                 Just LetterModifier
 
                             else
                                 Nothing
 
-                        else if code < 0x070F then
-                            if
-                                (code == 0x06EF)
-                                    || (code >= 0x06FA && code <= 0x06FC)
-                                    || (code == 0x06FF)
-                            then
+                        else if l 0x070F then
+                            if e 0x06EF || r 0x06FA 0x06FC || e 0x06FF then
                                 Just LetterOther
 
-                            else if code >= 0x06F0 && code <= 0x06F9 then
+                            else if r 0x06F0 0x06F9 then
                                 Just NumberDecimalDigit
 
-                            else if code >= 0x06FD && code <= 0x06FE then
+                            else if r 0x06FD 0x06FE then
                                 Just SymbolOther
 
-                            else if code >= 0x0700 && code <= 0x070D then
+                            else if r 0x0700 0x070D then
                                 Just PunctuationOther
 
                             else
                                 Nothing
 
-                        else if code == 0x070F then
+                        else if e 0x070F then
                             Just OtherFormat
 
                         else if
-                            (code == 0x0710)
-                                || (code >= 0x0712 && code <= 0x072F)
-                                || (code >= 0x074D && code <= 0x07A5)
-                                || (code == 0x07B1)
+                            e 0x0710
+                                || r 0x0712 0x072F
+                                || r 0x074D 0x07A5
+                                || e 0x07B1
                         then
                             Just LetterOther
 
-                        else if
-                            (code == 0x0711)
-                                || (code >= 0x0730 && code <= 0x074A)
-                                || (code >= 0x07A6 && code <= 0x07B0)
-                        then
+                        else if e 0x0711 || r 0x0730 0x074A || r 0x07A6 0x07B0 then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if code < 0x081A then
-                        if code >= 0x07C0 && code <= 0x07C9 then
+                    else if l 0x081A then
+                        if r 0x07C0 0x07C9 then
                             Just NumberDecimalDigit
 
-                        else if
-                            (code >= 0x07CA && code <= 0x07EA)
-                                || (code >= 0x0800 && code <= 0x0815)
-                        then
+                        else if r 0x07CA 0x07EA || r 0x0800 0x0815 then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x07EB && code <= 0x07F3)
-                                || (code == 0x07FD)
-                                || (code >= 0x0816 && code <= 0x0819)
-                        then
+                        else if r 0x07EB 0x07F3 || e 0x07FD || r 0x0816 0x0819 then
                             Just MarkNonSpacing
 
-                        else if
-                            (code >= 0x07F4 && code <= 0x07F5)
-                                || (code == 0x07FA)
-                        then
+                        else if r 0x07F4 0x07F5 || e 0x07FA then
                             Just LetterModifier
 
-                        else if code == 0x07F6 then
+                        else if e 0x07F6 then
                             Just SymbolOther
 
-                        else if code >= 0x07F7 && code <= 0x07F9 then
+                        else if r 0x07F7 0x07F9 then
                             Just PunctuationOther
 
-                        else if code >= 0x07FE && code <= 0x07FF then
+                        else if r 0x07FE 0x07FF then
                             Just SymbolCurrency
 
                         else
                             Nothing
 
-                    else if code < 0x083F then
-                        if
-                            (code == 0x081A)
-                                || (code == 0x0824)
-                                || (code == 0x0828)
-                        then
+                    else if l 0x083F then
+                        if e 0x081A || e 0x0824 || e 0x0828 then
                             Just LetterModifier
 
                         else if
-                            (code >= 0x081B && code <= 0x0823)
-                                || (code >= 0x0825 && code <= 0x0827)
-                                || (code >= 0x0829 && code <= 0x082D)
+                            r 0x081B 0x0823
+                                || r 0x0825 0x0827
+                                || r 0x0829 0x082D
                         then
                             Just MarkNonSpacing
 
-                        else if code >= 0x0830 && code <= 0x083E then
+                        else if r 0x0830 0x083E then
                             Just PunctuationOther
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x0840 && code <= 0x0858)
-                            || (code >= 0x0860 && code <= 0x086A)
-                            || (code >= 0x0870 && code <= 0x0887)
-                            || (code >= 0x0889 && code <= 0x088E)
+                        r 0x0840 0x0858
+                            || r 0x0860 0x086A
+                            || r 0x0870 0x0887
+                            || r 0x0889 0x088E
                     then
                         Just LetterOther
 
-                    else if code >= 0x0859 && code <= 0x085B then
+                    else if r 0x0859 0x085B then
                         Just MarkNonSpacing
 
-                    else if code == 0x085E then
+                    else if e 0x085E then
                         Just PunctuationOther
 
-                    else if code == 0x0888 then
+                    else if e 0x0888 then
                         Just SymbolModifier
 
                     else
                         Nothing
 
-                else if code < 0x0970 then
-                    if code < 0x093C then
-                        if
-                            (code >= 0x0890 && code <= 0x0891)
-                                || (code == 0x08E2)
-                        then
+                else if l 0x0970 then
+                    if l 0x093C then
+                        if r 0x0890 0x0891 || e 0x08E2 then
                             Just OtherFormat
 
                         else if
-                            (code >= 0x0898 && code <= 0x089F)
-                                || (code >= 0x08CA && code <= 0x08E1)
-                                || (code >= 0x08E3 && code <= 0x0902)
-                                || (code == 0x093A)
+                            r 0x0898 0x089F
+                                || r 0x08CA 0x08E1
+                                || r 0x08E3 0x0902
+                                || e 0x093A
                         then
                             Just MarkNonSpacing
 
-                        else if
-                            (code >= 0x08A0 && code <= 0x08C8)
-                                || (code >= 0x0904 && code <= 0x0939)
-                        then
+                        else if r 0x08A0 0x08C8 || r 0x0904 0x0939 then
                             Just LetterOther
 
-                        else if code == 0x08C9 then
+                        else if e 0x08C9 then
                             Just LetterModifier
 
-                        else if (code == 0x0903) || (code == 0x093B) then
+                        else if e 0x0903 || e 0x093B then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if code < 0x094D then
-                        if
-                            (code == 0x093C)
-                                || (code >= 0x0941 && code <= 0x0948)
-                        then
+                    else if l 0x094D then
+                        if e 0x093C || r 0x0941 0x0948 then
                             Just MarkNonSpacing
 
-                        else if code == 0x093D then
+                        else if e 0x093D then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x093E && code <= 0x0940)
-                                || (code >= 0x0949 && code <= 0x094C)
-                        then
+                        else if r 0x093E 0x0940 || r 0x0949 0x094C then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x094D)
-                            || (code >= 0x0951 && code <= 0x0957)
-                            || (code >= 0x0962 && code <= 0x0963)
-                    then
+                    else if e 0x094D || r 0x0951 0x0957 || r 0x0962 0x0963 then
                         Just MarkNonSpacing
 
-                    else if code >= 0x094E && code <= 0x094F then
+                    else if r 0x094E 0x094F then
                         Just MarkSpacingCombining
 
-                    else if (code == 0x0950) || (code >= 0x0958 && code <= 0x0961) then
+                    else if e 0x0950 || r 0x0958 0x0961 then
                         Just LetterOther
 
-                    else if code >= 0x0964 && code <= 0x0965 then
+                    else if r 0x0964 0x0965 then
                         Just PunctuationOther
 
-                    else if code >= 0x0966 && code <= 0x096F then
+                    else if r 0x0966 0x096F then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code < 0x09BD then
-                    if code == 0x0970 then
+                else if l 0x09BD then
+                    if e 0x0970 then
                         Just PunctuationOther
 
-                    else if code == 0x0971 then
+                    else if e 0x0971 then
                         Just LetterModifier
 
                     else if
-                        (code >= 0x0972 && code <= 0x0980)
-                            || (code >= 0x0985 && code <= 0x098C)
-                            || (code >= 0x098F && code <= 0x0990)
-                            || (code >= 0x0993 && code <= 0x09A8)
-                            || (code >= 0x09AA && code <= 0x09B0)
-                            || (code == 0x09B2)
-                            || (code >= 0x09B6 && code <= 0x09B9)
+                        r 0x0972 0x0980
+                            || r 0x0985 0x098C
+                            || r 0x098F 0x0990
+                            || r 0x0993 0x09A8
+                            || r 0x09AA 0x09B0
+                            || e 0x09B2
+                            || r 0x09B6 0x09B9
                     then
                         Just LetterOther
 
-                    else if (code == 0x0981) || (code == 0x09BC) then
+                    else if e 0x0981 || e 0x09BC then
                         Just MarkNonSpacing
 
-                    else if code >= 0x0982 && code <= 0x0983 then
+                    else if r 0x0982 0x0983 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0x09D6 then
-                    if (code == 0x09BD) || (code == 0x09CE) then
+                else if l 0x09D6 then
+                    if e 0x09BD || e 0x09CE then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x09BE && code <= 0x09C0)
-                            || (code >= 0x09C7 && code <= 0x09C8)
-                            || (code >= 0x09CB && code <= 0x09CC)
-                    then
+                    else if r 0x09BE 0x09C0 || r 0x09C7 0x09C8 || r 0x09CB 0x09CC then
                         Just MarkSpacingCombining
 
-                    else if (code >= 0x09C1 && code <= 0x09C4) || (code == 0x09CD) then
+                    else if r 0x09C1 0x09C4 || e 0x09CD then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code == 0x09D7 then
+                else if e 0x09D7 then
                     Just MarkSpacingCombining
 
-                else if
-                    (code >= 0x09DC && code <= 0x09DD)
-                        || (code >= 0x09DF && code <= 0x09E1)
-                        || (code >= 0x09F0 && code <= 0x09F1)
-                then
+                else if r 0x09DC 0x09DD || r 0x09DF 0x09E1 || r 0x09F0 0x09F1 then
                     Just LetterOther
 
-                else if code >= 0x09E2 && code <= 0x09E3 then
+                else if r 0x09E2 0x09E3 then
                     Just MarkNonSpacing
 
-                else if code >= 0x09E6 && code <= 0x09EF then
+                else if r 0x09E6 0x09EF then
                     Just NumberDecimalDigit
 
-                else if code >= 0x09F2 && code <= 0x09F3 then
+                else if r 0x09F2 0x09F3 then
                     Just SymbolCurrency
 
-                else if code >= 0x09F4 && code <= 0x09F8 then
+                else if r 0x09F4 0x09F8 then
                     Just NumberOther
 
                 else
                     Nothing
 
-            else if code < 0x0AF9 then
-                if code < 0x0A71 then
-                    if code < 0x0A31 then
-                        if code == 0x09F9 then
+            else if l 0x0AF9 then
+                if l 0x0A71 then
+                    if l 0x0A31 then
+                        if e 0x09F9 then
                             Just NumberOther
 
-                        else if code == 0x09FA then
+                        else if e 0x09FA then
                             Just SymbolOther
 
-                        else if code == 0x09FB then
+                        else if e 0x09FB then
                             Just SymbolCurrency
 
                         else if
-                            (code == 0x09FC)
-                                || (code >= 0x0A05 && code <= 0x0A0A)
-                                || (code >= 0x0A0F && code <= 0x0A10)
-                                || (code >= 0x0A13 && code <= 0x0A28)
-                                || (code >= 0x0A2A && code <= 0x0A30)
+                            e 0x09FC
+                                || r 0x0A05 0x0A0A
+                                || r 0x0A0F 0x0A10
+                                || r 0x0A13 0x0A28
+                                || r 0x0A2A 0x0A30
                         then
                             Just LetterOther
 
-                        else if code == 0x09FD then
+                        else if e 0x09FD then
                             Just PunctuationOther
 
-                        else if
-                            (code == 0x09FE)
-                                || (code >= 0x0A01 && code <= 0x0A02)
-                        then
+                        else if e 0x09FE || r 0x0A01 0x0A02 then
                             Just MarkNonSpacing
 
-                        else if code == 0x0A03 then
+                        else if e 0x0A03 then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if code < 0x0A46 then
-                        if
-                            (code >= 0x0A32 && code <= 0x0A33)
-                                || (code >= 0x0A35 && code <= 0x0A36)
-                                || (code >= 0x0A38 && code <= 0x0A39)
-                        then
+                    else if l 0x0A46 then
+                        if r 0x0A32 0x0A33 || r 0x0A35 0x0A36 || r 0x0A38 0x0A39 then
                             Just LetterOther
 
-                        else if
-                            (code == 0x0A3C)
-                                || (code >= 0x0A41 && code <= 0x0A42)
-                        then
+                        else if e 0x0A3C || r 0x0A41 0x0A42 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x0A3E && code <= 0x0A40 then
+                        else if r 0x0A3E 0x0A40 then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x0A47 && code <= 0x0A48)
-                            || (code >= 0x0A4B && code <= 0x0A4D)
-                            || (code == 0x0A51)
-                            || (code == 0x0A70)
+                        r 0x0A47 0x0A48
+                            || r 0x0A4B 0x0A4D
+                            || e 0x0A51
+                            || e 0x0A70
                     then
                         Just MarkNonSpacing
 
-                    else if (code >= 0x0A59 && code <= 0x0A5C) || (code == 0x0A5E) then
+                    else if r 0x0A59 0x0A5C || e 0x0A5E then
                         Just LetterOther
 
-                    else if code >= 0x0A66 && code <= 0x0A6F then
+                    else if r 0x0A66 0x0A6F then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code < 0x0ABC then
-                    if
-                        (code == 0x0A71)
-                            || (code == 0x0A75)
-                            || (code >= 0x0A81 && code <= 0x0A82)
-                    then
+                else if l 0x0ABC then
+                    if e 0x0A71 || e 0x0A75 || r 0x0A81 0x0A82 then
                         Just MarkNonSpacing
 
                     else if
-                        (code >= 0x0A72 && code <= 0x0A74)
-                            || (code >= 0x0A85 && code <= 0x0A8D)
-                            || (code >= 0x0A8F && code <= 0x0A91)
-                            || (code >= 0x0A93 && code <= 0x0AA8)
-                            || (code >= 0x0AAA && code <= 0x0AB0)
-                            || (code >= 0x0AB2 && code <= 0x0AB3)
-                            || (code >= 0x0AB5 && code <= 0x0AB9)
+                        r 0x0A72 0x0A74
+                            || r 0x0A85 0x0A8D
+                            || r 0x0A8F 0x0A91
+                            || r 0x0A93 0x0AA8
+                            || r 0x0AAA 0x0AB0
+                            || r 0x0AB2 0x0AB3
+                            || r 0x0AB5 0x0AB9
                     then
                         Just LetterOther
 
-                    else if code == 0x0A76 then
+                    else if e 0x0A76 then
                         Just PunctuationOther
 
-                    else if code == 0x0A83 then
+                    else if e 0x0A83 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0x0ACC then
-                    if
-                        (code == 0x0ABC)
-                            || (code >= 0x0AC1 && code <= 0x0AC5)
-                            || (code >= 0x0AC7 && code <= 0x0AC8)
-                    then
+                else if l 0x0ACC then
+                    if e 0x0ABC || r 0x0AC1 0x0AC5 || r 0x0AC7 0x0AC8 then
                         Just MarkNonSpacing
 
-                    else if code == 0x0ABD then
+                    else if e 0x0ABD then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x0ABE && code <= 0x0AC0)
-                            || (code == 0x0AC9)
-                            || (code == 0x0ACB)
-                    then
+                    else if r 0x0ABE 0x0AC0 || e 0x0AC9 || e 0x0ACB then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code == 0x0ACC then
+                else if e 0x0ACC then
                     Just MarkSpacingCombining
 
-                else if (code == 0x0ACD) || (code >= 0x0AE2 && code <= 0x0AE3) then
+                else if e 0x0ACD || r 0x0AE2 0x0AE3 then
                     Just MarkNonSpacing
 
-                else if (code == 0x0AD0) || (code >= 0x0AE0 && code <= 0x0AE1) then
+                else if e 0x0AD0 || r 0x0AE0 0x0AE1 then
                     Just LetterOther
 
-                else if code >= 0x0AE6 && code <= 0x0AEF then
+                else if r 0x0AE6 0x0AEF then
                     Just NumberDecimalDigit
 
-                else if code == 0x0AF0 then
+                else if e 0x0AF0 then
                     Just PunctuationOther
 
-                else if code == 0x0AF1 then
+                else if e 0x0AF1 then
                     Just SymbolCurrency
 
                 else
                     Nothing
 
-            else if code < 0x0B70 then
-                if code < 0x0B3D then
+            else if l 0x0B70 then
+                if l 0x0B3D then
                     if
-                        (code == 0x0AF9)
-                            || (code >= 0x0B05 && code <= 0x0B0C)
-                            || (code >= 0x0B0F && code <= 0x0B10)
-                            || (code >= 0x0B13 && code <= 0x0B28)
-                            || (code >= 0x0B2A && code <= 0x0B30)
-                            || (code >= 0x0B32 && code <= 0x0B33)
-                            || (code >= 0x0B35 && code <= 0x0B39)
+                        e 0x0AF9
+                            || r 0x0B05 0x0B0C
+                            || r 0x0B0F 0x0B10
+                            || r 0x0B13 0x0B28
+                            || r 0x0B2A 0x0B30
+                            || r 0x0B32 0x0B33
+                            || r 0x0B35 0x0B39
                     then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x0AFA && code <= 0x0AFF)
-                            || (code == 0x0B01)
-                            || (code == 0x0B3C)
-                    then
+                    else if r 0x0AFA 0x0AFF || e 0x0B01 || e 0x0B3C then
                         Just MarkNonSpacing
 
-                    else if code >= 0x0B02 && code <= 0x0B03 then
+                    else if r 0x0B02 0x0B03 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0x0B4C then
-                    if code == 0x0B3D then
+                else if l 0x0B4C then
+                    if e 0x0B3D then
                         Just LetterOther
 
-                    else if
-                        (code == 0x0B3E)
-                            || (code == 0x0B40)
-                            || (code >= 0x0B47 && code <= 0x0B48)
-                            || (code == 0x0B4B)
-                    then
+                    else if e 0x0B3E || e 0x0B40 || r 0x0B47 0x0B48 || e 0x0B4B then
                         Just MarkSpacingCombining
 
-                    else if (code == 0x0B3F) || (code >= 0x0B41 && code <= 0x0B44) then
+                    else if e 0x0B3F || r 0x0B41 0x0B44 then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if (code == 0x0B4C) || (code == 0x0B57) then
+                else if e 0x0B4C || e 0x0B57 then
                     Just MarkSpacingCombining
 
-                else if
-                    (code == 0x0B4D)
-                        || (code >= 0x0B55 && code <= 0x0B56)
-                        || (code >= 0x0B62 && code <= 0x0B63)
-                then
+                else if e 0x0B4D || r 0x0B55 0x0B56 || r 0x0B62 0x0B63 then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0x0B5C && code <= 0x0B5D)
-                        || (code >= 0x0B5F && code <= 0x0B61)
-                then
+                else if r 0x0B5C 0x0B5D || r 0x0B5F 0x0B61 then
                     Just LetterOther
 
-                else if code >= 0x0B66 && code <= 0x0B6F then
+                else if r 0x0B66 0x0B6F then
                     Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if code < 0x0BAD then
-                if code < 0x0B8D then
-                    if code == 0x0B70 then
+            else if l 0x0BAD then
+                if l 0x0B8D then
+                    if e 0x0B70 then
                         Just SymbolOther
 
-                    else if
-                        (code == 0x0B71)
-                            || (code == 0x0B83)
-                            || (code >= 0x0B85 && code <= 0x0B8A)
-                    then
+                    else if e 0x0B71 || e 0x0B83 || r 0x0B85 0x0B8A then
                         Just LetterOther
 
-                    else if code >= 0x0B72 && code <= 0x0B77 then
+                    else if r 0x0B72 0x0B77 then
                         Just NumberOther
 
-                    else if code == 0x0B82 then
+                    else if e 0x0B82 then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
                 else if
-                    (code >= 0x0B8E && code <= 0x0B90)
-                        || (code >= 0x0B92 && code <= 0x0B95)
-                        || (code >= 0x0B99 && code <= 0x0B9A)
-                        || (code == 0x0B9C)
-                        || (code >= 0x0B9E && code <= 0x0B9F)
-                        || (code >= 0x0BA3 && code <= 0x0BA4)
-                        || (code >= 0x0BA8 && code <= 0x0BAA)
+                    r 0x0B8E 0x0B90
+                        || r 0x0B92 0x0B95
+                        || r 0x0B99 0x0B9A
+                        || e 0x0B9C
+                        || r 0x0B9E 0x0B9F
+                        || r 0x0BA3 0x0BA4
+                        || r 0x0BA8 0x0BAA
                 then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0x0BCF then
-                if code >= 0x0BAE && code <= 0x0BB9 then
+            else if l 0x0BCF then
+                if r 0x0BAE 0x0BB9 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x0BBE && code <= 0x0BBF)
-                        || (code >= 0x0BC1 && code <= 0x0BC2)
-                        || (code >= 0x0BC6 && code <= 0x0BC8)
-                        || (code >= 0x0BCA && code <= 0x0BCC)
+                    r 0x0BBE 0x0BBF
+                        || r 0x0BC1 0x0BC2
+                        || r 0x0BC6 0x0BC8
+                        || r 0x0BCA 0x0BCC
                 then
                     Just MarkSpacingCombining
 
-                else if (code == 0x0BC0) || (code == 0x0BCD) then
+                else if e 0x0BC0 || e 0x0BCD then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code == 0x0BD0 then
+            else if e 0x0BD0 then
                 Just LetterOther
 
-            else if code == 0x0BD7 then
+            else if e 0x0BD7 then
                 Just MarkSpacingCombining
 
-            else if code >= 0x0BE6 && code <= 0x0BEF then
+            else if r 0x0BE6 0x0BEF then
                 Just NumberDecimalDigit
 
-            else if code >= 0x0BF0 && code <= 0x0BF2 then
+            else if r 0x0BF0 0x0BF2 then
                 Just NumberOther
 
-            else if (code >= 0x0BF3 && code <= 0x0BF8) || (code == 0x0BFA) then
+            else if r 0x0BF3 0x0BF8 || e 0x0BFA then
                 Just SymbolOther
 
-            else if code == 0x0BF9 then
+            else if e 0x0BF9 then
                 Just SymbolCurrency
 
             else
                 Nothing
 
-        else if code < 0x1E0B then
-            if code < 0x12BF then
-                if code < 0x0EA6 then
-                    if code < 0x0D11 then
-                        if code < 0x0C83 then
-                            if code < 0x0C49 then
+        else if l 0x1E0B then
+            if l 0x12BF then
+                if l 0x0EA6 then
+                    if l 0x0D11 then
+                        if l 0x0C83 then
+                            if l 0x0C49 then
                                 if
-                                    (code == 0x0C00)
-                                        || (code == 0x0C04)
-                                        || (code == 0x0C3C)
-                                        || (code >= 0x0C3E && code <= 0x0C40)
-                                        || (code >= 0x0C46 && code <= 0x0C48)
+                                    e 0x0C00
+                                        || e 0x0C04
+                                        || e 0x0C3C
+                                        || r 0x0C3E 0x0C40
+                                        || r 0x0C46 0x0C48
                                 then
                                     Just MarkNonSpacing
 
-                                else if
-                                    (code >= 0x0C01 && code <= 0x0C03)
-                                        || (code >= 0x0C41 && code <= 0x0C44)
-                                then
+                                else if r 0x0C01 0x0C03 || r 0x0C41 0x0C44 then
                                     Just MarkSpacingCombining
 
                                 else if
-                                    (code >= 0x0C05 && code <= 0x0C0C)
-                                        || (code >= 0x0C0E && code <= 0x0C10)
-                                        || (code >= 0x0C12 && code <= 0x0C28)
-                                        || (code >= 0x0C2A && code <= 0x0C39)
-                                        || (code == 0x0C3D)
+                                    r 0x0C05 0x0C0C
+                                        || r 0x0C0E 0x0C10
+                                        || r 0x0C12 0x0C28
+                                        || r 0x0C2A 0x0C39
+                                        || e 0x0C3D
                                 then
                                     Just LetterOther
 
                                 else
                                     Nothing
 
-                            else if code < 0x0C65 then
+                            else if l 0x0C65 then
                                 if
-                                    (code >= 0x0C4A && code <= 0x0C4D)
-                                        || (code >= 0x0C55 && code <= 0x0C56)
-                                        || (code >= 0x0C62 && code <= 0x0C63)
+                                    r 0x0C4A 0x0C4D
+                                        || r 0x0C55 0x0C56
+                                        || r 0x0C62 0x0C63
                                 then
                                     Just MarkNonSpacing
 
                                 else if
-                                    (code >= 0x0C58 && code <= 0x0C5A)
-                                        || (code == 0x0C5D)
-                                        || (code >= 0x0C60 && code <= 0x0C61)
+                                    r 0x0C58 0x0C5A
+                                        || e 0x0C5D
+                                        || r 0x0C60 0x0C61
                                 then
                                     Just LetterOther
 
                                 else
                                     Nothing
 
-                            else if code >= 0x0C66 && code <= 0x0C6F then
+                            else if r 0x0C66 0x0C6F then
                                 Just NumberDecimalDigit
 
-                            else if code == 0x0C77 then
+                            else if e 0x0C77 then
                                 Just PunctuationOther
 
-                            else if code >= 0x0C78 && code <= 0x0C7E then
+                            else if r 0x0C78 0x0C7E then
                                 Just NumberOther
 
-                            else if code == 0x0C7F then
+                            else if e 0x0C7F then
                                 Just SymbolOther
 
-                            else if code == 0x0C80 then
+                            else if e 0x0C80 then
                                 Just LetterOther
 
-                            else if code == 0x0C81 then
+                            else if e 0x0C81 then
                                 Just MarkNonSpacing
 
-                            else if code == 0x0C82 then
+                            else if e 0x0C82 then
                                 Just MarkSpacingCombining
 
                             else
                                 Nothing
 
-                        else if code < 0x0CC6 then
-                            if
-                                (code == 0x0C83)
-                                    || (code == 0x0CBE)
-                                    || (code >= 0x0CC0 && code <= 0x0CC4)
-                            then
+                        else if l 0x0CC6 then
+                            if e 0x0C83 || e 0x0CBE || r 0x0CC0 0x0CC4 then
                                 Just MarkSpacingCombining
 
-                            else if code == 0x0C84 then
+                            else if e 0x0C84 then
                                 Just PunctuationOther
 
                             else if
-                                (code >= 0x0C85 && code <= 0x0C8C)
-                                    || (code >= 0x0C8E && code <= 0x0C90)
-                                    || (code >= 0x0C92 && code <= 0x0CA8)
-                                    || (code >= 0x0CAA && code <= 0x0CB3)
-                                    || (code >= 0x0CB5 && code <= 0x0CB9)
-                                    || (code == 0x0CBD)
+                                r 0x0C85 0x0C8C
+                                    || r 0x0C8E 0x0C90
+                                    || r 0x0C92 0x0CA8
+                                    || r 0x0CAA 0x0CB3
+                                    || r 0x0CB5 0x0CB9
+                                    || e 0x0CBD
                             then
                                 Just LetterOther
 
-                            else if (code == 0x0CBC) || (code == 0x0CBF) then
+                            else if e 0x0CBC || e 0x0CBF then
                                 Just MarkNonSpacing
 
                             else
                                 Nothing
 
-                        else if code < 0x0CE1 then
-                            if
-                                (code == 0x0CC6)
-                                    || (code >= 0x0CCC && code <= 0x0CCD)
-                            then
+                        else if l 0x0CE1 then
+                            if e 0x0CC6 || r 0x0CCC 0x0CCD then
                                 Just MarkNonSpacing
 
                             else if
-                                (code >= 0x0CC7 && code <= 0x0CC8)
-                                    || (code >= 0x0CCA && code <= 0x0CCB)
-                                    || (code >= 0x0CD5 && code <= 0x0CD6)
+                                r 0x0CC7 0x0CC8
+                                    || r 0x0CCA 0x0CCB
+                                    || r 0x0CD5 0x0CD6
                             then
                                 Just MarkSpacingCombining
 
-                            else if
-                                (code >= 0x0CDD && code <= 0x0CDE)
-                                    || (code == 0x0CE0)
-                            then
+                            else if r 0x0CDD 0x0CDE || e 0x0CE0 then
                                 Just LetterOther
 
                             else
                                 Nothing
 
                         else if
-                            (code == 0x0CE1)
-                                || (code >= 0x0CF1 && code <= 0x0CF2)
-                                || (code >= 0x0D04 && code <= 0x0D0C)
-                                || (code >= 0x0D0E && code <= 0x0D10)
+                            e 0x0CE1
+                                || r 0x0CF1 0x0CF2
+                                || r 0x0D04 0x0D0C
+                                || r 0x0D0E 0x0D10
                         then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x0CE2 && code <= 0x0CE3)
-                                || (code >= 0x0D00 && code <= 0x0D01)
-                        then
+                        else if r 0x0CE2 0x0CE3 || r 0x0D00 0x0D01 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x0CE6 && code <= 0x0CEF then
+                        else if r 0x0CE6 0x0CEF then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x0D02 && code <= 0x0D03 then
+                        else if r 0x0D02 0x0D03 then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if code < 0x0DBF then
-                        if code < 0x0D57 then
+                    else if l 0x0DBF then
+                        if l 0x0D57 then
                             if
-                                (code >= 0x0D12 && code <= 0x0D3A)
-                                    || (code == 0x0D3D)
-                                    || (code == 0x0D4E)
-                                    || (code >= 0x0D54 && code <= 0x0D56)
+                                r 0x0D12 0x0D3A
+                                    || e 0x0D3D
+                                    || e 0x0D4E
+                                    || r 0x0D54 0x0D56
                             then
                                 Just LetterOther
 
-                            else if
-                                (code >= 0x0D3B && code <= 0x0D3C)
-                                    || (code >= 0x0D41 && code <= 0x0D44)
-                                    || (code == 0x0D4D)
-                            then
+                            else if r 0x0D3B 0x0D3C || r 0x0D41 0x0D44 || e 0x0D4D then
                                 Just MarkNonSpacing
 
                             else if
-                                (code >= 0x0D3E && code <= 0x0D40)
-                                    || (code >= 0x0D46 && code <= 0x0D48)
-                                    || (code >= 0x0D4A && code <= 0x0D4C)
+                                r 0x0D3E 0x0D40
+                                    || r 0x0D46 0x0D48
+                                    || r 0x0D4A 0x0D4C
                             then
                                 Just MarkSpacingCombining
 
-                            else if code == 0x0D4F then
+                            else if e 0x0D4F then
                                 Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if code < 0x0D79 then
-                            if code == 0x0D57 then
+                        else if l 0x0D79 then
+                            if e 0x0D57 then
                                 Just MarkSpacingCombining
 
-                            else if
-                                (code >= 0x0D58 && code <= 0x0D5E)
-                                    || (code >= 0x0D70 && code <= 0x0D78)
-                            then
+                            else if r 0x0D58 0x0D5E || r 0x0D70 0x0D78 then
                                 Just NumberOther
 
-                            else if code >= 0x0D5F && code <= 0x0D61 then
+                            else if r 0x0D5F 0x0D61 then
                                 Just LetterOther
 
-                            else if code >= 0x0D62 && code <= 0x0D63 then
+                            else if r 0x0D62 0x0D63 then
                                 Just MarkNonSpacing
 
-                            else if code >= 0x0D66 && code <= 0x0D6F then
+                            else if r 0x0D66 0x0D6F then
                                 Just NumberDecimalDigit
 
                             else
                                 Nothing
 
-                        else if code == 0x0D79 then
+                        else if e 0x0D79 then
                             Just SymbolOther
 
                         else if
-                            (code >= 0x0D7A && code <= 0x0D7F)
-                                || (code >= 0x0D85 && code <= 0x0D96)
-                                || (code >= 0x0D9A && code <= 0x0DB1)
-                                || (code >= 0x0DB3 && code <= 0x0DBB)
-                                || (code == 0x0DBD)
+                            r 0x0D7A 0x0D7F
+                                || r 0x0D85 0x0D96
+                                || r 0x0D9A 0x0DB1
+                                || r 0x0DB3 0x0DBB
+                                || e 0x0DBD
                         then
                             Just LetterOther
 
-                        else if code == 0x0D81 then
+                        else if e 0x0D81 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x0D82 && code <= 0x0D83 then
+                        else if r 0x0D82 0x0D83 then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if code < 0x0E33 then
-                        if
-                            (code >= 0x0DC0 && code <= 0x0DC6)
-                                || (code >= 0x0E01 && code <= 0x0E30)
-                                || (code == 0x0E32)
-                        then
+                    else if l 0x0E33 then
+                        if r 0x0DC0 0x0DC6 || r 0x0E01 0x0E30 || e 0x0E32 then
                             Just LetterOther
 
-                        else if
-                            (code == 0x0DCA)
-                                || (code >= 0x0DD2 && code <= 0x0DD4)
-                                || (code == 0x0DD6)
-                                || (code == 0x0E31)
-                        then
+                        else if e 0x0DCA || r 0x0DD2 0x0DD4 || e 0x0DD6 || e 0x0E31 then
                             Just MarkNonSpacing
 
                         else if
-                            (code >= 0x0DCF && code <= 0x0DD1)
-                                || (code >= 0x0DD8 && code <= 0x0DDF)
-                                || (code >= 0x0DF2 && code <= 0x0DF3)
+                            r 0x0DCF 0x0DD1
+                                || r 0x0DD8 0x0DDF
+                                || r 0x0DF2 0x0DF3
                         then
                             Just MarkSpacingCombining
 
-                        else if code >= 0x0DE6 && code <= 0x0DEF then
+                        else if r 0x0DE6 0x0DEF then
                             Just NumberDecimalDigit
 
-                        else if code == 0x0DF4 then
+                        else if e 0x0DF4 then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code < 0x0E4F then
-                        if
-                            (code == 0x0E33)
-                                || (code >= 0x0E40 && code <= 0x0E45)
-                        then
+                    else if l 0x0E4F then
+                        if e 0x0E33 || r 0x0E40 0x0E45 then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x0E34 && code <= 0x0E3A)
-                                || (code >= 0x0E47 && code <= 0x0E4E)
-                        then
+                        else if r 0x0E34 0x0E3A || r 0x0E47 0x0E4E then
                             Just MarkNonSpacing
 
-                        else if code == 0x0E3F then
+                        else if e 0x0E3F then
                             Just SymbolCurrency
 
-                        else if code == 0x0E46 then
+                        else if e 0x0E46 then
                             Just LetterModifier
 
                         else
                             Nothing
 
-                    else if (code == 0x0E4F) || (code >= 0x0E5A && code <= 0x0E5B) then
+                    else if e 0x0E4F || r 0x0E5A 0x0E5B then
                         Just PunctuationOther
 
-                    else if code >= 0x0E50 && code <= 0x0E59 then
+                    else if r 0x0E50 0x0E59 then
                         Just NumberDecimalDigit
 
                     else if
-                        (code >= 0x0E81 && code <= 0x0E82)
-                            || (code == 0x0E84)
-                            || (code >= 0x0E86 && code <= 0x0E8A)
-                            || (code >= 0x0E8C && code <= 0x0EA3)
-                            || (code == 0x0EA5)
+                        r 0x0E81 0x0E82
+                            || e 0x0E84
+                            || r 0x0E86 0x0E8A
+                            || r 0x0E8C 0x0EA3
+                            || e 0x0EA5
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x102C then
-                    if code < 0x0F38 then
-                        if code < 0x0F03 then
+                else if l 0x102C then
+                    if l 0x0F38 then
+                        if l 0x0F03 then
                             if
-                                (code >= 0x0EA7 && code <= 0x0EB0)
-                                    || (code >= 0x0EB2 && code <= 0x0EB3)
-                                    || (code == 0x0EBD)
-                                    || (code >= 0x0EC0 && code <= 0x0EC4)
-                                    || (code >= 0x0EDC && code <= 0x0EDF)
-                                    || (code == 0x0F00)
+                                r 0x0EA7 0x0EB0
+                                    || r 0x0EB2 0x0EB3
+                                    || e 0x0EBD
+                                    || r 0x0EC0 0x0EC4
+                                    || r 0x0EDC 0x0EDF
+                                    || e 0x0F00
                             then
                                 Just LetterOther
 
-                            else if
-                                (code == 0x0EB1)
-                                    || (code >= 0x0EB4 && code <= 0x0EBC)
-                                    || (code >= 0x0EC8 && code <= 0x0ECD)
-                            then
+                            else if e 0x0EB1 || r 0x0EB4 0x0EBC || r 0x0EC8 0x0ECD then
                                 Just MarkNonSpacing
 
-                            else if code == 0x0EC6 then
+                            else if e 0x0EC6 then
                                 Just LetterModifier
 
-                            else if code >= 0x0ED0 && code <= 0x0ED9 then
+                            else if r 0x0ED0 0x0ED9 then
                                 Just NumberDecimalDigit
 
-                            else if code >= 0x0F01 && code <= 0x0F02 then
+                            else if r 0x0F01 0x0F02 then
                                 Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if code < 0x0F19 then
-                            if
-                                (code == 0x0F03)
-                                    || (code == 0x0F13)
-                                    || (code >= 0x0F15 && code <= 0x0F17)
-                            then
+                        else if l 0x0F19 then
+                            if e 0x0F03 || e 0x0F13 || r 0x0F15 0x0F17 then
                                 Just SymbolOther
 
-                            else if
-                                (code >= 0x0F04 && code <= 0x0F12)
-                                    || (code == 0x0F14)
-                            then
+                            else if r 0x0F04 0x0F12 || e 0x0F14 then
                                 Just PunctuationOther
 
-                            else if code == 0x0F18 then
+                            else if e 0x0F18 then
                                 Just MarkNonSpacing
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x0F19)
-                                || (code == 0x0F35)
-                                || (code == 0x0F37)
-                        then
+                        else if e 0x0F19 || e 0x0F35 || e 0x0F37 then
                             Just MarkNonSpacing
 
-                        else if
-                            (code >= 0x0F1A && code <= 0x0F1F)
-                                || (code == 0x0F34)
-                                || (code == 0x0F36)
-                        then
+                        else if r 0x0F1A 0x0F1F || e 0x0F34 || e 0x0F36 then
                             Just SymbolOther
 
-                        else if code >= 0x0F20 && code <= 0x0F29 then
+                        else if r 0x0F20 0x0F29 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x0F2A && code <= 0x0F33 then
+                        else if r 0x0F2A 0x0F33 then
                             Just NumberOther
 
                         else
                             Nothing
 
-                    else if code < 0x0F85 then
-                        if code == 0x0F38 then
+                    else if l 0x0F85 then
+                        if e 0x0F38 then
                             Just SymbolOther
 
-                        else if
-                            (code == 0x0F39)
-                                || (code >= 0x0F71 && code <= 0x0F7E)
-                                || (code >= 0x0F80 && code <= 0x0F84)
-                        then
+                        else if e 0x0F39 || r 0x0F71 0x0F7E || r 0x0F80 0x0F84 then
                             Just MarkNonSpacing
 
-                        else if (code == 0x0F3A) || (code == 0x0F3C) then
+                        else if e 0x0F3A || e 0x0F3C then
                             Just PunctuationOpen
 
-                        else if (code == 0x0F3B) || (code == 0x0F3D) then
+                        else if e 0x0F3B || e 0x0F3D then
                             Just PunctuationClose
 
-                        else if
-                            (code >= 0x0F3E && code <= 0x0F3F)
-                                || (code == 0x0F7F)
-                        then
+                        else if r 0x0F3E 0x0F3F || e 0x0F7F then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x0F40 && code <= 0x0F47)
-                                || (code >= 0x0F49 && code <= 0x0F6C)
-                        then
+                        else if r 0x0F40 0x0F47 || r 0x0F49 0x0F6C then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if code < 0x0FC6 then
-                        if code == 0x0F85 then
+                    else if l 0x0FC6 then
+                        if e 0x0F85 then
                             Just PunctuationOther
 
                         else if
-                            (code >= 0x0F86 && code <= 0x0F87)
-                                || (code >= 0x0F8D && code <= 0x0F97)
-                                || (code >= 0x0F99 && code <= 0x0FBC)
+                            r 0x0F86 0x0F87
+                                || r 0x0F8D 0x0F97
+                                || r 0x0F99 0x0FBC
                         then
                             Just MarkNonSpacing
 
-                        else if code >= 0x0F88 && code <= 0x0F8C then
+                        else if r 0x0F88 0x0F8C then
                             Just LetterOther
 
-                        else if code >= 0x0FBE && code <= 0x0FC5 then
+                        else if r 0x0FBE 0x0FC5 then
                             Just SymbolOther
 
                         else
                             Nothing
 
-                    else if code == 0x0FC6 then
+                    else if e 0x0FC6 then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x0FC7 && code <= 0x0FCC)
-                            || (code >= 0x0FCE && code <= 0x0FCF)
-                            || (code >= 0x0FD5 && code <= 0x0FD8)
-                    then
+                    else if r 0x0FC7 0x0FCC || r 0x0FCE 0x0FCF || r 0x0FD5 0x0FD8 then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x0FD0 && code <= 0x0FD4)
-                            || (code >= 0x0FD9 && code <= 0x0FDA)
-                    then
+                    else if r 0x0FD0 0x0FD4 || r 0x0FD9 0x0FDA then
                         Just PunctuationOther
 
-                    else if code >= 0x1000 && code <= 0x102A then
+                    else if r 0x1000 0x102A then
                         Just LetterOther
 
-                    else if code == 0x102B then
+                    else if e 0x102B then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0x1084 then
-                    if code < 0x1055 then
-                        if
-                            (code == 0x102C)
-                                || (code == 0x1031)
-                                || (code == 0x1038)
-                                || (code >= 0x103B && code <= 0x103C)
-                        then
+                else if l 0x1084 then
+                    if l 0x1055 then
+                        if e 0x102C || e 0x1031 || e 0x1038 || r 0x103B 0x103C then
                             Just MarkSpacingCombining
 
                         else if
-                            (code >= 0x102D && code <= 0x1030)
-                                || (code >= 0x1032 && code <= 0x1037)
-                                || (code >= 0x1039 && code <= 0x103A)
-                                || (code >= 0x103D && code <= 0x103E)
+                            r 0x102D 0x1030
+                                || r 0x1032 0x1037
+                                || r 0x1039 0x103A
+                                || r 0x103D 0x103E
                         then
                             Just MarkNonSpacing
 
-                        else if
-                            (code == 0x103F)
-                                || (code >= 0x1050 && code <= 0x1054)
-                        then
+                        else if e 0x103F || r 0x1050 0x1054 then
                             Just LetterOther
 
-                        else if code >= 0x1040 && code <= 0x1049 then
+                        else if r 0x1040 0x1049 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x104A && code <= 0x104F then
+                        else if r 0x104A 0x104F then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code < 0x1064 then
-                        if
-                            (code == 0x1055)
-                                || (code >= 0x105A && code <= 0x105D)
-                                || (code == 0x1061)
-                        then
+                    else if l 0x1064 then
+                        if e 0x1055 || r 0x105A 0x105D || e 0x1061 then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x1056 && code <= 0x1057)
-                                || (code >= 0x1062 && code <= 0x1063)
-                        then
+                        else if r 0x1056 0x1057 || r 0x1062 0x1063 then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x1058 && code <= 0x1059)
-                                || (code >= 0x105E && code <= 0x1060)
-                        then
+                        else if r 0x1058 0x1059 || r 0x105E 0x1060 then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1064)
-                            || (code >= 0x1067 && code <= 0x106D)
-                            || (code == 0x1083)
-                    then
+                    else if e 0x1064 || r 0x1067 0x106D || e 0x1083 then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0x1065 && code <= 0x1066)
-                            || (code >= 0x106E && code <= 0x1070)
-                            || (code >= 0x1075 && code <= 0x1081)
-                    then
+                    else if r 0x1065 0x1066 || r 0x106E 0x1070 || r 0x1075 0x1081 then
                         Just LetterOther
 
-                    else if (code >= 0x1071 && code <= 0x1074) || (code == 0x1082) then
+                    else if r 0x1071 0x1074 || e 0x1082 then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code < 0x10CF then
-                    if code < 0x108F then
-                        if
-                            (code == 0x1084)
-                                || (code >= 0x1087 && code <= 0x108C)
-                        then
+                else if l 0x10CF then
+                    if l 0x108F then
+                        if e 0x1084 || r 0x1087 0x108C then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x1085 && code <= 0x1086)
-                                || (code == 0x108D)
-                        then
+                        else if r 0x1085 0x1086 || e 0x108D then
                             Just MarkNonSpacing
 
-                        else if code == 0x108E then
+                        else if e 0x108E then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if (code == 0x108F) || (code >= 0x109A && code <= 0x109C) then
+                    else if e 0x108F || r 0x109A 0x109C then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x1090 && code <= 0x1099 then
+                    else if r 0x1090 0x1099 then
                         Just NumberDecimalDigit
 
-                    else if code == 0x109D then
+                    else if e 0x109D then
                         Just MarkNonSpacing
 
-                    else if code >= 0x109E && code <= 0x109F then
+                    else if r 0x109E 0x109F then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x10A0 && code <= 0x10C5)
-                            || (code == 0x10C7)
-                            || (code == 0x10CD)
-                    then
+                    else if r 0x10A0 0x10C5 || e 0x10C7 || e 0x10CD then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1257 then
-                    if
-                        (code >= 0x10D0 && code <= 0x10FA)
-                            || (code >= 0x10FD && code <= 0x10FF)
-                    then
+                else if l 0x1257 then
+                    if r 0x10D0 0x10FA || r 0x10FD 0x10FF then
                         Just LetterLowercase
 
-                    else if code == 0x10FB then
+                    else if e 0x10FB then
                         Just PunctuationOther
 
-                    else if code == 0x10FC then
+                    else if e 0x10FC then
                         Just LetterModifier
 
-                    else if
-                        (code >= 0x1100 && code <= 0x1248)
-                            || (code >= 0x124A && code <= 0x124D)
-                            || (code >= 0x1250 && code <= 0x1256)
-                    then
+                    else if r 0x1100 0x1248 || r 0x124A 0x124D || r 0x1250 0x1256 then
                         Just LetterOther
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x1258)
-                        || (code >= 0x125A && code <= 0x125D)
-                        || (code >= 0x1260 && code <= 0x1288)
-                        || (code >= 0x128A && code <= 0x128D)
-                        || (code >= 0x1290 && code <= 0x12B0)
-                        || (code >= 0x12B2 && code <= 0x12B5)
-                        || (code >= 0x12B8 && code <= 0x12BE)
+                    e 0x1258
+                        || r 0x125A 0x125D
+                        || r 0x1260 0x1288
+                        || r 0x128A 0x128D
+                        || r 0x1290 0x12B0
+                        || r 0x12B2 0x12B5
+                        || r 0x12B8 0x12BE
                 then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0x1A60 then
-                if code < 0x17DA then
-                    if code < 0x16ED then
-                        if code < 0x13F7 then
+            else if l 0x1A60 then
+                if l 0x17DA then
+                    if l 0x16ED then
+                        if l 0x13F7 then
                             if
-                                (code == 0x12C0)
-                                    || (code >= 0x12C2 && code <= 0x12C5)
-                                    || (code >= 0x12C8 && code <= 0x12D6)
-                                    || (code >= 0x12D8 && code <= 0x1310)
-                                    || (code >= 0x1312 && code <= 0x1315)
-                                    || (code >= 0x1318 && code <= 0x135A)
-                                    || (code >= 0x1380 && code <= 0x138F)
+                                e 0x12C0
+                                    || r 0x12C2 0x12C5
+                                    || r 0x12C8 0x12D6
+                                    || r 0x12D8 0x1310
+                                    || r 0x1312 0x1315
+                                    || r 0x1318 0x135A
+                                    || r 0x1380 0x138F
                             then
                                 Just LetterOther
 
-                            else if code >= 0x135D && code <= 0x135F then
+                            else if r 0x135D 0x135F then
                                 Just MarkNonSpacing
 
-                            else if code >= 0x1360 && code <= 0x1368 then
+                            else if r 0x1360 0x1368 then
                                 Just PunctuationOther
 
-                            else if code >= 0x1369 && code <= 0x137C then
+                            else if r 0x1369 0x137C then
                                 Just NumberOther
 
-                            else if code >= 0x1390 && code <= 0x1399 then
+                            else if r 0x1390 0x1399 then
                                 Just SymbolOther
 
-                            else if code >= 0x13A0 && code <= 0x13F5 then
+                            else if r 0x13A0 0x13F5 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code >= 0x13F8 && code <= 0x13FD then
+                        else if r 0x13F8 0x13FD then
                             Just LetterLowercase
 
-                        else if code == 0x1400 then
+                        else if e 0x1400 then
                             Just PunctuationDash
 
                         else if
-                            (code >= 0x1401 && code <= 0x166C)
-                                || (code >= 0x166F && code <= 0x167F)
-                                || (code >= 0x1681 && code <= 0x169A)
-                                || (code >= 0x16A0 && code <= 0x16EA)
+                            r 0x1401 0x166C
+                                || r 0x166F 0x167F
+                                || r 0x1681 0x169A
+                                || r 0x16A0 0x16EA
                         then
                             Just LetterOther
 
-                        else if code == 0x166D then
+                        else if e 0x166D then
                             Just SymbolOther
 
-                        else if
-                            (code == 0x166E)
-                                || (code >= 0x16EB && code <= 0x16EC)
-                        then
+                        else if e 0x166E || r 0x16EB 0x16EC then
                             Just PunctuationOther
 
-                        else if code == 0x1680 then
+                        else if e 0x1680 then
                             Just SeparatorSpace
 
-                        else if code == 0x169B then
+                        else if e 0x169B then
                             Just PunctuationOpen
 
-                        else if code == 0x169C then
+                        else if e 0x169C then
                             Just PunctuationClose
 
                         else
                             Nothing
 
-                    else if code < 0x176D then
-                        if code < 0x171E then
-                            if code == 0x16ED then
+                    else if l 0x176D then
+                        if l 0x171E then
+                            if e 0x16ED then
                                 Just PunctuationOther
 
-                            else if code >= 0x16EE && code <= 0x16F0 then
+                            else if r 0x16EE 0x16F0 then
                                 Just NumberLetter
 
-                            else if
-                                (code >= 0x16F1 && code <= 0x16F8)
-                                    || (code >= 0x1700 && code <= 0x1711)
-                            then
+                            else if r 0x16F1 0x16F8 || r 0x1700 0x1711 then
                                 Just LetterOther
 
-                            else if code >= 0x1712 && code <= 0x1714 then
+                            else if r 0x1712 0x1714 then
                                 Just MarkNonSpacing
 
-                            else if code == 0x1715 then
+                            else if e 0x1715 then
                                 Just MarkSpacingCombining
 
                             else
                                 Nothing
 
                         else if
-                            (code >= 0x171F && code <= 0x1731)
-                                || (code >= 0x1740 && code <= 0x1751)
-                                || (code >= 0x1760 && code <= 0x176C)
+                            r 0x171F 0x1731
+                                || r 0x1740 0x1751
+                                || r 0x1760 0x176C
                         then
                             Just LetterOther
 
-                        else if
-                            (code >= 0x1732 && code <= 0x1733)
-                                || (code >= 0x1752 && code <= 0x1753)
-                        then
+                        else if r 0x1732 0x1733 || r 0x1752 0x1753 then
                             Just MarkNonSpacing
 
-                        else if code == 0x1734 then
+                        else if e 0x1734 then
                             Just MarkSpacingCombining
 
-                        else if code >= 0x1735 && code <= 0x1736 then
+                        else if r 0x1735 0x1736 then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code < 0x17BD then
-                        if
-                            (code >= 0x176E && code <= 0x1770)
-                                || (code >= 0x1780 && code <= 0x17B3)
-                        then
+                    else if l 0x17BD then
+                        if r 0x176E 0x1770 || r 0x1780 0x17B3 then
                             Just LetterOther
 
                         else if
-                            (code >= 0x1772 && code <= 0x1773)
-                                || (code >= 0x17B4 && code <= 0x17B5)
-                                || (code >= 0x17B7 && code <= 0x17BC)
+                            r 0x1772 0x1773
+                                || r 0x17B4 0x17B5
+                                || r 0x17B7 0x17BC
                         then
                             Just MarkNonSpacing
 
-                        else if code == 0x17B6 then
+                        else if e 0x17B6 then
                             Just MarkSpacingCombining
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x17BD)
-                            || (code == 0x17C6)
-                            || (code >= 0x17C9 && code <= 0x17D3)
-                    then
+                    else if e 0x17BD || e 0x17C6 || r 0x17C9 0x17D3 then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x17BE && code <= 0x17C5)
-                            || (code >= 0x17C7 && code <= 0x17C8)
-                    then
+                    else if r 0x17BE 0x17C5 || r 0x17C7 0x17C8 then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0x17D4 && code <= 0x17D6)
-                            || (code >= 0x17D8 && code <= 0x17D9)
-                    then
+                    else if r 0x17D4 0x17D6 || r 0x17D8 0x17D9 then
                         Just PunctuationOther
 
-                    else if code == 0x17D7 then
+                    else if e 0x17D7 then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if code < 0x1926 then
-                    if code < 0x180F then
-                        if
-                            (code == 0x17DA)
-                                || (code >= 0x1800 && code <= 0x1805)
-                                || (code >= 0x1807 && code <= 0x180A)
-                        then
+                else if l 0x1926 then
+                    if l 0x180F then
+                        if e 0x17DA || r 0x1800 0x1805 || r 0x1807 0x180A then
                             Just PunctuationOther
 
-                        else if code == 0x17DB then
+                        else if e 0x17DB then
                             Just SymbolCurrency
 
-                        else if code == 0x17DC then
+                        else if e 0x17DC then
                             Just LetterOther
 
-                        else if
-                            (code == 0x17DD)
-                                || (code >= 0x180B && code <= 0x180D)
-                        then
+                        else if e 0x17DD || r 0x180B 0x180D then
                             Just MarkNonSpacing
 
-                        else if code >= 0x17E0 && code <= 0x17E9 then
+                        else if r 0x17E0 0x17E9 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x17F0 && code <= 0x17F9 then
+                        else if r 0x17F0 0x17F9 then
                             Just NumberOther
 
-                        else if code == 0x1806 then
+                        else if e 0x1806 then
                             Just PunctuationDash
 
-                        else if code == 0x180E then
+                        else if e 0x180E then
                             Just OtherFormat
 
                         else
                             Nothing
 
-                    else if code < 0x1886 then
-                        if (code == 0x180F) || (code == 0x1885) then
+                    else if l 0x1886 then
+                        if e 0x180F || e 0x1885 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x1810 && code <= 0x1819 then
+                        else if r 0x1810 0x1819 then
                             Just NumberDecimalDigit
 
                         else if
-                            (code >= 0x1820 && code <= 0x1842)
-                                || (code >= 0x1844 && code <= 0x1878)
-                                || (code >= 0x1880 && code <= 0x1884)
+                            r 0x1820 0x1842
+                                || r 0x1844 0x1878
+                                || r 0x1880 0x1884
                         then
                             Just LetterOther
 
-                        else if code == 0x1843 then
+                        else if e 0x1843 then
                             Just LetterModifier
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1886)
-                            || (code == 0x18A9)
-                            || (code >= 0x1920 && code <= 0x1922)
-                    then
+                    else if e 0x1886 || e 0x18A9 || r 0x1920 0x1922 then
                         Just MarkNonSpacing
 
                     else if
-                        (code >= 0x1887 && code <= 0x18A8)
-                            || (code == 0x18AA)
-                            || (code >= 0x18B0 && code <= 0x18F5)
-                            || (code >= 0x1900 && code <= 0x191E)
+                        r 0x1887 0x18A8
+                            || e 0x18AA
+                            || r 0x18B0 0x18F5
+                            || r 0x1900 0x191E
                     then
                         Just LetterOther
 
-                    else if code >= 0x1923 && code <= 0x1925 then
+                    else if r 0x1923 0x1925 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0x19AF then
-                    if code < 0x1938 then
+                else if l 0x19AF then
+                    if l 0x1938 then
                         if
-                            (code == 0x1926)
-                                || (code >= 0x1929 && code <= 0x192B)
-                                || (code >= 0x1930 && code <= 0x1931)
-                                || (code >= 0x1933 && code <= 0x1937)
+                            e 0x1926
+                                || r 0x1929 0x192B
+                                || r 0x1930 0x1931
+                                || r 0x1933 0x1937
                         then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x1927 && code <= 0x1928)
-                                || (code == 0x1932)
-                        then
+                        else if r 0x1927 0x1928 || e 0x1932 then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if code == 0x1938 then
+                    else if e 0x1938 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x1939 && code <= 0x193B then
+                    else if r 0x1939 0x193B then
                         Just MarkNonSpacing
 
-                    else if code == 0x1940 then
+                    else if e 0x1940 then
                         Just SymbolOther
 
-                    else if code >= 0x1944 && code <= 0x1945 then
+                    else if r 0x1944 0x1945 then
                         Just PunctuationOther
 
-                    else if code >= 0x1946 && code <= 0x194F then
+                    else if r 0x1946 0x194F then
                         Just NumberDecimalDigit
 
-                    else if
-                        (code >= 0x1950 && code <= 0x196D)
-                            || (code >= 0x1970 && code <= 0x1974)
-                            || (code >= 0x1980 && code <= 0x19AB)
-                    then
+                    else if r 0x1950 0x196D || r 0x1970 0x1974 || r 0x1980 0x19AB then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x1A1A then
-                    if
-                        (code >= 0x19B0 && code <= 0x19C9)
-                            || (code >= 0x1A00 && code <= 0x1A16)
-                    then
+                else if l 0x1A1A then
+                    if r 0x19B0 0x19C9 || r 0x1A00 0x1A16 then
                         Just LetterOther
 
-                    else if code >= 0x19D0 && code <= 0x19D9 then
+                    else if r 0x19D0 0x19D9 then
                         Just NumberDecimalDigit
 
-                    else if code == 0x19DA then
+                    else if e 0x19DA then
                         Just NumberOther
 
-                    else if code >= 0x19DE && code <= 0x19FF then
+                    else if r 0x19DE 0x19FF then
                         Just SymbolOther
 
-                    else if code >= 0x1A17 && code <= 0x1A18 then
+                    else if r 0x1A17 0x1A18 then
                         Just MarkNonSpacing
 
-                    else if code == 0x1A19 then
+                    else if e 0x1A19 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if (code == 0x1A1A) || (code == 0x1A55) || (code == 0x1A57) then
+                else if e 0x1A1A || e 0x1A55 || e 0x1A57 then
                     Just MarkSpacingCombining
 
-                else if
-                    (code == 0x1A1B)
-                        || (code == 0x1A56)
-                        || (code >= 0x1A58 && code <= 0x1A5E)
-                then
+                else if e 0x1A1B || e 0x1A56 || r 0x1A58 0x1A5E then
                     Just MarkNonSpacing
 
-                else if code >= 0x1A1E && code <= 0x1A1F then
+                else if r 0x1A1E 0x1A1F then
                     Just PunctuationOther
 
-                else if code >= 0x1A20 && code <= 0x1A54 then
+                else if r 0x1A20 0x1A54 then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0x1BED then
-                if code < 0x1B41 then
-                    if code < 0x1AA7 then
+            else if l 0x1BED then
+                if l 0x1B41 then
+                    if l 0x1AA7 then
                         if
-                            (code == 0x1A60)
-                                || (code == 0x1A62)
-                                || (code >= 0x1A65 && code <= 0x1A6C)
-                                || (code >= 0x1A73 && code <= 0x1A7C)
-                                || (code == 0x1A7F)
+                            e 0x1A60
+                                || e 0x1A62
+                                || r 0x1A65 0x1A6C
+                                || r 0x1A73 0x1A7C
+                                || e 0x1A7F
                         then
                             Just MarkNonSpacing
 
-                        else if
-                            (code == 0x1A61)
-                                || (code >= 0x1A63 && code <= 0x1A64)
-                                || (code >= 0x1A6D && code <= 0x1A72)
-                        then
+                        else if e 0x1A61 || r 0x1A63 0x1A64 || r 0x1A6D 0x1A72 then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x1A80 && code <= 0x1A89)
-                                || (code >= 0x1A90 && code <= 0x1A99)
-                        then
+                        else if r 0x1A80 0x1A89 || r 0x1A90 0x1A99 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x1AA0 && code <= 0x1AA6 then
+                        else if r 0x1AA0 0x1AA6 then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code < 0x1B04 then
-                        if code == 0x1AA7 then
+                    else if l 0x1B04 then
+                        if e 0x1AA7 then
                             Just LetterModifier
 
-                        else if code >= 0x1AA8 && code <= 0x1AAD then
+                        else if r 0x1AA8 0x1AAD then
                             Just PunctuationOther
 
                         else if
-                            (code >= 0x1AB0 && code <= 0x1ABD)
-                                || (code >= 0x1ABF && code <= 0x1ACE)
-                                || (code >= 0x1B00 && code <= 0x1B03)
+                            r 0x1AB0 0x1ABD
+                                || r 0x1ABF 0x1ACE
+                                || r 0x1B00 0x1B03
                         then
                             Just MarkNonSpacing
 
-                        else if code == 0x1ABE then
+                        else if e 0x1ABE then
                             Just MarkEnclosing
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1B04)
-                            || (code == 0x1B35)
-                            || (code == 0x1B3B)
-                            || (code >= 0x1B3D && code <= 0x1B40)
-                    then
+                    else if e 0x1B04 || e 0x1B35 || e 0x1B3B || r 0x1B3D 0x1B40 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x1B05 && code <= 0x1B33 then
+                    else if r 0x1B05 0x1B33 then
                         Just LetterOther
 
-                    else if
-                        (code == 0x1B34)
-                            || (code >= 0x1B36 && code <= 0x1B3A)
-                            || (code == 0x1B3C)
-                    then
+                    else if e 0x1B34 || r 0x1B36 0x1B3A || e 0x1B3C then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code < 0x1BA0 then
-                    if code < 0x1B60 then
-                        if
-                            (code == 0x1B41)
-                                || (code >= 0x1B43 && code <= 0x1B44)
-                        then
+                else if l 0x1BA0 then
+                    if l 0x1B60 then
+                        if e 0x1B41 || r 0x1B43 0x1B44 then
                             Just MarkSpacingCombining
 
-                        else if code == 0x1B42 then
+                        else if e 0x1B42 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x1B45 && code <= 0x1B4C then
+                        else if r 0x1B45 0x1B4C then
                             Just LetterOther
 
-                        else if code >= 0x1B50 && code <= 0x1B59 then
+                        else if r 0x1B50 0x1B59 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x1B5A && code <= 0x1B5F then
+                        else if r 0x1B5A 0x1B5F then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if (code == 0x1B60) || (code >= 0x1B7D && code <= 0x1B7E) then
+                    else if e 0x1B60 || r 0x1B7D 0x1B7E then
                         Just PunctuationOther
 
-                    else if
-                        (code >= 0x1B61 && code <= 0x1B6A)
-                            || (code >= 0x1B74 && code <= 0x1B7C)
-                    then
+                    else if r 0x1B61 0x1B6A || r 0x1B74 0x1B7C then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x1B6B && code <= 0x1B73)
-                            || (code >= 0x1B80 && code <= 0x1B81)
-                    then
+                    else if r 0x1B6B 0x1B73 || r 0x1B80 0x1B81 then
                         Just MarkNonSpacing
 
-                    else if code == 0x1B82 then
+                    else if e 0x1B82 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x1B83 && code <= 0x1B9F then
+                    else if r 0x1B83 0x1B9F then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x1BAD then
-                    if code == 0x1BA0 then
+                else if l 0x1BAD then
+                    if e 0x1BA0 then
                         Just LetterOther
 
-                    else if
-                        (code == 0x1BA1)
-                            || (code >= 0x1BA6 && code <= 0x1BA7)
-                            || (code == 0x1BAA)
-                    then
+                    else if e 0x1BA1 || r 0x1BA6 0x1BA7 || e 0x1BAA then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0x1BA2 && code <= 0x1BA5)
-                            || (code >= 0x1BA8 && code <= 0x1BA9)
-                            || (code >= 0x1BAB && code <= 0x1BAC)
-                    then
+                    else if r 0x1BA2 0x1BA5 || r 0x1BA8 0x1BA9 || r 0x1BAB 0x1BAC then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x1BAD)
-                        || (code == 0x1BE6)
-                        || (code >= 0x1BE8 && code <= 0x1BE9)
-                then
+                else if e 0x1BAD || e 0x1BE6 || r 0x1BE8 0x1BE9 then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0x1BAE && code <= 0x1BAF)
-                        || (code >= 0x1BBA && code <= 0x1BE5)
-                then
+                else if r 0x1BAE 0x1BAF || r 0x1BBA 0x1BE5 then
                     Just LetterOther
 
-                else if code >= 0x1BB0 && code <= 0x1BB9 then
+                else if r 0x1BB0 0x1BB9 then
                     Just NumberDecimalDigit
 
-                else if (code == 0x1BE7) || (code >= 0x1BEA && code <= 0x1BEC) then
+                else if e 0x1BE7 || r 0x1BEA 0x1BEC then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x1CE8 then
-                if code < 0x1C4F then
-                    if code < 0x1C23 then
-                        if
-                            (code == 0x1BED)
-                                || (code >= 0x1BEF && code <= 0x1BF1)
-                        then
+            else if l 0x1CE8 then
+                if l 0x1C4F then
+                    if l 0x1C23 then
+                        if e 0x1BED || r 0x1BEF 0x1BF1 then
                             Just MarkNonSpacing
 
-                        else if
-                            (code == 0x1BEE)
-                                || (code >= 0x1BF2 && code <= 0x1BF3)
-                        then
+                        else if e 0x1BEE || r 0x1BF2 0x1BF3 then
                             Just MarkSpacingCombining
 
-                        else if code >= 0x1BFC && code <= 0x1BFF then
+                        else if r 0x1BFC 0x1BFF then
                             Just PunctuationOther
 
-                        else if code >= 0x1C00 && code <= 0x1C22 then
+                        else if r 0x1C00 0x1C22 then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if (code == 0x1C23) || (code >= 0x1C4D && code <= 0x1C4E) then
+                    else if e 0x1C23 || r 0x1C4D 0x1C4E then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x1C24 && code <= 0x1C2B)
-                            || (code >= 0x1C34 && code <= 0x1C35)
-                    then
+                    else if r 0x1C24 0x1C2B || r 0x1C34 0x1C35 then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0x1C2C && code <= 0x1C33)
-                            || (code >= 0x1C36 && code <= 0x1C37)
-                    then
+                    else if r 0x1C2C 0x1C33 || r 0x1C36 0x1C37 then
                         Just MarkNonSpacing
 
-                    else if code >= 0x1C3B && code <= 0x1C3F then
+                    else if r 0x1C3B 0x1C3F then
                         Just PunctuationOther
 
-                    else if code >= 0x1C40 && code <= 0x1C49 then
+                    else if r 0x1C40 0x1C49 then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code < 0x1CBC then
-                    if (code == 0x1C4F) || (code >= 0x1C5A && code <= 0x1C77) then
+                else if l 0x1CBC then
+                    if e 0x1C4F || r 0x1C5A 0x1C77 then
                         Just LetterOther
 
-                    else if code >= 0x1C50 && code <= 0x1C59 then
+                    else if r 0x1C50 0x1C59 then
                         Just NumberDecimalDigit
 
-                    else if code >= 0x1C78 && code <= 0x1C7D then
+                    else if r 0x1C78 0x1C7D then
                         Just LetterModifier
 
-                    else if code >= 0x1C7E && code <= 0x1C7F then
+                    else if r 0x1C7E 0x1C7F then
                         Just PunctuationOther
 
-                    else if code >= 0x1C80 && code <= 0x1C88 then
+                    else if r 0x1C80 0x1C88 then
                         Just LetterLowercase
 
-                    else if code >= 0x1C90 && code <= 0x1CBA then
+                    else if r 0x1C90 0x1CBA then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code >= 0x1CBD && code <= 0x1CBF then
+                else if r 0x1CBD 0x1CBF then
                     Just LetterUppercase
 
-                else if (code >= 0x1CC0 && code <= 0x1CC7) || (code == 0x1CD3) then
+                else if r 0x1CC0 0x1CC7 || e 0x1CD3 then
                     Just PunctuationOther
 
-                else if
-                    (code >= 0x1CD0 && code <= 0x1CD2)
-                        || (code >= 0x1CD4 && code <= 0x1CE0)
-                        || (code >= 0x1CE2 && code <= 0x1CE7)
-                then
+                else if r 0x1CD0 0x1CD2 || r 0x1CD4 0x1CE0 || r 0x1CE2 0x1CE7 then
                     Just MarkNonSpacing
 
-                else if code == 0x1CE1 then
+                else if e 0x1CE1 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x1D78 then
-                if
-                    (code == 0x1CE8)
-                        || (code == 0x1CED)
-                        || (code == 0x1CF4)
-                        || (code >= 0x1CF8 && code <= 0x1CF9)
-                then
+            else if l 0x1D78 then
+                if e 0x1CE8 || e 0x1CED || e 0x1CF4 || r 0x1CF8 0x1CF9 then
                     Just MarkNonSpacing
 
                 else if
-                    (code >= 0x1CE9 && code <= 0x1CEC)
-                        || (code >= 0x1CEE && code <= 0x1CF3)
-                        || (code >= 0x1CF5 && code <= 0x1CF6)
-                        || (code == 0x1CFA)
+                    r 0x1CE9 0x1CEC
+                        || r 0x1CEE 0x1CF3
+                        || r 0x1CF5 0x1CF6
+                        || e 0x1CFA
                 then
                     Just LetterOther
 
-                else if code == 0x1CF7 then
+                else if e 0x1CF7 then
                     Just MarkSpacingCombining
 
-                else if
-                    (code >= 0x1D00 && code <= 0x1D2B)
-                        || (code >= 0x1D6B && code <= 0x1D77)
-                then
+                else if r 0x1D00 0x1D2B || r 0x1D6B 0x1D77 then
                     Just LetterLowercase
 
-                else if code >= 0x1D2C && code <= 0x1D6A then
+                else if r 0x1D2C 0x1D6A then
                     Just LetterModifier
 
                 else
                     Nothing
 
-            else if code < 0x1E02 then
-                if (code == 0x1D78) || (code >= 0x1D9B && code <= 0x1DBF) then
+            else if l 0x1E02 then
+                if e 0x1D78 || r 0x1D9B 0x1DBF then
                     Just LetterModifier
 
-                else if (code >= 0x1D79 && code <= 0x1D9A) || (code == 0x1E01) then
+                else if r 0x1D79 0x1D9A || e 0x1E01 then
                     Just LetterLowercase
 
-                else if code >= 0x1DC0 && code <= 0x1DFF then
+                else if r 0x1DC0 0x1DFF then
                     Just MarkNonSpacing
 
-                else if code == 0x1E00 then
+                else if e 0x1E00 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if
-                (code == 0x1E02)
-                    || (code == 0x1E04)
-                    || (code == 0x1E06)
-                    || (code == 0x1E08)
-                    || (code == 0x1E0A)
-            then
+            else if e 0x1E02 || e 0x1E04 || e 0x1E06 || e 0x1E08 || e 0x1E0A then
                 Just LetterUppercase
 
-            else if
-                (code == 0x1E03)
-                    || (code == 0x1E05)
-                    || (code == 0x1E07)
-                    || (code == 0x1E09)
-            then
+            else if e 0x1E03 || e 0x1E05 || e 0x1E07 || e 0x1E09 then
                 Just LetterLowercase
 
             else
                 Nothing
 
-        else if code < 0x1EDB then
-            if code < 0x1E6E then
-                if code < 0x1E3B then
-                    if code < 0x1E22 then
-                        if code < 0x1E15 then
+        else if l 0x1EDB then
+            if l 0x1E6E then
+                if l 0x1E3B then
+                    if l 0x1E22 then
+                        if l 0x1E15 then
                             if
-                                (code == 0x1E0B)
-                                    || (code == 0x1E0D)
-                                    || (code == 0x1E0F)
-                                    || (code == 0x1E11)
-                                    || (code == 0x1E13)
+                                e 0x1E0B
+                                    || e 0x1E0D
+                                    || e 0x1E0F
+                                    || e 0x1E11
+                                    || e 0x1E13
                             then
                                 Just LetterLowercase
 
                             else if
-                                (code == 0x1E0C)
-                                    || (code == 0x1E0E)
-                                    || (code == 0x1E10)
-                                    || (code == 0x1E12)
-                                    || (code == 0x1E14)
+                                e 0x1E0C
+                                    || e 0x1E0E
+                                    || e 0x1E10
+                                    || e 0x1E12
+                                    || e 0x1E14
                             then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if code < 0x1E1A then
-                            if
-                                (code == 0x1E15)
-                                    || (code == 0x1E17)
-                                    || (code == 0x1E19)
-                            then
+                        else if l 0x1E1A then
+                            if e 0x1E15 || e 0x1E17 || e 0x1E19 then
                                 Just LetterLowercase
 
-                            else if (code == 0x1E16) || (code == 0x1E18) then
+                            else if e 0x1E16 || e 0x1E18 then
                                 Just LetterUppercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x1E1A)
-                                || (code == 0x1E1C)
-                                || (code == 0x1E1E)
-                                || (code == 0x1E20)
-                        then
+                        else if e 0x1E1A || e 0x1E1C || e 0x1E1E || e 0x1E20 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x1E1B)
-                                || (code == 0x1E1D)
-                                || (code == 0x1E1F)
-                                || (code == 0x1E21)
-                        then
+                        else if e 0x1E1B || e 0x1E1D || e 0x1E1F || e 0x1E21 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x1E2D then
+                    else if l 0x1E2D then
                         if
-                            (code == 0x1E22)
-                                || (code == 0x1E24)
-                                || (code == 0x1E26)
-                                || (code == 0x1E28)
-                                || (code == 0x1E2A)
-                                || (code == 0x1E2C)
+                            e 0x1E22
+                                || e 0x1E24
+                                || e 0x1E26
+                                || e 0x1E28
+                                || e 0x1E2A
+                                || e 0x1E2C
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x1E23)
-                                || (code == 0x1E25)
-                                || (code == 0x1E27)
-                                || (code == 0x1E29)
-                                || (code == 0x1E2B)
+                            e 0x1E23
+                                || e 0x1E25
+                                || e 0x1E27
+                                || e 0x1E29
+                                || e 0x1E2B
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x1E33 then
-                        if
-                            (code == 0x1E2D)
-                                || (code == 0x1E2F)
-                                || (code == 0x1E31)
-                        then
+                    else if l 0x1E33 then
+                        if e 0x1E2D || e 0x1E2F || e 0x1E31 then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0x1E2E)
-                                || (code == 0x1E30)
-                                || (code == 0x1E32)
-                        then
+                        else if e 0x1E2E || e 0x1E30 || e 0x1E32 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1E33)
-                            || (code == 0x1E35)
-                            || (code == 0x1E37)
-                            || (code == 0x1E39)
-                    then
+                    else if e 0x1E33 || e 0x1E35 || e 0x1E37 || e 0x1E39 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x1E34)
-                            || (code == 0x1E36)
-                            || (code == 0x1E38)
-                            || (code == 0x1E3A)
-                    then
+                    else if e 0x1E34 || e 0x1E36 || e 0x1E38 || e 0x1E3A then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1E53 then
-                    if code < 0x1E46 then
+                else if l 0x1E53 then
+                    if l 0x1E46 then
                         if
-                            (code == 0x1E3B)
-                                || (code == 0x1E3D)
-                                || (code == 0x1E3F)
-                                || (code == 0x1E41)
-                                || (code == 0x1E43)
-                                || (code == 0x1E45)
+                            e 0x1E3B
+                                || e 0x1E3D
+                                || e 0x1E3F
+                                || e 0x1E41
+                                || e 0x1E43
+                                || e 0x1E45
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0x1E3C)
-                                || (code == 0x1E3E)
-                                || (code == 0x1E40)
-                                || (code == 0x1E42)
-                                || (code == 0x1E44)
+                            e 0x1E3C
+                                || e 0x1E3E
+                                || e 0x1E40
+                                || e 0x1E42
+                                || e 0x1E44
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x1E4B then
-                        if
-                            (code == 0x1E46)
-                                || (code == 0x1E48)
-                                || (code == 0x1E4A)
-                        then
+                    else if l 0x1E4B then
+                        if e 0x1E46 || e 0x1E48 || e 0x1E4A then
                             Just LetterUppercase
 
-                        else if (code == 0x1E47) || (code == 0x1E49) then
+                        else if e 0x1E47 || e 0x1E49 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1E4B)
-                            || (code == 0x1E4D)
-                            || (code == 0x1E4F)
-                            || (code == 0x1E51)
-                    then
+                    else if e 0x1E4B || e 0x1E4D || e 0x1E4F || e 0x1E51 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x1E4C)
-                            || (code == 0x1E4E)
-                            || (code == 0x1E50)
-                            || (code == 0x1E52)
-                    then
+                    else if e 0x1E4C || e 0x1E4E || e 0x1E50 || e 0x1E52 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1E5F then
+                else if l 0x1E5F then
                     if
-                        (code == 0x1E53)
-                            || (code == 0x1E55)
-                            || (code == 0x1E57)
-                            || (code == 0x1E59)
-                            || (code == 0x1E5B)
-                            || (code == 0x1E5D)
+                        e 0x1E53
+                            || e 0x1E55
+                            || e 0x1E57
+                            || e 0x1E59
+                            || e 0x1E5B
+                            || e 0x1E5D
                     then
                         Just LetterLowercase
 
                     else if
-                        (code == 0x1E54)
-                            || (code == 0x1E56)
-                            || (code == 0x1E58)
-                            || (code == 0x1E5A)
-                            || (code == 0x1E5C)
-                            || (code == 0x1E5E)
+                        e 0x1E54
+                            || e 0x1E56
+                            || e 0x1E58
+                            || e 0x1E5A
+                            || e 0x1E5C
+                            || e 0x1E5E
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1E65 then
-                    if (code == 0x1E5F) || (code == 0x1E61) || (code == 0x1E63) then
+                else if l 0x1E65 then
+                    if e 0x1E5F || e 0x1E61 || e 0x1E63 then
                         Just LetterLowercase
 
-                    else if (code == 0x1E60) || (code == 0x1E62) || (code == 0x1E64) then
+                    else if e 0x1E60 || e 0x1E62 || e 0x1E64 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x1E65)
-                        || (code == 0x1E67)
-                        || (code == 0x1E69)
-                        || (code == 0x1E6B)
-                        || (code == 0x1E6D)
-                then
+                else if e 0x1E65 || e 0x1E67 || e 0x1E69 || e 0x1E6B || e 0x1E6D then
                     Just LetterLowercase
 
-                else if
-                    (code == 0x1E66)
-                        || (code == 0x1E68)
-                        || (code == 0x1E6A)
-                        || (code == 0x1E6C)
-                then
+                else if e 0x1E66 || e 0x1E68 || e 0x1E6A || e 0x1E6C then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x1EA7 then
-                if code < 0x1E85 then
-                    if code < 0x1E78 then
+            else if l 0x1EA7 then
+                if l 0x1E85 then
+                    if l 0x1E78 then
                         if
-                            (code == 0x1E6E)
-                                || (code == 0x1E70)
-                                || (code == 0x1E72)
-                                || (code == 0x1E74)
-                                || (code == 0x1E76)
+                            e 0x1E6E
+                                || e 0x1E70
+                                || e 0x1E72
+                                || e 0x1E74
+                                || e 0x1E76
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x1E6F)
-                                || (code == 0x1E71)
-                                || (code == 0x1E73)
-                                || (code == 0x1E75)
-                                || (code == 0x1E77)
+                            e 0x1E6F
+                                || e 0x1E71
+                                || e 0x1E73
+                                || e 0x1E75
+                                || e 0x1E77
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x1E7D then
-                        if
-                            (code == 0x1E78)
-                                || (code == 0x1E7A)
-                                || (code == 0x1E7C)
-                        then
+                    else if l 0x1E7D then
+                        if e 0x1E78 || e 0x1E7A || e 0x1E7C then
                             Just LetterUppercase
 
-                        else if (code == 0x1E79) || (code == 0x1E7B) then
+                        else if e 0x1E79 || e 0x1E7B then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1E7D)
-                            || (code == 0x1E7F)
-                            || (code == 0x1E81)
-                            || (code == 0x1E83)
-                    then
+                    else if e 0x1E7D || e 0x1E7F || e 0x1E81 || e 0x1E83 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x1E7E)
-                            || (code == 0x1E80)
-                            || (code == 0x1E82)
-                            || (code == 0x1E84)
-                    then
+                    else if e 0x1E7E || e 0x1E80 || e 0x1E82 || e 0x1E84 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1E91 then
+                else if l 0x1E91 then
                     if
-                        (code == 0x1E85)
-                            || (code == 0x1E87)
-                            || (code == 0x1E89)
-                            || (code == 0x1E8B)
-                            || (code == 0x1E8D)
-                            || (code == 0x1E8F)
+                        e 0x1E85
+                            || e 0x1E87
+                            || e 0x1E89
+                            || e 0x1E8B
+                            || e 0x1E8D
+                            || e 0x1E8F
                     then
                         Just LetterLowercase
 
                     else if
-                        (code == 0x1E86)
-                            || (code == 0x1E88)
-                            || (code == 0x1E8A)
-                            || (code == 0x1E8C)
-                            || (code == 0x1E8E)
-                            || (code == 0x1E90)
+                        e 0x1E86
+                            || e 0x1E88
+                            || e 0x1E8A
+                            || e 0x1E8C
+                            || e 0x1E8E
+                            || e 0x1E90
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1E9F then
-                    if
-                        (code == 0x1E91)
-                            || (code == 0x1E93)
-                            || (code >= 0x1E95 && code <= 0x1E9D)
-                    then
+                else if l 0x1E9F then
+                    if e 0x1E91 || e 0x1E93 || r 0x1E95 0x1E9D then
                         Just LetterLowercase
 
-                    else if (code == 0x1E92) || (code == 0x1E94) || (code == 0x1E9E) then
+                    else if e 0x1E92 || e 0x1E94 || e 0x1E9E then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x1E9F)
-                        || (code == 0x1EA1)
-                        || (code == 0x1EA3)
-                        || (code == 0x1EA5)
-                then
+                else if e 0x1E9F || e 0x1EA1 || e 0x1EA3 || e 0x1EA5 then
                     Just LetterLowercase
 
-                else if
-                    (code == 0x1EA0)
-                        || (code == 0x1EA2)
-                        || (code == 0x1EA4)
-                        || (code == 0x1EA6)
-                then
+                else if e 0x1EA0 || e 0x1EA2 || e 0x1EA4 || e 0x1EA6 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x1EC0 then
-                if code < 0x1EB2 then
+            else if l 0x1EC0 then
+                if l 0x1EB2 then
                     if
-                        (code == 0x1EA7)
-                            || (code == 0x1EA9)
-                            || (code == 0x1EAB)
-                            || (code == 0x1EAD)
-                            || (code == 0x1EAF)
-                            || (code == 0x1EB1)
+                        e 0x1EA7
+                            || e 0x1EA9
+                            || e 0x1EAB
+                            || e 0x1EAD
+                            || e 0x1EAF
+                            || e 0x1EB1
                     then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x1EA8)
-                            || (code == 0x1EAA)
-                            || (code == 0x1EAC)
-                            || (code == 0x1EAE)
-                            || (code == 0x1EB0)
-                    then
+                    else if e 0x1EA8 || e 0x1EAA || e 0x1EAC || e 0x1EAE || e 0x1EB0 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1EB8 then
-                    if (code == 0x1EB2) || (code == 0x1EB4) || (code == 0x1EB6) then
+                else if l 0x1EB8 then
+                    if e 0x1EB2 || e 0x1EB4 || e 0x1EB6 then
                         Just LetterUppercase
 
-                    else if (code == 0x1EB3) || (code == 0x1EB5) || (code == 0x1EB7) then
+                    else if e 0x1EB3 || e 0x1EB5 || e 0x1EB7 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x1EB8)
-                        || (code == 0x1EBA)
-                        || (code == 0x1EBC)
-                        || (code == 0x1EBE)
-                then
+                else if e 0x1EB8 || e 0x1EBA || e 0x1EBC || e 0x1EBE then
                     Just LetterUppercase
 
-                else if
-                    (code == 0x1EB9)
-                        || (code == 0x1EBB)
-                        || (code == 0x1EBD)
-                        || (code == 0x1EBF)
-                then
+                else if e 0x1EB9 || e 0x1EBB || e 0x1EBD || e 0x1EBF then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0x1ECC then
+            else if l 0x1ECC then
                 if
-                    (code == 0x1EC0)
-                        || (code == 0x1EC2)
-                        || (code == 0x1EC4)
-                        || (code == 0x1EC6)
-                        || (code == 0x1EC8)
-                        || (code == 0x1ECA)
+                    e 0x1EC0
+                        || e 0x1EC2
+                        || e 0x1EC4
+                        || e 0x1EC6
+                        || e 0x1EC8
+                        || e 0x1ECA
                 then
                     Just LetterUppercase
 
                 else if
-                    (code == 0x1EC1)
-                        || (code == 0x1EC3)
-                        || (code == 0x1EC5)
-                        || (code == 0x1EC7)
-                        || (code == 0x1EC9)
-                        || (code == 0x1ECB)
+                    e 0x1EC1
+                        || e 0x1EC3
+                        || e 0x1EC5
+                        || e 0x1EC7
+                        || e 0x1EC9
+                        || e 0x1ECB
                 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0x1ED2 then
-                if (code == 0x1ECC) || (code == 0x1ECE) || (code == 0x1ED0) then
+            else if l 0x1ED2 then
+                if e 0x1ECC || e 0x1ECE || e 0x1ED0 then
                     Just LetterUppercase
 
-                else if (code == 0x1ECD) || (code == 0x1ECF) || (code == 0x1ED1) then
+                else if e 0x1ECD || e 0x1ECF || e 0x1ED1 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if
-                (code == 0x1ED2)
-                    || (code == 0x1ED4)
-                    || (code == 0x1ED6)
-                    || (code == 0x1ED8)
-                    || (code == 0x1EDA)
-            then
+            else if e 0x1ED2 || e 0x1ED4 || e 0x1ED6 || e 0x1ED8 || e 0x1EDA then
                 Just LetterUppercase
 
-            else if
-                (code == 0x1ED3)
-                    || (code == 0x1ED5)
-                    || (code == 0x1ED7)
-                    || (code == 0x1ED9)
-            then
+            else if e 0x1ED3 || e 0x1ED5 || e 0x1ED7 || e 0x1ED9 then
                 Just LetterLowercase
 
             else
                 Nothing
 
-        else if code < 0x2040 then
-            if code < 0x1F7F then
-                if code < 0x1EF3 then
-                    if code < 0x1EE6 then
+        else if l 0x2040 then
+            if l 0x1F7F then
+                if l 0x1EF3 then
+                    if l 0x1EE6 then
                         if
-                            (code == 0x1EDB)
-                                || (code == 0x1EDD)
-                                || (code == 0x1EDF)
-                                || (code == 0x1EE1)
-                                || (code == 0x1EE3)
-                                || (code == 0x1EE5)
+                            e 0x1EDB
+                                || e 0x1EDD
+                                || e 0x1EDF
+                                || e 0x1EE1
+                                || e 0x1EE3
+                                || e 0x1EE5
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0x1EDC)
-                                || (code == 0x1EDE)
-                                || (code == 0x1EE0)
-                                || (code == 0x1EE2)
-                                || (code == 0x1EE4)
+                            e 0x1EDC
+                                || e 0x1EDE
+                                || e 0x1EE0
+                                || e 0x1EE2
+                                || e 0x1EE4
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x1EEB then
-                        if
-                            (code == 0x1EE6)
-                                || (code == 0x1EE8)
-                                || (code == 0x1EEA)
-                        then
+                    else if l 0x1EEB then
+                        if e 0x1EE6 || e 0x1EE8 || e 0x1EEA then
                             Just LetterUppercase
 
-                        else if (code == 0x1EE7) || (code == 0x1EE9) then
+                        else if e 0x1EE7 || e 0x1EE9 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1EEB)
-                            || (code == 0x1EED)
-                            || (code == 0x1EEF)
-                            || (code == 0x1EF1)
-                    then
+                    else if e 0x1EEB || e 0x1EED || e 0x1EEF || e 0x1EF1 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x1EEC)
-                            || (code == 0x1EEE)
-                            || (code == 0x1EF0)
-                            || (code == 0x1EF2)
-                    then
+                    else if e 0x1EEC || e 0x1EEE || e 0x1EF0 || e 0x1EF2 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x1F07 then
-                    if code < 0x1EF8 then
-                        if
-                            (code == 0x1EF3)
-                                || (code == 0x1EF5)
-                                || (code == 0x1EF7)
-                        then
+                else if l 0x1F07 then
+                    if l 0x1EF8 then
+                        if e 0x1EF3 || e 0x1EF5 || e 0x1EF7 then
                             Just LetterLowercase
 
-                        else if (code == 0x1EF4) || (code == 0x1EF6) then
+                        else if e 0x1EF4 || e 0x1EF6 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x1EF8)
-                            || (code == 0x1EFA)
-                            || (code == 0x1EFC)
-                            || (code == 0x1EFE)
-                    then
+                    else if e 0x1EF8 || e 0x1EFA || e 0x1EFC || e 0x1EFE then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x1EF9)
-                            || (code == 0x1EFB)
-                            || (code == 0x1EFD)
-                            || (code >= 0x1EFF && code <= 0x1F06)
-                    then
+                    else if e 0x1EF9 || e 0x1EFB || e 0x1EFD || r 0x1EFF 0x1F06 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x1F37 then
+                else if l 0x1F37 then
                     if
-                        (code == 0x1F07)
-                            || (code >= 0x1F10 && code <= 0x1F15)
-                            || (code >= 0x1F20 && code <= 0x1F27)
-                            || (code >= 0x1F30 && code <= 0x1F36)
+                        e 0x1F07
+                            || r 0x1F10 0x1F15
+                            || r 0x1F20 0x1F27
+                            || r 0x1F30 0x1F36
                     then
                         Just LetterLowercase
 
-                    else if
-                        (code >= 0x1F08 && code <= 0x1F0F)
-                            || (code >= 0x1F18 && code <= 0x1F1D)
-                            || (code >= 0x1F28 && code <= 0x1F2F)
-                    then
+                    else if r 0x1F08 0x1F0F || r 0x1F18 0x1F1D || r 0x1F28 0x1F2F then
                         Just LetterUppercase
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x1F37)
-                        || (code >= 0x1F40 && code <= 0x1F45)
-                        || (code >= 0x1F50 && code <= 0x1F57)
-                        || (code >= 0x1F60 && code <= 0x1F67)
-                        || (code >= 0x1F70 && code <= 0x1F7D)
+                    e 0x1F37
+                        || r 0x1F40 0x1F45
+                        || r 0x1F50 0x1F57
+                        || r 0x1F60 0x1F67
+                        || r 0x1F70 0x1F7D
                 then
                     Just LetterLowercase
 
                 else if
-                    (code >= 0x1F38 && code <= 0x1F3F)
-                        || (code >= 0x1F48 && code <= 0x1F4D)
-                        || (code >= 0x1F68 && code <= 0x1F6F)
-                        || ((modBy 2 code == 1)
-                                && (code >= 0x1F59 && code <= 0x1F5F)
-                           )
+                    r 0x1F38 0x1F3F
+                        || r 0x1F48 0x1F4D
+                        || r 0x1F68 0x1F6F
+                        || ((modBy 2 code == 1) && r 0x1F59 0x1F5F)
                 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x1FF1 then
-                if code < 0x1FBE then
+            else if l 0x1FF1 then
+                if l 0x1FBE then
                     if
-                        (code >= 0x1F80 && code <= 0x1F87)
-                            || (code >= 0x1F90 && code <= 0x1F97)
-                            || (code >= 0x1FA0 && code <= 0x1FA7)
-                            || (code >= 0x1FB0 && code <= 0x1FB4)
-                            || (code >= 0x1FB6 && code <= 0x1FB7)
+                        r 0x1F80 0x1F87
+                            || r 0x1F90 0x1F97
+                            || r 0x1FA0 0x1FA7
+                            || r 0x1FB0 0x1FB4
+                            || r 0x1FB6 0x1FB7
                     then
                         Just LetterLowercase
 
                     else if
-                        (code >= 0x1F88 && code <= 0x1F8F)
-                            || (code >= 0x1F98 && code <= 0x1F9F)
-                            || (code >= 0x1FA8 && code <= 0x1FAF)
-                            || (code == 0x1FBC)
+                        r 0x1F88 0x1F8F
+                            || r 0x1F98 0x1F9F
+                            || r 0x1FA8 0x1FAF
+                            || e 0x1FBC
                     then
                         Just LetterTitlecase
 
-                    else if code >= 0x1FB8 && code <= 0x1FBB then
+                    else if r 0x1FB8 0x1FBB then
                         Just LetterUppercase
 
-                    else if code == 0x1FBD then
+                    else if e 0x1FBD then
                         Just SymbolModifier
 
                     else
                         Nothing
 
-                else if code < 0x1FCF then
-                    if
-                        (code == 0x1FBE)
-                            || (code >= 0x1FC2 && code <= 0x1FC4)
-                            || (code >= 0x1FC6 && code <= 0x1FC7)
-                    then
+                else if l 0x1FCF then
+                    if e 0x1FBE || r 0x1FC2 0x1FC4 || r 0x1FC6 0x1FC7 then
                         Just LetterLowercase
 
-                    else if
-                        (code >= 0x1FBF && code <= 0x1FC1)
-                            || (code >= 0x1FCD && code <= 0x1FCE)
-                    then
+                    else if r 0x1FBF 0x1FC1 || r 0x1FCD 0x1FCE then
                         Just SymbolModifier
 
-                    else if code >= 0x1FC8 && code <= 0x1FCB then
+                    else if r 0x1FC8 0x1FCB then
                         Just LetterUppercase
 
-                    else if code == 0x1FCC then
+                    else if e 0x1FCC then
                         Just LetterTitlecase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x1FCF)
-                        || (code >= 0x1FDD && code <= 0x1FDF)
-                        || (code >= 0x1FED && code <= 0x1FEF)
-                then
+                else if e 0x1FCF || r 0x1FDD 0x1FDF || r 0x1FED 0x1FEF then
                     Just SymbolModifier
 
-                else if
-                    (code >= 0x1FD0 && code <= 0x1FD3)
-                        || (code >= 0x1FD6 && code <= 0x1FD7)
-                        || (code >= 0x1FE0 && code <= 0x1FE7)
-                then
+                else if r 0x1FD0 0x1FD3 || r 0x1FD6 0x1FD7 || r 0x1FE0 0x1FE7 then
                     Just LetterLowercase
 
-                else if
-                    (code >= 0x1FD8 && code <= 0x1FDB)
-                        || (code >= 0x1FE8 && code <= 0x1FEC)
-                then
+                else if r 0x1FD8 0x1FDB || r 0x1FE8 0x1FEC then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x201C then
-                if code < 0x200A then
-                    if
-                        (code >= 0x1FF2 && code <= 0x1FF4)
-                            || (code >= 0x1FF6 && code <= 0x1FF7)
-                    then
+            else if l 0x201C then
+                if l 0x200A then
+                    if r 0x1FF2 0x1FF4 || r 0x1FF6 0x1FF7 then
                         Just LetterLowercase
 
-                    else if code >= 0x1FF8 && code <= 0x1FFB then
+                    else if r 0x1FF8 0x1FFB then
                         Just LetterUppercase
 
-                    else if code == 0x1FFC then
+                    else if e 0x1FFC then
                         Just LetterTitlecase
 
-                    else if code >= 0x1FFD && code <= 0x1FFE then
+                    else if r 0x1FFD 0x1FFE then
                         Just SymbolModifier
 
-                    else if code >= 0x2000 && code <= 0x2009 then
+                    else if r 0x2000 0x2009 then
                         Just SeparatorSpace
 
                     else
                         Nothing
 
-                else if code == 0x200A then
+                else if e 0x200A then
                     Just SeparatorSpace
 
-                else if code >= 0x200B && code <= 0x200F then
+                else if r 0x200B 0x200F then
                     Just OtherFormat
 
-                else if code >= 0x2010 && code <= 0x2015 then
+                else if r 0x2010 0x2015 then
                     Just PunctuationDash
 
-                else if code >= 0x2016 && code <= 0x2017 then
+                else if r 0x2016 0x2017 then
                     Just PunctuationOther
 
-                else if (code == 0x2018) || (code == 0x201B) then
+                else if e 0x2018 || e 0x201B then
                     Just PunctuationInitialQuote
 
-                else if code == 0x2019 then
+                else if e 0x2019 then
                     Just PunctuationFinalQuote
 
-                else if code == 0x201A then
+                else if e 0x201A then
                     Just PunctuationOpen
 
                 else
                     Nothing
 
-            else if code < 0x2029 then
-                if (code == 0x201C) || (code == 0x201F) then
+            else if l 0x2029 then
+                if e 0x201C || e 0x201F then
                     Just PunctuationInitialQuote
 
-                else if code == 0x201D then
+                else if e 0x201D then
                     Just PunctuationFinalQuote
 
-                else if code == 0x201E then
+                else if e 0x201E then
                     Just PunctuationOpen
 
-                else if code >= 0x2020 && code <= 0x2027 then
+                else if r 0x2020 0x2027 then
                     Just PunctuationOther
 
-                else if code == 0x2028 then
+                else if e 0x2028 then
                     Just SeparatorLine
 
                 else
                     Nothing
 
-            else if code == 0x2029 then
+            else if e 0x2029 then
                 Just SeparatorParagraph
 
-            else if code >= 0x202A && code <= 0x202E then
+            else if r 0x202A 0x202E then
                 Just OtherFormat
 
-            else if code == 0x202F then
+            else if e 0x202F then
                 Just SeparatorSpace
 
-            else if
-                (code >= 0x2030 && code <= 0x2038)
-                    || (code >= 0x203B && code <= 0x203E)
-            then
+            else if r 0x2030 0x2038 || r 0x203B 0x203E then
                 Just PunctuationOther
 
-            else if code == 0x2039 then
+            else if e 0x2039 then
                 Just PunctuationInitialQuote
 
-            else if code == 0x203A then
+            else if e 0x203A then
                 Just PunctuationFinalQuote
 
-            else if code == 0x203F then
+            else if e 0x203F then
                 Just PunctuationConnector
 
             else
                 Nothing
 
-        else if code < 0x2127 then
-            if code < 0x209F then
-                if code < 0x2065 then
-                    if (code == 0x2040) || (code == 0x2054) then
+        else if l 0x2127 then
+            if l 0x209F then
+                if l 0x2065 then
+                    if e 0x2040 || e 0x2054 then
                         Just PunctuationConnector
 
                     else if
-                        (code >= 0x2041 && code <= 0x2043)
-                            || (code >= 0x2047 && code <= 0x2051)
-                            || (code == 0x2053)
-                            || (code >= 0x2055 && code <= 0x205E)
+                        r 0x2041 0x2043
+                            || r 0x2047 0x2051
+                            || e 0x2053
+                            || r 0x2055 0x205E
                     then
                         Just PunctuationOther
 
-                    else if (code == 0x2044) || (code == 0x2052) then
+                    else if e 0x2044 || e 0x2052 then
                         Just SymbolMath
 
-                    else if code == 0x2045 then
+                    else if e 0x2045 then
                         Just PunctuationOpen
 
-                    else if code == 0x2046 then
+                    else if e 0x2046 then
                         Just PunctuationClose
 
-                    else if code == 0x205F then
+                    else if e 0x205F then
                         Just SeparatorSpace
 
-                    else if code >= 0x2060 && code <= 0x2064 then
+                    else if r 0x2060 0x2064 then
                         Just OtherFormat
 
                     else
                         Nothing
 
-                else if code < 0x207D then
-                    if code >= 0x2066 && code <= 0x206F then
+                else if l 0x207D then
+                    if r 0x2066 0x206F then
                         Just OtherFormat
 
-                    else if (code == 0x2070) || (code >= 0x2074 && code <= 0x2079) then
+                    else if e 0x2070 || r 0x2074 0x2079 then
                         Just NumberOther
 
-                    else if code == 0x2071 then
+                    else if e 0x2071 then
                         Just LetterModifier
 
-                    else if code >= 0x207A && code <= 0x207C then
+                    else if r 0x207A 0x207C then
                         Just SymbolMath
 
                     else
                         Nothing
 
-                else if (code == 0x207D) || (code == 0x208D) then
+                else if e 0x207D || e 0x208D then
                     Just PunctuationOpen
 
-                else if (code == 0x207E) || (code == 0x208E) then
+                else if e 0x207E || e 0x208E then
                     Just PunctuationClose
 
-                else if (code == 0x207F) || (code >= 0x2090 && code <= 0x209C) then
+                else if e 0x207F || r 0x2090 0x209C then
                     Just LetterModifier
 
-                else if code >= 0x2080 && code <= 0x2089 then
+                else if r 0x2080 0x2089 then
                     Just NumberOther
 
-                else if code >= 0x208A && code <= 0x208C then
+                else if r 0x208A 0x208C then
                     Just SymbolMath
 
                 else
                     Nothing
 
-            else if code < 0x210A then
-                if code >= 0x20A0 && code <= 0x20C0 then
+            else if l 0x210A then
+                if r 0x20A0 0x20C0 then
                     Just SymbolCurrency
 
-                else if
-                    (code >= 0x20D0 && code <= 0x20DC)
-                        || (code == 0x20E1)
-                        || (code >= 0x20E5 && code <= 0x20F0)
-                then
+                else if r 0x20D0 0x20DC || e 0x20E1 || r 0x20E5 0x20F0 then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0x20DD && code <= 0x20E0)
-                        || (code >= 0x20E2 && code <= 0x20E4)
-                then
+                else if r 0x20DD 0x20E0 || r 0x20E2 0x20E4 then
                     Just MarkEnclosing
 
-                else if
-                    (code >= 0x2100 && code <= 0x2101)
-                        || (code >= 0x2103 && code <= 0x2106)
-                        || (code >= 0x2108 && code <= 0x2109)
-                then
+                else if r 0x2100 0x2101 || r 0x2103 0x2106 || r 0x2108 0x2109 then
                     Just SymbolOther
 
-                else if (code == 0x2102) || (code == 0x2107) then
+                else if e 0x2102 || e 0x2107 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x2115 then
-                if
-                    (code == 0x210A)
-                        || (code >= 0x210E && code <= 0x210F)
-                        || (code == 0x2113)
-                then
+            else if l 0x2115 then
+                if e 0x210A || r 0x210E 0x210F || e 0x2113 then
                     Just LetterLowercase
 
-                else if
-                    (code >= 0x210B && code <= 0x210D)
-                        || (code >= 0x2110 && code <= 0x2112)
-                then
+                else if r 0x210B 0x210D || r 0x2110 0x2112 then
                     Just LetterUppercase
 
-                else if code == 0x2114 then
+                else if e 0x2114 then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if
-                (code == 0x2115)
-                    || (code >= 0x2119 && code <= 0x211D)
-                    || (code == 0x2124)
-                    || (code == 0x2126)
-            then
+            else if e 0x2115 || r 0x2119 0x211D || e 0x2124 || e 0x2126 then
                 Just LetterUppercase
 
-            else if
-                (code >= 0x2116 && code <= 0x2117)
-                    || (code >= 0x211E && code <= 0x2123)
-                    || (code == 0x2125)
-            then
+            else if r 0x2116 0x2117 || r 0x211E 0x2123 || e 0x2125 then
                 Just SymbolOther
 
-            else if code == 0x2118 then
+            else if e 0x2118 then
                 Just SymbolMath
 
             else
                 Nothing
 
-        else if code < 0x2188 then
-            if code < 0x213F then
-                if code < 0x212F then
-                    if (code == 0x2127) || (code == 0x2129) || (code == 0x212E) then
+        else if l 0x2188 then
+            if l 0x213F then
+                if l 0x212F then
+                    if e 0x2127 || e 0x2129 || e 0x212E then
                         Just SymbolOther
 
-                    else if (code == 0x2128) || (code >= 0x212A && code <= 0x212D) then
+                    else if e 0x2128 || r 0x212A 0x212D then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x212F)
-                        || (code == 0x2134)
-                        || (code == 0x2139)
-                        || (code >= 0x213C && code <= 0x213D)
-                then
+                else if e 0x212F || e 0x2134 || e 0x2139 || r 0x213C 0x213D then
                     Just LetterLowercase
 
-                else if (code >= 0x2130 && code <= 0x2133) || (code == 0x213E) then
+                else if r 0x2130 0x2133 || e 0x213E then
                     Just LetterUppercase
 
-                else if code >= 0x2135 && code <= 0x2138 then
+                else if r 0x2135 0x2138 then
                     Just LetterOther
 
-                else if code >= 0x213A && code <= 0x213B then
+                else if r 0x213A 0x213B then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if code < 0x214D then
-                if (code == 0x213F) || (code == 0x2145) then
+            else if l 0x214D then
+                if e 0x213F || e 0x2145 then
                     Just LetterUppercase
 
-                else if (code >= 0x2140 && code <= 0x2144) || (code == 0x214B) then
+                else if r 0x2140 0x2144 || e 0x214B then
                     Just SymbolMath
 
-                else if code >= 0x2146 && code <= 0x2149 then
+                else if r 0x2146 0x2149 then
                     Just LetterLowercase
 
-                else if (code == 0x214A) || (code == 0x214C) then
+                else if e 0x214A || e 0x214C then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if (code == 0x214D) || (code == 0x214F) then
+            else if e 0x214D || e 0x214F then
                 Just SymbolOther
 
-            else if (code == 0x214E) || (code == 0x2184) then
+            else if e 0x214E || e 0x2184 then
                 Just LetterLowercase
 
-            else if code >= 0x2150 && code <= 0x215F then
+            else if r 0x2150 0x215F then
                 Just NumberOther
 
-            else if
-                (code >= 0x2160 && code <= 0x2182)
-                    || (code >= 0x2185 && code <= 0x2187)
-            then
+            else if r 0x2160 0x2182 || r 0x2185 0x2187 then
                 Just NumberLetter
 
-            else if code == 0x2183 then
+            else if e 0x2183 then
                 Just LetterUppercase
 
             else
                 Nothing
 
-        else if code < 0x21AE then
-            if code < 0x219B then
-                if code == 0x2188 then
+        else if l 0x21AE then
+            if l 0x219B then
+                if e 0x2188 then
                     Just NumberLetter
 
-                else if code == 0x2189 then
+                else if e 0x2189 then
                     Just NumberOther
 
-                else if
-                    (code >= 0x218A && code <= 0x218B)
-                        || (code >= 0x2195 && code <= 0x2199)
-                then
+                else if r 0x218A 0x218B || r 0x2195 0x2199 then
                     Just SymbolOther
 
-                else if (code >= 0x2190 && code <= 0x2194) || (code == 0x219A) then
+                else if r 0x2190 0x2194 || e 0x219A then
                     Just SymbolMath
 
                 else
                     Nothing
 
-            else if
-                (code == 0x219B)
-                    || (code == 0x21A0)
-                    || (code == 0x21A3)
-                    || (code == 0x21A6)
-            then
+            else if e 0x219B || e 0x21A0 || e 0x21A3 || e 0x21A6 then
                 Just SymbolMath
 
             else if
-                (code >= 0x219C && code <= 0x219F)
-                    || (code >= 0x21A1 && code <= 0x21A2)
-                    || (code >= 0x21A4 && code <= 0x21A5)
-                    || (code >= 0x21A7 && code <= 0x21AD)
+                r 0x219C 0x219F
+                    || r 0x21A1 0x21A2
+                    || r 0x21A4 0x21A5
+                    || r 0x21A7 0x21AD
             then
                 Just SymbolOther
 
             else
                 Nothing
 
-        else if code < 0x21D4 then
-            if
-                (code == 0x21AE)
-                    || (code >= 0x21CE && code <= 0x21CF)
-                    || (code == 0x21D2)
-            then
+        else if l 0x21D4 then
+            if e 0x21AE || r 0x21CE 0x21CF || e 0x21D2 then
                 Just SymbolMath
 
-            else if
-                (code >= 0x21AF && code <= 0x21CD)
-                    || (code >= 0x21D0 && code <= 0x21D1)
-                    || (code == 0x21D3)
-            then
+            else if r 0x21AF 0x21CD || r 0x21D0 0x21D1 || e 0x21D3 then
                 Just SymbolOther
 
             else
                 Nothing
 
-        else if (code == 0x21D4) || (code >= 0x21F4 && code <= 0x22FF) then
+        else if e 0x21D4 || r 0x21F4 0x22FF then
             Just SymbolMath
 
-        else if
-            (code >= 0x21D5 && code <= 0x21F3)
-                || (code >= 0x2300 && code <= 0x2307)
-                || (code >= 0x230C && code <= 0x231E)
-        then
+        else if r 0x21D5 0x21F3 || r 0x2300 0x2307 || r 0x230C 0x231E then
             Just SymbolOther
 
-        else if (code == 0x2308) || (code == 0x230A) then
+        else if e 0x2308 || e 0x230A then
             Just PunctuationOpen
 
-        else if (code == 0x2309) || (code == 0x230B) then
+        else if e 0x2309 || e 0x230B then
             Just PunctuationClose
 
         else
             Nothing
 
-    else if code < 0xFE3A then
-        if code < 0xA652 then
-            if code < 0x2CD4 then
-                if code < 0x2C60 then
-                    if code < 0x27E9 then
-                        if code < 0x266F then
-                            if code < 0x23E1 then
+    else if l 0xFE3A then
+        if l 0xA652 then
+            if l 0x2CD4 then
+                if l 0x2C60 then
+                    if l 0x27E9 then
+                        if l 0x266F then
+                            if l 0x23E1 then
                                 if
-                                    (code == 0x231F)
-                                        || (code >= 0x2322 && code <= 0x2328)
-                                        || (code >= 0x232B && code <= 0x237B)
-                                        || (code >= 0x237D && code <= 0x239A)
-                                        || (code >= 0x23B4 && code <= 0x23DB)
+                                    e 0x231F
+                                        || r 0x2322 0x2328
+                                        || r 0x232B 0x237B
+                                        || r 0x237D 0x239A
+                                        || r 0x23B4 0x23DB
                                 then
                                     Just SymbolOther
 
                                 else if
-                                    (code >= 0x2320 && code <= 0x2321)
-                                        || (code == 0x237C)
-                                        || (code >= 0x239B && code <= 0x23B3)
-                                        || (code >= 0x23DC && code <= 0x23E0)
+                                    r 0x2320 0x2321
+                                        || e 0x237C
+                                        || r 0x239B 0x23B3
+                                        || r 0x23DC 0x23E0
                                 then
                                     Just SymbolMath
 
-                                else if code == 0x2329 then
+                                else if e 0x2329 then
                                     Just PunctuationOpen
 
-                                else if code == 0x232A then
+                                else if e 0x232A then
                                     Just PunctuationClose
 
                                 else
                                     Nothing
 
-                            else if code < 0x24FF then
-                                if code == 0x23E1 then
+                            else if l 0x24FF then
+                                if e 0x23E1 then
                                     Just SymbolMath
 
                                 else if
-                                    (code >= 0x23E2 && code <= 0x2426)
-                                        || (code >= 0x2440 && code <= 0x244A)
-                                        || (code >= 0x249C && code <= 0x24E9)
+                                    r 0x23E2 0x2426
+                                        || r 0x2440 0x244A
+                                        || r 0x249C 0x24E9
                                 then
                                     Just SymbolOther
 
-                                else if
-                                    (code >= 0x2460 && code <= 0x249B)
-                                        || (code >= 0x24EA && code <= 0x24FE)
-                                then
+                                else if r 0x2460 0x249B || r 0x24EA 0x24FE then
                                     Just NumberOther
 
                                 else
                                     Nothing
 
-                            else if code == 0x24FF then
+                            else if e 0x24FF then
                                 Just NumberOther
 
                             else if
-                                (code >= 0x2500 && code <= 0x25B6)
-                                    || (code >= 0x25B8 && code <= 0x25C0)
-                                    || (code >= 0x25C2 && code <= 0x25F7)
-                                    || (code >= 0x2600 && code <= 0x266E)
+                                r 0x2500 0x25B6
+                                    || r 0x25B8 0x25C0
+                                    || r 0x25C2 0x25F7
+                                    || r 0x2600 0x266E
                             then
                                 Just SymbolOther
 
-                            else if
-                                (code == 0x25B7)
-                                    || (code == 0x25C1)
-                                    || (code >= 0x25F8 && code <= 0x25FF)
-                            then
+                            else if e 0x25B7 || e 0x25C1 || r 0x25F8 0x25FF then
                                 Just SymbolMath
 
                             else
                                 Nothing
 
-                        else if code < 0x2771 then
-                            if code == 0x266F then
+                        else if l 0x2771 then
+                            if e 0x266F then
                                 Just SymbolMath
 
-                            else if code >= 0x2670 && code <= 0x2767 then
+                            else if r 0x2670 0x2767 then
                                 Just SymbolOther
 
                             else if
-                                (code == 0x2768)
-                                    || (code == 0x276A)
-                                    || (code == 0x276C)
-                                    || (code == 0x276E)
-                                    || (code == 0x2770)
+                                e 0x2768
+                                    || e 0x276A
+                                    || e 0x276C
+                                    || e 0x276E
+                                    || e 0x2770
                             then
                                 Just PunctuationOpen
 
-                            else if
-                                (code == 0x2769)
-                                    || (code == 0x276B)
-                                    || (code == 0x276D)
-                                    || (code == 0x276F)
-                            then
+                            else if e 0x2769 || e 0x276B || e 0x276D || e 0x276F then
                                 Just PunctuationClose
 
                             else
                                 Nothing
 
-                        else if code < 0x27BF then
-                            if
-                                (code == 0x2771)
-                                    || (code == 0x2773)
-                                    || (code == 0x2775)
-                            then
+                        else if l 0x27BF then
+                            if e 0x2771 || e 0x2773 || e 0x2775 then
                                 Just PunctuationClose
 
-                            else if (code == 0x2772) || (code == 0x2774) then
+                            else if e 0x2772 || e 0x2774 then
                                 Just PunctuationOpen
 
-                            else if code >= 0x2776 && code <= 0x2793 then
+                            else if r 0x2776 0x2793 then
                                 Just NumberOther
 
-                            else if code >= 0x2794 && code <= 0x27BE then
+                            else if r 0x2794 0x27BE then
                                 Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if code == 0x27BF then
+                        else if e 0x27BF then
                             Just SymbolOther
 
-                        else if
-                            (code >= 0x27C0 && code <= 0x27C4)
-                                || (code >= 0x27C7 && code <= 0x27E5)
-                        then
+                        else if r 0x27C0 0x27C4 || r 0x27C7 0x27E5 then
                             Just SymbolMath
 
-                        else if
-                            (code == 0x27C5)
-                                || (code == 0x27E6)
-                                || (code == 0x27E8)
-                        then
+                        else if e 0x27C5 || e 0x27E6 || e 0x27E8 then
                             Just PunctuationOpen
 
-                        else if (code == 0x27C6) || (code == 0x27E7) then
+                        else if e 0x27C6 || e 0x27E7 then
                             Just PunctuationClose
 
                         else
                             Nothing
 
-                    else if code < 0x2991 then
-                        if code < 0x2984 then
-                            if
-                                (code == 0x27E9)
-                                    || (code == 0x27EB)
-                                    || (code == 0x27ED)
-                                    || (code == 0x27EF)
-                            then
+                    else if l 0x2991 then
+                        if l 0x2984 then
+                            if e 0x27E9 || e 0x27EB || e 0x27ED || e 0x27EF then
                                 Just PunctuationClose
 
-                            else if
-                                (code == 0x27EA)
-                                    || (code == 0x27EC)
-                                    || (code == 0x27EE)
-                                    || (code == 0x2983)
-                            then
+                            else if e 0x27EA || e 0x27EC || e 0x27EE || e 0x2983 then
                                 Just PunctuationOpen
 
-                            else if
-                                (code >= 0x27F0 && code <= 0x27FF)
-                                    || (code >= 0x2900 && code <= 0x2982)
-                            then
+                            else if r 0x27F0 0x27FF || r 0x2900 0x2982 then
                                 Just SymbolMath
 
-                            else if code >= 0x2800 && code <= 0x28FF then
+                            else if r 0x2800 0x28FF then
                                 Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if code < 0x2989 then
-                            if
-                                (code == 0x2984)
-                                    || (code == 0x2986)
-                                    || (code == 0x2988)
-                            then
+                        else if l 0x2989 then
+                            if e 0x2984 || e 0x2986 || e 0x2988 then
                                 Just PunctuationClose
 
-                            else if (code == 0x2985) || (code == 0x2987) then
+                            else if e 0x2985 || e 0x2987 then
                                 Just PunctuationOpen
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x2989)
-                                || (code == 0x298B)
-                                || (code == 0x298D)
-                                || (code == 0x298F)
-                        then
+                        else if e 0x2989 || e 0x298B || e 0x298D || e 0x298F then
                             Just PunctuationOpen
 
-                        else if
-                            (code == 0x298A)
-                                || (code == 0x298C)
-                                || (code == 0x298E)
-                                || (code == 0x2990)
-                        then
+                        else if e 0x298A || e 0x298C || e 0x298E || e 0x2990 then
                             Just PunctuationClose
 
                         else
                             Nothing
 
-                    else if code < 0x29DB then
+                    else if l 0x29DB then
                         if
-                            (code == 0x2991)
-                                || (code == 0x2993)
-                                || (code == 0x2995)
-                                || (code == 0x2997)
-                                || (code == 0x29D8)
-                                || (code == 0x29DA)
+                            e 0x2991
+                                || e 0x2993
+                                || e 0x2995
+                                || e 0x2997
+                                || e 0x29D8
+                                || e 0x29DA
                         then
                             Just PunctuationOpen
 
                         else if
-                            (code == 0x2992)
-                                || (code == 0x2994)
-                                || (code == 0x2996)
-                                || (code == 0x2998)
-                                || (code == 0x29D9)
+                            e 0x2992
+                                || e 0x2994
+                                || e 0x2996
+                                || e 0x2998
+                                || e 0x29D9
                         then
                             Just PunctuationClose
 
-                        else if code >= 0x2999 && code <= 0x29D7 then
+                        else if r 0x2999 0x29D7 then
                             Just SymbolMath
 
                         else
                             Nothing
 
-                    else if code < 0x2B44 then
-                        if (code == 0x29DB) || (code == 0x29FD) then
+                    else if l 0x2B44 then
+                        if e 0x29DB || e 0x29FD then
                             Just PunctuationClose
 
                         else if
-                            (code >= 0x29DC && code <= 0x29FB)
-                                || (code >= 0x29FE && code <= 0x2AFF)
-                                || (code >= 0x2B30 && code <= 0x2B43)
+                            r 0x29DC 0x29FB
+                                || r 0x29FE 0x2AFF
+                                || r 0x2B30 0x2B43
                         then
                             Just SymbolMath
 
-                        else if code == 0x29FC then
+                        else if e 0x29FC then
                             Just PunctuationOpen
 
-                        else if code >= 0x2B00 && code <= 0x2B2F then
+                        else if r 0x2B00 0x2B2F then
                             Just SymbolOther
 
                         else
                             Nothing
 
-                    else if (code == 0x2B44) || (code >= 0x2B47 && code <= 0x2B4C) then
+                    else if e 0x2B44 || r 0x2B47 0x2B4C then
                         Just SymbolMath
 
                     else if
-                        (code >= 0x2B45 && code <= 0x2B46)
-                            || (code >= 0x2B4D && code <= 0x2B73)
-                            || (code >= 0x2B76 && code <= 0x2B95)
-                            || (code >= 0x2B97 && code <= 0x2BFF)
+                        r 0x2B45 0x2B46
+                            || r 0x2B4D 0x2B73
+                            || r 0x2B76 0x2B95
+                            || r 0x2B97 0x2BFF
                     then
                         Just SymbolOther
 
-                    else if code >= 0x2C00 && code <= 0x2C2F then
+                    else if r 0x2C00 0x2C2F then
                         Just LetterUppercase
 
-                    else if code >= 0x2C30 && code <= 0x2C5F then
+                    else if r 0x2C30 0x2C5F then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x2CA0 then
-                    if code < 0x2C86 then
-                        if code < 0x2C70 then
+                else if l 0x2CA0 then
+                    if l 0x2C86 then
+                        if l 0x2C70 then
                             if
-                                (code == 0x2C60)
-                                    || (code >= 0x2C62 && code <= 0x2C64)
-                                    || (code == 0x2C67)
-                                    || (code == 0x2C69)
-                                    || (code == 0x2C6B)
-                                    || (code >= 0x2C6D && code <= 0x2C6F)
+                                e 0x2C60
+                                    || r 0x2C62 0x2C64
+                                    || e 0x2C67
+                                    || e 0x2C69
+                                    || e 0x2C6B
+                                    || r 0x2C6D 0x2C6F
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x2C61)
-                                    || (code >= 0x2C65 && code <= 0x2C66)
-                                    || (code == 0x2C68)
-                                    || (code == 0x2C6A)
-                                    || (code == 0x2C6C)
+                                e 0x2C61
+                                    || r 0x2C65 0x2C66
+                                    || e 0x2C68
+                                    || e 0x2C6A
+                                    || e 0x2C6C
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x2C7B then
-                            if
-                                (code == 0x2C70)
-                                    || (code == 0x2C72)
-                                    || (code == 0x2C75)
-                            then
+                        else if l 0x2C7B then
+                            if e 0x2C70 || e 0x2C72 || e 0x2C75 then
                                 Just LetterUppercase
 
-                            else if
-                                (code == 0x2C71)
-                                    || (code >= 0x2C73 && code <= 0x2C74)
-                                    || (code >= 0x2C76 && code <= 0x2C7A)
-                            then
+                            else if e 0x2C71 || r 0x2C73 0x2C74 || r 0x2C76 0x2C7A then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0x2C7B)
-                                || (code == 0x2C81)
-                                || (code == 0x2C83)
-                                || (code == 0x2C85)
-                        then
+                        else if e 0x2C7B || e 0x2C81 || e 0x2C83 || e 0x2C85 then
                             Just LetterLowercase
 
-                        else if code >= 0x2C7C && code <= 0x2C7D then
+                        else if r 0x2C7C 0x2C7D then
                             Just LetterModifier
 
-                        else if
-                            (code >= 0x2C7E && code <= 0x2C80)
-                                || (code == 0x2C82)
-                                || (code == 0x2C84)
-                        then
+                        else if r 0x2C7E 0x2C80 || e 0x2C82 || e 0x2C84 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0x2C92 then
+                    else if l 0x2C92 then
                         if
-                            (code == 0x2C86)
-                                || (code == 0x2C88)
-                                || (code == 0x2C8A)
-                                || (code == 0x2C8C)
-                                || (code == 0x2C8E)
-                                || (code == 0x2C90)
+                            e 0x2C86
+                                || e 0x2C88
+                                || e 0x2C8A
+                                || e 0x2C8C
+                                || e 0x2C8E
+                                || e 0x2C90
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x2C87)
-                                || (code == 0x2C89)
-                                || (code == 0x2C8B)
-                                || (code == 0x2C8D)
-                                || (code == 0x2C8F)
-                                || (code == 0x2C91)
+                            e 0x2C87
+                                || e 0x2C89
+                                || e 0x2C8B
+                                || e 0x2C8D
+                                || e 0x2C8F
+                                || e 0x2C91
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x2C98 then
-                        if
-                            (code == 0x2C92)
-                                || (code == 0x2C94)
-                                || (code == 0x2C96)
-                        then
+                    else if l 0x2C98 then
+                        if e 0x2C92 || e 0x2C94 || e 0x2C96 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x2C93)
-                                || (code == 0x2C95)
-                                || (code == 0x2C97)
-                        then
+                        else if e 0x2C93 || e 0x2C95 || e 0x2C97 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x2C98)
-                            || (code == 0x2C9A)
-                            || (code == 0x2C9C)
-                            || (code == 0x2C9E)
-                    then
+                    else if e 0x2C98 || e 0x2C9A || e 0x2C9C || e 0x2C9E then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0x2C99)
-                            || (code == 0x2C9B)
-                            || (code == 0x2C9D)
-                            || (code == 0x2C9F)
-                    then
+                    else if e 0x2C99 || e 0x2C9B || e 0x2C9D || e 0x2C9F then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0x2CB9 then
-                    if code < 0x2CAB then
+                else if l 0x2CB9 then
+                    if l 0x2CAB then
                         if
-                            (code == 0x2CA0)
-                                || (code == 0x2CA2)
-                                || (code == 0x2CA4)
-                                || (code == 0x2CA6)
-                                || (code == 0x2CA8)
-                                || (code == 0x2CAA)
+                            e 0x2CA0
+                                || e 0x2CA2
+                                || e 0x2CA4
+                                || e 0x2CA6
+                                || e 0x2CA8
+                                || e 0x2CAA
                         then
                             Just LetterUppercase
 
                         else if
-                            (code == 0x2CA1)
-                                || (code == 0x2CA3)
-                                || (code == 0x2CA5)
-                                || (code == 0x2CA7)
-                                || (code == 0x2CA9)
+                            e 0x2CA1
+                                || e 0x2CA3
+                                || e 0x2CA5
+                                || e 0x2CA7
+                                || e 0x2CA9
                         then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if code < 0x2CB1 then
-                        if
-                            (code == 0x2CAB)
-                                || (code == 0x2CAD)
-                                || (code == 0x2CAF)
-                        then
+                    else if l 0x2CB1 then
+                        if e 0x2CAB || e 0x2CAD || e 0x2CAF then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0x2CAC)
-                                || (code == 0x2CAE)
-                                || (code == 0x2CB0)
-                        then
+                        else if e 0x2CAC || e 0x2CAE || e 0x2CB0 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x2CB1)
-                            || (code == 0x2CB3)
-                            || (code == 0x2CB5)
-                            || (code == 0x2CB7)
-                    then
+                    else if e 0x2CB1 || e 0x2CB3 || e 0x2CB5 || e 0x2CB7 then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0x2CB2)
-                            || (code == 0x2CB4)
-                            || (code == 0x2CB6)
-                            || (code == 0x2CB8)
-                    then
+                    else if e 0x2CB2 || e 0x2CB4 || e 0x2CB6 || e 0x2CB8 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x2CC5 then
+                else if l 0x2CC5 then
                     if
-                        (code == 0x2CB9)
-                            || (code == 0x2CBB)
-                            || (code == 0x2CBD)
-                            || (code == 0x2CBF)
-                            || (code == 0x2CC1)
-                            || (code == 0x2CC3)
+                        e 0x2CB9
+                            || e 0x2CBB
+                            || e 0x2CBD
+                            || e 0x2CBF
+                            || e 0x2CC1
+                            || e 0x2CC3
                     then
                         Just LetterLowercase
 
                     else if
-                        (code == 0x2CBA)
-                            || (code == 0x2CBC)
-                            || (code == 0x2CBE)
-                            || (code == 0x2CC0)
-                            || (code == 0x2CC2)
-                            || (code == 0x2CC4)
+                        e 0x2CBA
+                            || e 0x2CBC
+                            || e 0x2CBE
+                            || e 0x2CC0
+                            || e 0x2CC2
+                            || e 0x2CC4
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x2CCB then
-                    if (code == 0x2CC5) || (code == 0x2CC7) || (code == 0x2CC9) then
+                else if l 0x2CCB then
+                    if e 0x2CC5 || e 0x2CC7 || e 0x2CC9 then
                         Just LetterLowercase
 
-                    else if (code == 0x2CC6) || (code == 0x2CC8) || (code == 0x2CCA) then
+                    else if e 0x2CC6 || e 0x2CC8 || e 0x2CCA then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0x2CCB)
-                        || (code == 0x2CCD)
-                        || (code == 0x2CCF)
-                        || (code == 0x2CD1)
-                        || (code == 0x2CD3)
-                then
+                else if e 0x2CCB || e 0x2CCD || e 0x2CCF || e 0x2CD1 || e 0x2CD3 then
                     Just LetterLowercase
 
-                else if
-                    (code == 0x2CCC)
-                        || (code == 0x2CCE)
-                        || (code == 0x2CD0)
-                        || (code == 0x2CD2)
-                then
+                else if e 0x2CCC || e 0x2CCE || e 0x2CD0 || e 0x2CD2 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x3004 then
-                if code < 0x2E05 then
-                    if code < 0x2CF8 then
-                        if code < 0x2CDF then
+            else if l 0x3004 then
+                if l 0x2E05 then
+                    if l 0x2CF8 then
+                        if l 0x2CDF then
                             if
-                                (code == 0x2CD4)
-                                    || (code == 0x2CD6)
-                                    || (code == 0x2CD8)
-                                    || (code == 0x2CDA)
-                                    || (code == 0x2CDC)
-                                    || (code == 0x2CDE)
+                                e 0x2CD4
+                                    || e 0x2CD6
+                                    || e 0x2CD8
+                                    || e 0x2CDA
+                                    || e 0x2CDC
+                                    || e 0x2CDE
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0x2CD5)
-                                    || (code == 0x2CD7)
-                                    || (code == 0x2CD9)
-                                    || (code == 0x2CDB)
-                                    || (code == 0x2CDD)
+                                e 0x2CD5
+                                    || e 0x2CD7
+                                    || e 0x2CD9
+                                    || e 0x2CDB
+                                    || e 0x2CDD
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0x2CEA then
-                            if
-                                (code == 0x2CDF)
-                                    || (code == 0x2CE1)
-                                    || (code >= 0x2CE3 && code <= 0x2CE4)
-                            then
+                        else if l 0x2CEA then
+                            if e 0x2CDF || e 0x2CE1 || r 0x2CE3 0x2CE4 then
                                 Just LetterLowercase
 
-                            else if (code == 0x2CE0) || (code == 0x2CE2) then
+                            else if e 0x2CE0 || e 0x2CE2 then
                                 Just LetterUppercase
 
-                            else if code >= 0x2CE5 && code <= 0x2CE9 then
+                            else if r 0x2CE5 0x2CE9 then
                                 Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if code == 0x2CEA then
+                        else if e 0x2CEA then
                             Just SymbolOther
 
-                        else if
-                            (code == 0x2CEB)
-                                || (code == 0x2CED)
-                                || (code == 0x2CF2)
-                        then
+                        else if e 0x2CEB || e 0x2CED || e 0x2CF2 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0x2CEC)
-                                || (code == 0x2CEE)
-                                || (code == 0x2CF3)
-                        then
+                        else if e 0x2CEC || e 0x2CEE || e 0x2CF3 then
                             Just LetterLowercase
 
-                        else if code >= 0x2CEF && code <= 0x2CF1 then
+                        else if r 0x2CEF 0x2CF1 then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if code < 0x2DA7 then
-                        if
-                            (code >= 0x2CF9 && code <= 0x2CFC)
-                                || (code >= 0x2CFE && code <= 0x2CFF)
-                                || (code == 0x2D70)
-                        then
+                    else if l 0x2DA7 then
+                        if r 0x2CF9 0x2CFC || r 0x2CFE 0x2CFF || e 0x2D70 then
                             Just PunctuationOther
 
-                        else if code == 0x2CFD then
+                        else if e 0x2CFD then
                             Just NumberOther
 
-                        else if
-                            (code >= 0x2D00 && code <= 0x2D25)
-                                || (code == 0x2D27)
-                                || (code == 0x2D2D)
-                        then
+                        else if r 0x2D00 0x2D25 || e 0x2D27 || e 0x2D2D then
                             Just LetterLowercase
 
                         else if
-                            (code >= 0x2D30 && code <= 0x2D67)
-                                || (code >= 0x2D80 && code <= 0x2D96)
-                                || (code >= 0x2DA0 && code <= 0x2DA6)
+                            r 0x2D30 0x2D67
+                                || r 0x2D80 0x2D96
+                                || r 0x2DA0 0x2DA6
                         then
                             Just LetterOther
 
-                        else if code == 0x2D6F then
+                        else if e 0x2D6F then
                             Just LetterModifier
 
-                        else if code == 0x2D7F then
+                        else if e 0x2D7F then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x2DA8 && code <= 0x2DAE)
-                            || (code >= 0x2DB0 && code <= 0x2DB6)
-                            || (code >= 0x2DB8 && code <= 0x2DBE)
-                            || (code >= 0x2DC0 && code <= 0x2DC6)
-                            || (code >= 0x2DC8 && code <= 0x2DCE)
-                            || (code >= 0x2DD0 && code <= 0x2DD6)
-                            || (code >= 0x2DD8 && code <= 0x2DDE)
+                        r 0x2DA8 0x2DAE
+                            || r 0x2DB0 0x2DB6
+                            || r 0x2DB8 0x2DBE
+                            || r 0x2DC0 0x2DC6
+                            || r 0x2DC8 0x2DCE
+                            || r 0x2DD0 0x2DD6
+                            || r 0x2DD8 0x2DDE
                     then
                         Just LetterOther
 
-                    else if code >= 0x2DE0 && code <= 0x2DFF then
+                    else if r 0x2DE0 0x2DFF then
                         Just MarkNonSpacing
 
-                    else if code >= 0x2E00 && code <= 0x2E01 then
+                    else if r 0x2E00 0x2E01 then
                         Just PunctuationOther
 
-                    else if (code == 0x2E02) || (code == 0x2E04) then
+                    else if e 0x2E02 || e 0x2E04 then
                         Just PunctuationInitialQuote
 
-                    else if code == 0x2E03 then
+                    else if e 0x2E03 then
                         Just PunctuationFinalQuote
 
                     else
                         Nothing
 
-                else if code < 0x2E29 then
-                    if code < 0x2E1B then
-                        if
-                            (code == 0x2E05)
-                                || (code == 0x2E0A)
-                                || (code == 0x2E0D)
-                        then
+                else if l 0x2E29 then
+                    if l 0x2E1B then
+                        if e 0x2E05 || e 0x2E0A || e 0x2E0D then
                             Just PunctuationFinalQuote
 
                         else if
-                            (code >= 0x2E06 && code <= 0x2E08)
-                                || (code == 0x2E0B)
-                                || (code >= 0x2E0E && code <= 0x2E16)
-                                || (code >= 0x2E18 && code <= 0x2E19)
+                            r 0x2E06 0x2E08
+                                || e 0x2E0B
+                                || r 0x2E0E 0x2E16
+                                || r 0x2E18 0x2E19
                         then
                             Just PunctuationOther
 
-                        else if (code == 0x2E09) || (code == 0x2E0C) then
+                        else if e 0x2E09 || e 0x2E0C then
                             Just PunctuationInitialQuote
 
-                        else if (code == 0x2E17) || (code == 0x2E1A) then
+                        else if e 0x2E17 || e 0x2E1A then
                             Just PunctuationDash
 
                         else
                             Nothing
 
-                    else if code < 0x2E21 then
-                        if
-                            (code == 0x2E1B)
-                                || (code >= 0x2E1E && code <= 0x2E1F)
-                        then
+                    else if l 0x2E21 then
+                        if e 0x2E1B || r 0x2E1E 0x2E1F then
                             Just PunctuationOther
 
-                        else if (code == 0x2E1C) || (code == 0x2E20) then
+                        else if e 0x2E1C || e 0x2E20 then
                             Just PunctuationInitialQuote
 
-                        else if code == 0x2E1D then
+                        else if e 0x2E1D then
                             Just PunctuationFinalQuote
 
                         else
                             Nothing
 
-                    else if code == 0x2E21 then
+                    else if e 0x2E21 then
                         Just PunctuationFinalQuote
 
-                    else if
-                        (code == 0x2E22)
-                            || (code == 0x2E24)
-                            || (code == 0x2E26)
-                            || (code == 0x2E28)
-                    then
+                    else if e 0x2E22 || e 0x2E24 || e 0x2E26 || e 0x2E28 then
                         Just PunctuationOpen
 
-                    else if (code == 0x2E23) || (code == 0x2E25) || (code == 0x2E27) then
+                    else if e 0x2E23 || e 0x2E25 || e 0x2E27 then
                         Just PunctuationClose
 
                     else
                         Nothing
 
-                else if code < 0x2E55 then
-                    if code == 0x2E29 then
+                else if l 0x2E55 then
+                    if e 0x2E29 then
                         Just PunctuationClose
 
                     else if
-                        (code >= 0x2E2A && code <= 0x2E2E)
-                            || (code >= 0x2E30 && code <= 0x2E39)
-                            || (code >= 0x2E3C && code <= 0x2E3F)
-                            || (code == 0x2E41)
-                            || (code >= 0x2E43 && code <= 0x2E4F)
-                            || (code >= 0x2E52 && code <= 0x2E54)
+                        r 0x2E2A 0x2E2E
+                            || r 0x2E30 0x2E39
+                            || r 0x2E3C 0x2E3F
+                            || e 0x2E41
+                            || r 0x2E43 0x2E4F
+                            || r 0x2E52 0x2E54
                     then
                         Just PunctuationOther
 
-                    else if code == 0x2E2F then
+                    else if e 0x2E2F then
                         Just LetterModifier
 
-                    else if (code >= 0x2E3A && code <= 0x2E3B) || (code == 0x2E40) then
+                    else if r 0x2E3A 0x2E3B || e 0x2E40 then
                         Just PunctuationDash
 
-                    else if code == 0x2E42 then
+                    else if e 0x2E42 then
                         Just PunctuationOpen
 
-                    else if code >= 0x2E50 && code <= 0x2E51 then
+                    else if r 0x2E50 0x2E51 then
                         Just SymbolOther
 
                     else
                         Nothing
 
-                else if code < 0x2E5B then
-                    if (code == 0x2E55) || (code == 0x2E57) || (code == 0x2E59) then
+                else if l 0x2E5B then
+                    if e 0x2E55 || e 0x2E57 || e 0x2E59 then
                         Just PunctuationOpen
 
-                    else if (code == 0x2E56) || (code == 0x2E58) || (code == 0x2E5A) then
+                    else if e 0x2E56 || e 0x2E58 || e 0x2E5A then
                         Just PunctuationClose
 
                     else
                         Nothing
 
-                else if code == 0x2E5B then
+                else if e 0x2E5B then
                     Just PunctuationOpen
 
-                else if code == 0x2E5C then
+                else if e 0x2E5C then
                     Just PunctuationClose
 
-                else if code == 0x2E5D then
+                else if e 0x2E5D then
                     Just PunctuationDash
 
                 else if
-                    (code >= 0x2E80 && code <= 0x2E99)
-                        || (code >= 0x2E9B && code <= 0x2EF3)
-                        || (code >= 0x2F00 && code <= 0x2FD5)
-                        || (code >= 0x2FF0 && code <= 0x2FFB)
+                    r 0x2E80 0x2E99
+                        || r 0x2E9B 0x2EF3
+                        || r 0x2F00 0x2FD5
+                        || r 0x2FF0 0x2FFB
                 then
                     Just SymbolOther
 
-                else if code == 0x3000 then
+                else if e 0x3000 then
                     Just SeparatorSpace
 
-                else if code >= 0x3001 && code <= 0x3003 then
+                else if r 0x3001 0x3003 then
                     Just PunctuationOther
 
                 else
                     Nothing
 
-            else if code < 0x3191 then
-                if code < 0x301D then
-                    if code < 0x300F then
-                        if code == 0x3004 then
+            else if l 0x3191 then
+                if l 0x301D then
+                    if l 0x300F then
+                        if e 0x3004 then
                             Just SymbolOther
 
-                        else if code == 0x3005 then
+                        else if e 0x3005 then
                             Just LetterModifier
 
-                        else if code == 0x3006 then
+                        else if e 0x3006 then
                             Just LetterOther
 
-                        else if code == 0x3007 then
+                        else if e 0x3007 then
                             Just NumberLetter
 
-                        else if
-                            (code == 0x3008)
-                                || (code == 0x300A)
-                                || (code == 0x300C)
-                                || (code == 0x300E)
-                        then
+                        else if e 0x3008 || e 0x300A || e 0x300C || e 0x300E then
                             Just PunctuationOpen
 
-                        else if
-                            (code == 0x3009)
-                                || (code == 0x300B)
-                                || (code == 0x300D)
-                        then
+                        else if e 0x3009 || e 0x300B || e 0x300D then
                             Just PunctuationClose
 
                         else
                             Nothing
 
-                    else if code < 0x3015 then
-                        if (code == 0x300F) || (code == 0x3011) then
+                    else if l 0x3015 then
+                        if e 0x300F || e 0x3011 then
                             Just PunctuationClose
 
-                        else if (code == 0x3010) || (code == 0x3014) then
+                        else if e 0x3010 || e 0x3014 then
                             Just PunctuationOpen
 
-                        else if code >= 0x3012 && code <= 0x3013 then
+                        else if r 0x3012 0x3013 then
                             Just SymbolOther
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x3015)
-                            || (code == 0x3017)
-                            || (code == 0x3019)
-                            || (code == 0x301B)
-                    then
+                    else if e 0x3015 || e 0x3017 || e 0x3019 || e 0x301B then
                         Just PunctuationClose
 
-                    else if (code == 0x3016) || (code == 0x3018) || (code == 0x301A) then
+                    else if e 0x3016 || e 0x3018 || e 0x301A then
                         Just PunctuationOpen
 
-                    else if code == 0x301C then
+                    else if e 0x301C then
                         Just PunctuationDash
 
                     else
                         Nothing
 
-                else if code < 0x303D then
-                    if code == 0x301D then
+                else if l 0x303D then
+                    if e 0x301D then
                         Just PunctuationOpen
 
-                    else if code >= 0x301E && code <= 0x301F then
+                    else if r 0x301E 0x301F then
                         Just PunctuationClose
 
-                    else if (code == 0x3020) || (code >= 0x3036 && code <= 0x3037) then
+                    else if e 0x3020 || r 0x3036 0x3037 then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x3021 && code <= 0x3029)
-                            || (code >= 0x3038 && code <= 0x303A)
-                    then
+                    else if r 0x3021 0x3029 || r 0x3038 0x303A then
                         Just NumberLetter
 
-                    else if code >= 0x302A && code <= 0x302D then
+                    else if r 0x302A 0x302D then
                         Just MarkNonSpacing
 
-                    else if code >= 0x302E && code <= 0x302F then
+                    else if r 0x302E 0x302F then
                         Just MarkSpacingCombining
 
-                    else if code == 0x3030 then
+                    else if e 0x3030 then
                         Just PunctuationDash
 
-                    else if (code >= 0x3031 && code <= 0x3035) || (code == 0x303B) then
+                    else if r 0x3031 0x3035 || e 0x303B then
                         Just LetterModifier
 
-                    else if code == 0x303C then
+                    else if e 0x303C then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x309F then
-                    if code == 0x303D then
+                else if l 0x309F then
+                    if e 0x303D then
                         Just PunctuationOther
 
-                    else if code >= 0x303E && code <= 0x303F then
+                    else if r 0x303E 0x303F then
                         Just SymbolOther
 
-                    else if code >= 0x3041 && code <= 0x3096 then
+                    else if r 0x3041 0x3096 then
                         Just LetterOther
 
-                    else if code >= 0x3099 && code <= 0x309A then
+                    else if r 0x3099 0x309A then
                         Just MarkNonSpacing
 
-                    else if code >= 0x309B && code <= 0x309C then
+                    else if r 0x309B 0x309C then
                         Just SymbolModifier
 
-                    else if code >= 0x309D && code <= 0x309E then
+                    else if r 0x309D 0x309E then
                         Just LetterModifier
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x309F)
-                        || (code >= 0x30A1 && code <= 0x30FA)
-                        || (code == 0x30FF)
-                        || (code >= 0x3105 && code <= 0x312F)
-                        || (code >= 0x3131 && code <= 0x318E)
+                    e 0x309F
+                        || r 0x30A1 0x30FA
+                        || e 0x30FF
+                        || r 0x3105 0x312F
+                        || r 0x3131 0x318E
                 then
                     Just LetterOther
 
-                else if code == 0x30A0 then
+                else if e 0x30A0 then
                     Just PunctuationDash
 
-                else if code == 0x30FB then
+                else if e 0x30FB then
                     Just PunctuationOther
 
-                else if code >= 0x30FC && code <= 0x30FE then
+                else if r 0x30FC 0x30FE then
                     Just LetterModifier
 
-                else if code == 0x3190 then
+                else if e 0x3190 then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if code < 0xA4F7 then
-                if code < 0x327F then
-                    if code < 0x31FF then
-                        if
-                            (code == 0x3191)
-                                || (code >= 0x3196 && code <= 0x319F)
-                                || (code >= 0x31C0 && code <= 0x31E3)
-                        then
+            else if l 0xA4F7 then
+                if l 0x327F then
+                    if l 0x31FF then
+                        if e 0x3191 || r 0x3196 0x319F || r 0x31C0 0x31E3 then
                             Just SymbolOther
 
-                        else if code >= 0x3192 && code <= 0x3195 then
+                        else if r 0x3192 0x3195 then
                             Just NumberOther
 
-                        else if
-                            (code >= 0x31A0 && code <= 0x31BF)
-                                || (code >= 0x31F0 && code <= 0x31FE)
-                        then
+                        else if r 0x31A0 0x31BF || r 0x31F0 0x31FE then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if code == 0x31FF then
+                    else if e 0x31FF then
                         Just LetterOther
 
                     else if
-                        (code >= 0x3200 && code <= 0x321E)
-                            || (code >= 0x322A && code <= 0x3247)
-                            || (code == 0x3250)
-                            || (code >= 0x3260 && code <= 0x327E)
+                        r 0x3200 0x321E
+                            || r 0x322A 0x3247
+                            || e 0x3250
+                            || r 0x3260 0x327E
                     then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x3220 && code <= 0x3229)
-                            || (code >= 0x3248 && code <= 0x324F)
-                            || (code >= 0x3251 && code <= 0x325F)
-                    then
+                    else if r 0x3220 0x3229 || r 0x3248 0x324F || r 0x3251 0x325F then
                         Just NumberOther
 
                     else
                         Nothing
 
-                else if code < 0x4DBF then
-                    if
-                        (code == 0x327F)
-                            || (code >= 0x328A && code <= 0x32B0)
-                            || (code >= 0x32C0 && code <= 0x33FF)
-                    then
+                else if l 0x4DBF then
+                    if e 0x327F || r 0x328A 0x32B0 || r 0x32C0 0x33FF then
                         Just SymbolOther
 
-                    else if
-                        (code >= 0x3280 && code <= 0x3289)
-                            || (code >= 0x32B1 && code <= 0x32BF)
-                    then
+                    else if r 0x3280 0x3289 || r 0x32B1 0x32BF then
                         Just NumberOther
 
-                    else if code == 0x3400 then
+                    else if e 0x3400 then
                         Just LetterOther
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x4DBF)
-                        || (code == 0x4E00)
-                        || (code >= 0x9FFF && code <= 0xA014)
-                        || (code >= 0xA016 && code <= 0xA48C)
-                        || (code >= 0xA4D0 && code <= 0xA4F6)
+                    e 0x4DBF
+                        || e 0x4E00
+                        || r 0x9FFF 0xA014
+                        || r 0xA016 0xA48C
+                        || r 0xA4D0 0xA4F6
                 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x4DC0 && code <= 0x4DFF)
-                        || (code >= 0xA490 && code <= 0xA4C6)
-                then
+                else if r 0x4DC0 0x4DFF || r 0xA490 0xA4C6 then
                     Just SymbolOther
 
-                else if code == 0xA015 then
+                else if e 0xA015 then
                     Just LetterModifier
 
                 else
                     Nothing
 
-            else if code < 0xA643 then
+            else if l 0xA643 then
                 if
-                    (code == 0xA4F7)
-                        || (code >= 0xA500 && code <= 0xA60B)
-                        || (code >= 0xA610 && code <= 0xA61F)
-                        || (code >= 0xA62A && code <= 0xA62B)
+                    e 0xA4F7
+                        || r 0xA500 0xA60B
+                        || r 0xA610 0xA61F
+                        || r 0xA62A 0xA62B
                 then
                     Just LetterOther
 
-                else if (code >= 0xA4F8 && code <= 0xA4FD) || (code == 0xA60C) then
+                else if r 0xA4F8 0xA4FD || e 0xA60C then
                     Just LetterModifier
 
-                else if
-                    (code >= 0xA4FE && code <= 0xA4FF)
-                        || (code >= 0xA60D && code <= 0xA60F)
-                then
+                else if r 0xA4FE 0xA4FF || r 0xA60D 0xA60F then
                     Just PunctuationOther
 
-                else if code >= 0xA620 && code <= 0xA629 then
+                else if r 0xA620 0xA629 then
                     Just NumberDecimalDigit
 
-                else if (code == 0xA640) || (code == 0xA642) then
+                else if e 0xA640 || e 0xA642 then
                     Just LetterUppercase
 
-                else if code == 0xA641 then
+                else if e 0xA641 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0xA649 then
-                if (code == 0xA643) || (code == 0xA645) || (code == 0xA647) then
+            else if l 0xA649 then
+                if e 0xA643 || e 0xA645 || e 0xA647 then
                     Just LetterLowercase
 
-                else if (code == 0xA644) || (code == 0xA646) || (code == 0xA648) then
+                else if e 0xA644 || e 0xA646 || e 0xA648 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if
-                (code == 0xA649)
-                    || (code == 0xA64B)
-                    || (code == 0xA64D)
-                    || (code == 0xA64F)
-                    || (code == 0xA651)
-            then
+            else if e 0xA649 || e 0xA64B || e 0xA64D || e 0xA64F || e 0xA651 then
                 Just LetterLowercase
 
-            else if
-                (code == 0xA64A)
-                    || (code == 0xA64C)
-                    || (code == 0xA64E)
-                    || (code == 0xA650)
-            then
+            else if e 0xA64A || e 0xA64C || e 0xA64E || e 0xA650 then
                 Just LetterUppercase
 
             else
                 Nothing
 
-        else if code < 0xA7B7 then
-            if code < 0xA73F then
-                if code < 0xA68D then
-                    if code < 0xA669 then
-                        if code < 0xA65C then
+        else if l 0xA7B7 then
+            if l 0xA73F then
+                if l 0xA68D then
+                    if l 0xA669 then
+                        if l 0xA65C then
                             if
-                                (code == 0xA652)
-                                    || (code == 0xA654)
-                                    || (code == 0xA656)
-                                    || (code == 0xA658)
-                                    || (code == 0xA65A)
+                                e 0xA652
+                                    || e 0xA654
+                                    || e 0xA656
+                                    || e 0xA658
+                                    || e 0xA65A
                             then
                                 Just LetterUppercase
 
                             else if
-                                (code == 0xA653)
-                                    || (code == 0xA655)
-                                    || (code == 0xA657)
-                                    || (code == 0xA659)
-                                    || (code == 0xA65B)
+                                e 0xA653
+                                    || e 0xA655
+                                    || e 0xA657
+                                    || e 0xA659
+                                    || e 0xA65B
                             then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if code < 0xA661 then
-                            if
-                                (code == 0xA65C)
-                                    || (code == 0xA65E)
-                                    || (code == 0xA660)
-                            then
+                        else if l 0xA661 then
+                            if e 0xA65C || e 0xA65E || e 0xA660 then
                                 Just LetterUppercase
 
-                            else if (code == 0xA65D) || (code == 0xA65F) then
+                            else if e 0xA65D || e 0xA65F then
                                 Just LetterLowercase
 
                             else
                                 Nothing
 
-                        else if
-                            (code == 0xA661)
-                                || (code == 0xA663)
-                                || (code == 0xA665)
-                                || (code == 0xA667)
-                        then
+                        else if e 0xA661 || e 0xA663 || e 0xA665 || e 0xA667 then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0xA662)
-                                || (code == 0xA664)
-                                || (code == 0xA666)
-                                || (code == 0xA668)
-                        then
+                        else if e 0xA662 || e 0xA664 || e 0xA666 || e 0xA668 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0xA67F then
-                        if
-                            (code == 0xA669)
-                                || (code == 0xA66B)
-                                || (code == 0xA66D)
-                        then
+                    else if l 0xA67F then
+                        if e 0xA669 || e 0xA66B || e 0xA66D then
                             Just LetterLowercase
 
-                        else if (code == 0xA66A) || (code == 0xA66C) then
+                        else if e 0xA66A || e 0xA66C then
                             Just LetterUppercase
 
-                        else if code == 0xA66E then
+                        else if e 0xA66E then
                             Just LetterOther
 
-                        else if
-                            (code == 0xA66F)
-                                || (code >= 0xA674 && code <= 0xA67D)
-                        then
+                        else if e 0xA66F || r 0xA674 0xA67D then
                             Just MarkNonSpacing
 
-                        else if code >= 0xA670 && code <= 0xA672 then
+                        else if r 0xA670 0xA672 then
                             Just MarkEnclosing
 
-                        else if (code == 0xA673) || (code == 0xA67E) then
+                        else if e 0xA673 || e 0xA67E then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code < 0xA685 then
-                        if code == 0xA67F then
+                    else if l 0xA685 then
+                        if e 0xA67F then
                             Just LetterModifier
 
-                        else if
-                            (code == 0xA680)
-                                || (code == 0xA682)
-                                || (code == 0xA684)
-                        then
+                        else if e 0xA680 || e 0xA682 || e 0xA684 then
                             Just LetterUppercase
 
-                        else if (code == 0xA681) || (code == 0xA683) then
+                        else if e 0xA681 || e 0xA683 then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0xA685)
-                            || (code == 0xA687)
-                            || (code == 0xA689)
-                            || (code == 0xA68B)
-                    then
+                    else if e 0xA685 || e 0xA687 || e 0xA689 || e 0xA68B then
                         Just LetterLowercase
 
-                    else if
-                        (code == 0xA686)
-                            || (code == 0xA688)
-                            || (code == 0xA68A)
-                            || (code == 0xA68C)
-                    then
+                    else if e 0xA686 || e 0xA688 || e 0xA68A || e 0xA68C then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0xA722 then
-                    if code < 0xA698 then
+                else if l 0xA722 then
+                    if l 0xA698 then
                         if
-                            (code == 0xA68D)
-                                || (code == 0xA68F)
-                                || (code == 0xA691)
-                                || (code == 0xA693)
-                                || (code == 0xA695)
-                                || (code == 0xA697)
+                            e 0xA68D
+                                || e 0xA68F
+                                || e 0xA691
+                                || e 0xA693
+                                || e 0xA695
+                                || e 0xA697
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0xA68E)
-                                || (code == 0xA690)
-                                || (code == 0xA692)
-                                || (code == 0xA694)
-                                || (code == 0xA696)
+                            e 0xA68E
+                                || e 0xA690
+                                || e 0xA692
+                                || e 0xA694
+                                || e 0xA696
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0xA69F then
-                        if (code == 0xA698) || (code == 0xA69A) then
+                    else if l 0xA69F then
+                        if e 0xA698 || e 0xA69A then
                             Just LetterUppercase
 
-                        else if (code == 0xA699) || (code == 0xA69B) then
+                        else if e 0xA699 || e 0xA69B then
                             Just LetterLowercase
 
-                        else if code >= 0xA69C && code <= 0xA69D then
+                        else if r 0xA69C 0xA69D then
                             Just LetterModifier
 
-                        else if code == 0xA69E then
+                        else if e 0xA69E then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if (code == 0xA69F) || (code >= 0xA6F0 && code <= 0xA6F1) then
+                    else if e 0xA69F || r 0xA6F0 0xA6F1 then
                         Just MarkNonSpacing
 
-                    else if code >= 0xA6A0 && code <= 0xA6E5 then
+                    else if r 0xA6A0 0xA6E5 then
                         Just LetterOther
 
-                    else if code >= 0xA6E6 && code <= 0xA6EF then
+                    else if r 0xA6E6 0xA6EF then
                         Just NumberLetter
 
-                    else if code >= 0xA6F2 && code <= 0xA6F7 then
+                    else if r 0xA6F2 0xA6F7 then
                         Just PunctuationOther
 
-                    else if
-                        (code >= 0xA700 && code <= 0xA716)
-                            || (code >= 0xA720 && code <= 0xA721)
-                    then
+                    else if r 0xA700 0xA716 || r 0xA720 0xA721 then
                         Just SymbolModifier
 
-                    else if code >= 0xA717 && code <= 0xA71F then
+                    else if r 0xA717 0xA71F then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if code < 0xA72E then
+                else if l 0xA72E then
                     if
-                        (code == 0xA722)
-                            || (code == 0xA724)
-                            || (code == 0xA726)
-                            || (code == 0xA728)
-                            || (code == 0xA72A)
-                            || (code == 0xA72C)
+                        e 0xA722
+                            || e 0xA724
+                            || e 0xA726
+                            || e 0xA728
+                            || e 0xA72A
+                            || e 0xA72C
                     then
                         Just LetterUppercase
 
                     else if
-                        (code == 0xA723)
-                            || (code == 0xA725)
-                            || (code == 0xA727)
-                            || (code == 0xA729)
-                            || (code == 0xA72B)
-                            || (code == 0xA72D)
+                        e 0xA723
+                            || e 0xA725
+                            || e 0xA727
+                            || e 0xA729
+                            || e 0xA72B
+                            || e 0xA72D
                     then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0xA736 then
-                    if (code == 0xA72E) || (code == 0xA732) || (code == 0xA734) then
+                else if l 0xA736 then
+                    if e 0xA72E || e 0xA732 || e 0xA734 then
                         Just LetterUppercase
 
-                    else if
-                        (code >= 0xA72F && code <= 0xA731)
-                            || (code == 0xA733)
-                            || (code == 0xA735)
-                    then
+                    else if r 0xA72F 0xA731 || e 0xA733 || e 0xA735 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0xA736)
-                        || (code == 0xA738)
-                        || (code == 0xA73A)
-                        || (code == 0xA73C)
-                        || (code == 0xA73E)
-                then
+                else if e 0xA736 || e 0xA738 || e 0xA73A || e 0xA73C || e 0xA73E then
                     Just LetterUppercase
 
-                else if
-                    (code == 0xA737)
-                        || (code == 0xA739)
-                        || (code == 0xA73B)
-                        || (code == 0xA73D)
-                then
+                else if e 0xA737 || e 0xA739 || e 0xA73B || e 0xA73D then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0xA770 then
-                if code < 0xA756 then
-                    if code < 0xA749 then
+            else if l 0xA770 then
+                if l 0xA756 then
+                    if l 0xA749 then
                         if
-                            (code == 0xA73F)
-                                || (code == 0xA741)
-                                || (code == 0xA743)
-                                || (code == 0xA745)
-                                || (code == 0xA747)
+                            e 0xA73F
+                                || e 0xA741
+                                || e 0xA743
+                                || e 0xA745
+                                || e 0xA747
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0xA740)
-                                || (code == 0xA742)
-                                || (code == 0xA744)
-                                || (code == 0xA746)
-                                || (code == 0xA748)
+                            e 0xA740
+                                || e 0xA742
+                                || e 0xA744
+                                || e 0xA746
+                                || e 0xA748
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0xA74E then
-                        if
-                            (code == 0xA749)
-                                || (code == 0xA74B)
-                                || (code == 0xA74D)
-                        then
+                    else if l 0xA74E then
+                        if e 0xA749 || e 0xA74B || e 0xA74D then
                             Just LetterLowercase
 
-                        else if (code == 0xA74A) || (code == 0xA74C) then
+                        else if e 0xA74A || e 0xA74C then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0xA74E)
-                            || (code == 0xA750)
-                            || (code == 0xA752)
-                            || (code == 0xA754)
-                    then
+                    else if e 0xA74E || e 0xA750 || e 0xA752 || e 0xA754 then
                         Just LetterUppercase
 
-                    else if
-                        (code == 0xA74F)
-                            || (code == 0xA751)
-                            || (code == 0xA753)
-                            || (code == 0xA755)
-                    then
+                    else if e 0xA74F || e 0xA751 || e 0xA753 || e 0xA755 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0xA762 then
+                else if l 0xA762 then
                     if
-                        (code == 0xA756)
-                            || (code == 0xA758)
-                            || (code == 0xA75A)
-                            || (code == 0xA75C)
-                            || (code == 0xA75E)
-                            || (code == 0xA760)
+                        e 0xA756
+                            || e 0xA758
+                            || e 0xA75A
+                            || e 0xA75C
+                            || e 0xA75E
+                            || e 0xA760
                     then
                         Just LetterUppercase
 
                     else if
-                        (code == 0xA757)
-                            || (code == 0xA759)
-                            || (code == 0xA75B)
-                            || (code == 0xA75D)
-                            || (code == 0xA75F)
-                            || (code == 0xA761)
+                        e 0xA757
+                            || e 0xA759
+                            || e 0xA75B
+                            || e 0xA75D
+                            || e 0xA75F
+                            || e 0xA761
                     then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if code < 0xA768 then
-                    if (code == 0xA762) || (code == 0xA764) || (code == 0xA766) then
+                else if l 0xA768 then
+                    if e 0xA762 || e 0xA764 || e 0xA766 then
                         Just LetterUppercase
 
-                    else if (code == 0xA763) || (code == 0xA765) || (code == 0xA767) then
+                    else if e 0xA763 || e 0xA765 || e 0xA767 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if
-                    (code == 0xA768)
-                        || (code == 0xA76A)
-                        || (code == 0xA76C)
-                        || (code == 0xA76E)
-                then
+                else if e 0xA768 || e 0xA76A || e 0xA76C || e 0xA76E then
                     Just LetterUppercase
 
-                else if
-                    (code == 0xA769)
-                        || (code == 0xA76B)
-                        || (code == 0xA76D)
-                        || (code == 0xA76F)
-                then
+                else if e 0xA769 || e 0xA76B || e 0xA76D || e 0xA76F then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0xA792 then
-                if code < 0xA783 then
-                    if code == 0xA770 then
+            else if l 0xA792 then
+                if l 0xA783 then
+                    if e 0xA770 then
                         Just LetterModifier
 
                     else if
-                        (code >= 0xA771 && code <= 0xA778)
-                            || (code == 0xA77A)
-                            || (code == 0xA77C)
-                            || (code == 0xA77F)
-                            || (code == 0xA781)
+                        r 0xA771 0xA778
+                            || e 0xA77A
+                            || e 0xA77C
+                            || e 0xA77F
+                            || e 0xA781
                     then
                         Just LetterLowercase
 
                     else if
-                        (code == 0xA779)
-                            || (code == 0xA77B)
-                            || (code >= 0xA77D && code <= 0xA77E)
-                            || (code == 0xA780)
-                            || (code == 0xA782)
+                        e 0xA779
+                            || e 0xA77B
+                            || r 0xA77D 0xA77E
+                            || e 0xA780
+                            || e 0xA782
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0xA78A then
-                    if (code == 0xA783) || (code == 0xA785) || (code == 0xA787) then
+                else if l 0xA78A then
+                    if e 0xA783 || e 0xA785 || e 0xA787 then
                         Just LetterLowercase
 
-                    else if (code == 0xA784) || (code == 0xA786) then
+                    else if e 0xA784 || e 0xA786 then
                         Just LetterUppercase
 
-                    else if code == 0xA788 then
+                    else if e 0xA788 then
                         Just LetterModifier
 
-                    else if code == 0xA789 then
+                    else if e 0xA789 then
                         Just SymbolModifier
 
                     else
                         Nothing
 
-                else if code == 0xA78A then
+                else if e 0xA78A then
                     Just SymbolModifier
 
-                else if (code == 0xA78B) || (code == 0xA78D) || (code == 0xA790) then
+                else if e 0xA78B || e 0xA78D || e 0xA790 then
                     Just LetterUppercase
 
-                else if (code == 0xA78C) || (code == 0xA78E) || (code == 0xA791) then
+                else if e 0xA78C || e 0xA78E || e 0xA791 then
                     Just LetterLowercase
 
-                else if code == 0xA78F then
+                else if e 0xA78F then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0xA7A0 then
+            else if l 0xA7A0 then
                 if
-                    (code == 0xA792)
-                        || (code == 0xA796)
-                        || (code == 0xA798)
-                        || (code == 0xA79A)
-                        || (code == 0xA79C)
-                        || (code == 0xA79E)
+                    e 0xA792
+                        || e 0xA796
+                        || e 0xA798
+                        || e 0xA79A
+                        || e 0xA79C
+                        || e 0xA79E
                 then
                     Just LetterUppercase
 
                 else if
-                    (code >= 0xA793 && code <= 0xA795)
-                        || (code == 0xA797)
-                        || (code == 0xA799)
-                        || (code == 0xA79B)
-                        || (code == 0xA79D)
-                        || (code == 0xA79F)
+                    r 0xA793 0xA795
+                        || e 0xA797
+                        || e 0xA799
+                        || e 0xA79B
+                        || e 0xA79D
+                        || e 0xA79F
                 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0xA7A6 then
-                if (code == 0xA7A0) || (code == 0xA7A2) || (code == 0xA7A4) then
+            else if l 0xA7A6 then
+                if e 0xA7A0 || e 0xA7A2 || e 0xA7A4 then
                     Just LetterUppercase
 
-                else if (code == 0xA7A1) || (code == 0xA7A3) || (code == 0xA7A5) then
+                else if e 0xA7A1 || e 0xA7A3 || e 0xA7A5 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
             else if
-                (code == 0xA7A6)
-                    || (code == 0xA7A8)
-                    || (code >= 0xA7AA && code <= 0xA7AE)
-                    || (code >= 0xA7B0 && code <= 0xA7B4)
-                    || (code == 0xA7B6)
+                e 0xA7A6
+                    || e 0xA7A8
+                    || r 0xA7AA 0xA7AE
+                    || r 0xA7B0 0xA7B4
+                    || e 0xA7B6
             then
                 Just LetterUppercase
 
-            else if
-                (code == 0xA7A7)
-                    || (code == 0xA7A9)
-                    || (code == 0xA7AF)
-                    || (code == 0xA7B5)
-            then
+            else if e 0xA7A7 || e 0xA7A9 || e 0xA7AF || e 0xA7B5 then
                 Just LetterLowercase
 
             else
                 Nothing
 
-        else if code < 0xAA6F then
-            if code < 0xA8CD then
-                if code < 0xA7F6 then
-                    if code < 0xA7C2 then
+        else if l 0xAA6F then
+            if l 0xA8CD then
+                if l 0xA7F6 then
+                    if l 0xA7C2 then
                         if
-                            (code == 0xA7B7)
-                                || (code == 0xA7B9)
-                                || (code == 0xA7BB)
-                                || (code == 0xA7BD)
-                                || (code == 0xA7BF)
-                                || (code == 0xA7C1)
+                            e 0xA7B7
+                                || e 0xA7B9
+                                || e 0xA7BB
+                                || e 0xA7BD
+                                || e 0xA7BF
+                                || e 0xA7C1
                         then
                             Just LetterLowercase
 
                         else if
-                            (code == 0xA7B8)
-                                || (code == 0xA7BA)
-                                || (code == 0xA7BC)
-                                || (code == 0xA7BE)
-                                || (code == 0xA7C0)
+                            e 0xA7B8
+                                || e 0xA7BA
+                                || e 0xA7BC
+                                || e 0xA7BE
+                                || e 0xA7C0
                         then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if code < 0xA7CF then
-                        if
-                            (code == 0xA7C2)
-                                || (code >= 0xA7C4 && code <= 0xA7C7)
-                                || (code == 0xA7C9)
-                        then
+                    else if l 0xA7CF then
+                        if e 0xA7C2 || r 0xA7C4 0xA7C7 || e 0xA7C9 then
                             Just LetterUppercase
 
-                        else if
-                            (code == 0xA7C3)
-                                || (code == 0xA7C8)
-                                || (code == 0xA7CA)
-                        then
+                        else if e 0xA7C3 || e 0xA7C8 || e 0xA7CA then
                             Just LetterLowercase
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0xA7D0)
-                            || (code == 0xA7D6)
-                            || (code == 0xA7D8)
-                            || (code == 0xA7F5)
-                    then
+                    else if e 0xA7D0 || e 0xA7D6 || e 0xA7D8 || e 0xA7F5 then
                         Just LetterUppercase
 
                     else if
-                        (code == 0xA7D7)
-                            || (code == 0xA7D9)
-                            || ((modBy 2 code == 1)
-                                    && (code >= 0xA7D1 && code <= 0xA7D5)
-                               )
+                        e 0xA7D7
+                            || e 0xA7D9
+                            || ((modBy 2 code == 1) && r 0xA7D1 0xA7D5)
                     then
                         Just LetterLowercase
 
-                    else if code >= 0xA7F2 && code <= 0xA7F4 then
+                    else if r 0xA7F2 0xA7F4 then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if code < 0xA826 then
-                    if code < 0xA802 then
-                        if (code == 0xA7F6) || (code == 0xA7FA) then
+                else if l 0xA826 then
+                    if l 0xA802 then
+                        if e 0xA7F6 || e 0xA7FA then
                             Just LetterLowercase
 
-                        else if
-                            (code == 0xA7F7)
-                                || (code >= 0xA7FB && code <= 0xA801)
-                        then
+                        else if e 0xA7F7 || r 0xA7FB 0xA801 then
                             Just LetterOther
 
-                        else if code >= 0xA7F8 && code <= 0xA7F9 then
+                        else if r 0xA7F8 0xA7F9 then
                             Just LetterModifier
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0xA802)
-                            || (code == 0xA806)
-                            || (code == 0xA80B)
-                            || (code == 0xA825)
-                    then
+                    else if e 0xA802 || e 0xA806 || e 0xA80B || e 0xA825 then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0xA803 && code <= 0xA805)
-                            || (code >= 0xA807 && code <= 0xA80A)
-                            || (code >= 0xA80C && code <= 0xA822)
-                    then
+                    else if r 0xA803 0xA805 || r 0xA807 0xA80A || r 0xA80C 0xA822 then
                         Just LetterOther
 
-                    else if code >= 0xA823 && code <= 0xA824 then
+                    else if r 0xA823 0xA824 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if code < 0xA838 then
-                    if (code == 0xA826) || (code == 0xA82C) then
+                else if l 0xA838 then
+                    if e 0xA826 || e 0xA82C then
                         Just MarkNonSpacing
 
-                    else if code == 0xA827 then
+                    else if e 0xA827 then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0xA828 && code <= 0xA82B)
-                            || (code >= 0xA836 && code <= 0xA837)
-                    then
+                    else if r 0xA828 0xA82B || r 0xA836 0xA837 then
                         Just SymbolOther
 
-                    else if code >= 0xA830 && code <= 0xA835 then
+                    else if r 0xA830 0xA835 then
                         Just NumberOther
 
                     else
                         Nothing
 
-                else if code == 0xA838 then
+                else if e 0xA838 then
                     Just SymbolCurrency
 
-                else if code == 0xA839 then
+                else if e 0xA839 then
                     Just SymbolOther
 
-                else if
-                    (code >= 0xA840 && code <= 0xA873)
-                        || (code >= 0xA882 && code <= 0xA8B3)
-                then
+                else if r 0xA840 0xA873 || r 0xA882 0xA8B3 then
                     Just LetterOther
 
-                else if code >= 0xA874 && code <= 0xA877 then
+                else if r 0xA874 0xA877 then
                     Just PunctuationOther
 
-                else if
-                    (code >= 0xA880 && code <= 0xA881)
-                        || (code >= 0xA8B4 && code <= 0xA8C3)
-                then
+                else if r 0xA880 0xA881 || r 0xA8B4 0xA8C3 then
                     Just MarkSpacingCombining
 
-                else if code >= 0xA8C4 && code <= 0xA8C5 then
+                else if r 0xA8C4 0xA8C5 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code < 0xA9BB then
-                if code < 0xA92D then
-                    if
-                        (code >= 0xA8CE && code <= 0xA8CF)
-                            || (code >= 0xA8F8 && code <= 0xA8FA)
-                            || (code == 0xA8FC)
-                    then
+            else if l 0xA9BB then
+                if l 0xA92D then
+                    if r 0xA8CE 0xA8CF || r 0xA8F8 0xA8FA || e 0xA8FC then
                         Just PunctuationOther
 
-                    else if
-                        (code >= 0xA8D0 && code <= 0xA8D9)
-                            || (code >= 0xA900 && code <= 0xA909)
-                    then
+                    else if r 0xA8D0 0xA8D9 || r 0xA900 0xA909 then
                         Just NumberDecimalDigit
 
-                    else if
-                        (code >= 0xA8E0 && code <= 0xA8F1)
-                            || (code == 0xA8FF)
-                            || (code >= 0xA926 && code <= 0xA92C)
-                    then
+                    else if r 0xA8E0 0xA8F1 || e 0xA8FF || r 0xA926 0xA92C then
                         Just MarkNonSpacing
 
                     else if
-                        (code >= 0xA8F2 && code <= 0xA8F7)
-                            || (code == 0xA8FB)
-                            || (code >= 0xA8FD && code <= 0xA8FE)
-                            || (code >= 0xA90A && code <= 0xA925)
+                        r 0xA8F2 0xA8F7
+                            || e 0xA8FB
+                            || r 0xA8FD 0xA8FE
+                            || r 0xA90A 0xA925
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0xA97F then
-                    if (code == 0xA92D) || (code >= 0xA947 && code <= 0xA951) then
+                else if l 0xA97F then
+                    if e 0xA92D || r 0xA947 0xA951 then
                         Just MarkNonSpacing
 
-                    else if (code >= 0xA92E && code <= 0xA92F) || (code == 0xA95F) then
+                    else if r 0xA92E 0xA92F || e 0xA95F then
                         Just PunctuationOther
 
-                    else if
-                        (code >= 0xA930 && code <= 0xA946)
-                            || (code >= 0xA960 && code <= 0xA97C)
-                    then
+                    else if r 0xA930 0xA946 || r 0xA960 0xA97C then
                         Just LetterOther
 
-                    else if code >= 0xA952 && code <= 0xA953 then
+                    else if r 0xA952 0xA953 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if
-                    (code >= 0xA980 && code <= 0xA982)
-                        || (code == 0xA9B3)
-                        || (code >= 0xA9B6 && code <= 0xA9B9)
-                then
+                else if r 0xA980 0xA982 || e 0xA9B3 || r 0xA9B6 0xA9B9 then
                     Just MarkNonSpacing
 
-                else if
-                    (code == 0xA983)
-                        || (code >= 0xA9B4 && code <= 0xA9B5)
-                        || (code == 0xA9BA)
-                then
+                else if e 0xA983 || r 0xA9B4 0xA9B5 || e 0xA9BA then
                     Just MarkSpacingCombining
 
-                else if code >= 0xA984 && code <= 0xA9B2 then
+                else if r 0xA984 0xA9B2 then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0xA9FF then
-                if code < 0xA9DD then
-                    if (code == 0xA9BB) || (code >= 0xA9BE && code <= 0xA9C0) then
+            else if l 0xA9FF then
+                if l 0xA9DD then
+                    if e 0xA9BB || r 0xA9BE 0xA9C0 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0xA9BC && code <= 0xA9BD then
+                    else if r 0xA9BC 0xA9BD then
                         Just MarkNonSpacing
 
-                    else if code >= 0xA9C1 && code <= 0xA9CD then
+                    else if r 0xA9C1 0xA9CD then
                         Just PunctuationOther
 
-                    else if code == 0xA9CF then
+                    else if e 0xA9CF then
                         Just LetterModifier
 
-                    else if code >= 0xA9D0 && code <= 0xA9D9 then
+                    else if r 0xA9D0 0xA9D9 then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code >= 0xA9DE && code <= 0xA9DF then
+                else if r 0xA9DE 0xA9DF then
                     Just PunctuationOther
 
-                else if
-                    (code >= 0xA9E0 && code <= 0xA9E4)
-                        || (code >= 0xA9E7 && code <= 0xA9EF)
-                        || (code >= 0xA9FA && code <= 0xA9FE)
-                then
+                else if r 0xA9E0 0xA9E4 || r 0xA9E7 0xA9EF || r 0xA9FA 0xA9FE then
                     Just LetterOther
 
-                else if code == 0xA9E5 then
+                else if e 0xA9E5 then
                     Just MarkNonSpacing
 
-                else if code == 0xA9E6 then
+                else if e 0xA9E6 then
                     Just LetterModifier
 
-                else if code >= 0xA9F0 && code <= 0xA9F9 then
+                else if r 0xA9F0 0xA9F9 then
                     Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if code < 0xAA42 then
-                if
-                    (code >= 0xAA00 && code <= 0xAA28)
-                        || (code >= 0xAA40 && code <= 0xAA41)
-                then
+            else if l 0xAA42 then
+                if r 0xAA00 0xAA28 || r 0xAA40 0xAA41 then
                     Just LetterOther
 
-                else if
-                    (code >= 0xAA29 && code <= 0xAA2E)
-                        || (code >= 0xAA31 && code <= 0xAA32)
-                        || (code >= 0xAA35 && code <= 0xAA36)
-                then
+                else if r 0xAA29 0xAA2E || r 0xAA31 0xAA32 || r 0xAA35 0xAA36 then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0xAA2F && code <= 0xAA30)
-                        || (code >= 0xAA33 && code <= 0xAA34)
-                then
+                else if r 0xAA2F 0xAA30 || r 0xAA33 0xAA34 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if
-                (code == 0xAA42)
-                    || (code >= 0xAA44 && code <= 0xAA4B)
-                    || (code >= 0xAA60 && code <= 0xAA6E)
-            then
+            else if e 0xAA42 || r 0xAA44 0xAA4B || r 0xAA60 0xAA6E then
                 Just LetterOther
 
-            else if (code == 0xAA43) || (code == 0xAA4C) then
+            else if e 0xAA43 || e 0xAA4C then
                 Just MarkNonSpacing
 
-            else if code == 0xAA4D then
+            else if e 0xAA4D then
                 Just MarkSpacingCombining
 
-            else if code >= 0xAA50 && code <= 0xAA59 then
+            else if r 0xAA50 0xAA59 then
                 Just NumberDecimalDigit
 
-            else if code >= 0xAA5C && code <= 0xAA5F then
+            else if r 0xAA5C 0xAA5F then
                 Just PunctuationOther
 
             else
                 Nothing
 
-        else if code < 0xABEC then
-            if code < 0xAAED then
-                if code < 0xAAB4 then
+        else if l 0xABEC then
+            if l 0xAAED then
+                if l 0xAAB4 then
                     if
-                        (code == 0xAA6F)
-                            || (code >= 0xAA71 && code <= 0xAA76)
-                            || (code == 0xAA7A)
-                            || (code >= 0xAA7E && code <= 0xAAAF)
-                            || (code == 0xAAB1)
+                        e 0xAA6F
+                            || r 0xAA71 0xAA76
+                            || e 0xAA7A
+                            || r 0xAA7E 0xAAAF
+                            || e 0xAAB1
                     then
                         Just LetterOther
 
-                    else if code == 0xAA70 then
+                    else if e 0xAA70 then
                         Just LetterModifier
 
-                    else if code >= 0xAA77 && code <= 0xAA79 then
+                    else if r 0xAA77 0xAA79 then
                         Just SymbolOther
 
-                    else if (code == 0xAA7B) || (code == 0xAA7D) then
+                    else if e 0xAA7B || e 0xAA7D then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code == 0xAA7C)
-                            || (code == 0xAAB0)
-                            || (code >= 0xAAB2 && code <= 0xAAB3)
-                    then
+                    else if e 0xAA7C || e 0xAAB0 || r 0xAAB2 0xAAB3 then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code < 0xAAC1 then
-                    if
-                        (code == 0xAAB4)
-                            || (code >= 0xAAB7 && code <= 0xAAB8)
-                            || (code >= 0xAABE && code <= 0xAABF)
-                    then
+                else if l 0xAAC1 then
+                    if e 0xAAB4 || r 0xAAB7 0xAAB8 || r 0xAABE 0xAABF then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0xAAB5 && code <= 0xAAB6)
-                            || (code >= 0xAAB9 && code <= 0xAABD)
-                            || (code == 0xAAC0)
-                    then
+                    else if r 0xAAB5 0xAAB6 || r 0xAAB9 0xAABD || e 0xAAC0 then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if (code == 0xAAC1) || (code == 0xAAEC) then
+                else if e 0xAAC1 || e 0xAAEC then
                     Just MarkNonSpacing
 
-                else if
-                    (code == 0xAAC2)
-                        || (code >= 0xAADB && code <= 0xAADC)
-                        || (code >= 0xAAE0 && code <= 0xAAEA)
-                then
+                else if e 0xAAC2 || r 0xAADB 0xAADC || r 0xAAE0 0xAAEA then
                     Just LetterOther
 
-                else if code == 0xAADD then
+                else if e 0xAADD then
                     Just LetterModifier
 
-                else if code >= 0xAADE && code <= 0xAADF then
+                else if r 0xAADE 0xAADF then
                     Just PunctuationOther
 
-                else if code == 0xAAEB then
+                else if e 0xAAEB then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0xAB5A then
-                if code < 0xAAF5 then
-                    if code == 0xAAED then
+            else if l 0xAB5A then
+                if l 0xAAF5 then
+                    if e 0xAAED then
                         Just MarkNonSpacing
 
-                    else if code >= 0xAAEE && code <= 0xAAEF then
+                    else if r 0xAAEE 0xAAEF then
                         Just MarkSpacingCombining
 
-                    else if code >= 0xAAF0 && code <= 0xAAF1 then
+                    else if r 0xAAF0 0xAAF1 then
                         Just PunctuationOther
 
-                    else if code == 0xAAF2 then
+                    else if e 0xAAF2 then
                         Just LetterOther
 
-                    else if code >= 0xAAF3 && code <= 0xAAF4 then
+                    else if r 0xAAF3 0xAAF4 then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if code == 0xAAF5 then
+                else if e 0xAAF5 then
                     Just MarkSpacingCombining
 
-                else if code == 0xAAF6 then
+                else if e 0xAAF6 then
                     Just MarkNonSpacing
 
                 else if
-                    (code >= 0xAB01 && code <= 0xAB06)
-                        || (code >= 0xAB09 && code <= 0xAB0E)
-                        || (code >= 0xAB11 && code <= 0xAB16)
-                        || (code >= 0xAB20 && code <= 0xAB26)
-                        || (code >= 0xAB28 && code <= 0xAB2E)
+                    r 0xAB01 0xAB06
+                        || r 0xAB09 0xAB0E
+                        || r 0xAB11 0xAB16
+                        || r 0xAB20 0xAB26
+                        || r 0xAB28 0xAB2E
                 then
                     Just LetterOther
 
-                else if code >= 0xAB30 && code <= 0xAB59 then
+                else if r 0xAB30 0xAB59 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0xABBF then
-                if
-                    (code == 0xAB5A)
-                        || (code >= 0xAB60 && code <= 0xAB68)
-                        || (code >= 0xAB70 && code <= 0xABBE)
-                then
+            else if l 0xABBF then
+                if e 0xAB5A || r 0xAB60 0xAB68 || r 0xAB70 0xABBE then
                     Just LetterLowercase
 
-                else if (code == 0xAB5B) || (code >= 0xAB6A && code <= 0xAB6B) then
+                else if e 0xAB5B || r 0xAB6A 0xAB6B then
                     Just SymbolModifier
 
-                else if (code >= 0xAB5C && code <= 0xAB5F) || (code == 0xAB69) then
+                else if r 0xAB5C 0xAB5F || e 0xAB69 then
                     Just LetterModifier
 
                 else
                     Nothing
 
-            else if code == 0xABBF then
+            else if e 0xABBF then
                 Just LetterLowercase
 
-            else if code >= 0xABC0 && code <= 0xABE2 then
+            else if r 0xABC0 0xABE2 then
                 Just LetterOther
 
-            else if
-                (code >= 0xABE3 && code <= 0xABE4)
-                    || (code >= 0xABE6 && code <= 0xABE7)
-                    || (code >= 0xABE9 && code <= 0xABEA)
-            then
+            else if r 0xABE3 0xABE4 || r 0xABE6 0xABE7 || r 0xABE9 0xABEA then
                 Just MarkSpacingCombining
 
-            else if (code == 0xABE5) || (code == 0xABE8) then
+            else if e 0xABE5 || e 0xABE8 then
                 Just MarkNonSpacing
 
-            else if code == 0xABEB then
+            else if e 0xABEB then
                 Just PunctuationOther
 
             else
                 Nothing
 
-        else if code < 0xFB45 then
-            if code < 0xF8FF then
-                if code == 0xABEC then
+        else if l 0xFB45 then
+            if l 0xF8FF then
+                if e 0xABEC then
                     Just MarkSpacingCombining
 
-                else if code == 0xABED then
+                else if e 0xABED then
                     Just MarkNonSpacing
 
-                else if code >= 0xABF0 && code <= 0xABF9 then
+                else if r 0xABF0 0xABF9 then
                     Just NumberDecimalDigit
 
-                else if
-                    (code == 0xAC00)
-                        || (code == 0xD7A3)
-                        || (code >= 0xD7B0 && code <= 0xD7C6)
-                        || (code >= 0xD7CB && code <= 0xD7FB)
-                then
+                else if e 0xAC00 || e 0xD7A3 || r 0xD7B0 0xD7C6 || r 0xD7CB 0xD7FB then
                     Just LetterOther
 
-                else if
-                    (code == 0xD800)
-                        || (code >= 0xDB7F && code <= 0xDB80)
-                        || (code >= 0xDBFF && code <= 0xDC00)
-                        || (code == 0xDFFF)
-                then
+                else if e 0xD800 || r 0xDB7F 0xDB80 || r 0xDBFF 0xDC00 || e 0xDFFF then
                     Just OtherSurrogate
 
-                else if code == 0xE000 then
+                else if e 0xE000 then
                     Just OtherPrivateUse
 
                 else
                     Nothing
 
-            else if code < 0xFB1E then
-                if code == 0xF8FF then
+            else if l 0xFB1E then
+                if e 0xF8FF then
                     Just OtherPrivateUse
 
-                else if
-                    (code >= 0xF900 && code <= 0xFA6D)
-                        || (code >= 0xFA70 && code <= 0xFAD9)
-                        || (code == 0xFB1D)
-                then
+                else if r 0xF900 0xFA6D || r 0xFA70 0xFAD9 || e 0xFB1D then
                     Just LetterOther
 
-                else if
-                    (code >= 0xFB00 && code <= 0xFB06)
-                        || (code >= 0xFB13 && code <= 0xFB17)
-                then
+                else if r 0xFB00 0xFB06 || r 0xFB13 0xFB17 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code == 0xFB1E then
+            else if e 0xFB1E then
                 Just MarkNonSpacing
 
             else if
-                (code >= 0xFB1F && code <= 0xFB28)
-                    || (code >= 0xFB2A && code <= 0xFB36)
-                    || (code >= 0xFB38 && code <= 0xFB3C)
-                    || (code == 0xFB3E)
-                    || (code >= 0xFB40 && code <= 0xFB41)
-                    || (code >= 0xFB43 && code <= 0xFB44)
+                r 0xFB1F 0xFB28
+                    || r 0xFB2A 0xFB36
+                    || r 0xFB38 0xFB3C
+                    || e 0xFB3E
+                    || r 0xFB40 0xFB41
+                    || r 0xFB43 0xFB44
             then
                 Just LetterOther
 
-            else if code == 0xFB29 then
+            else if e 0xFB29 then
                 Just SymbolMath
 
             else
                 Nothing
 
-        else if code < 0xFE0F then
-            if code < 0xFD4F then
-                if
-                    (code >= 0xFB46 && code <= 0xFBB1)
-                        || (code >= 0xFBD3 && code <= 0xFD3D)
-                then
+        else if l 0xFE0F then
+            if l 0xFD4F then
+                if r 0xFB46 0xFBB1 || r 0xFBD3 0xFD3D then
                     Just LetterOther
 
-                else if code >= 0xFBB2 && code <= 0xFBC2 then
+                else if r 0xFBB2 0xFBC2 then
                     Just SymbolModifier
 
-                else if code == 0xFD3E then
+                else if e 0xFD3E then
                     Just PunctuationClose
 
-                else if code == 0xFD3F then
+                else if e 0xFD3F then
                     Just PunctuationOpen
 
-                else if code >= 0xFD40 && code <= 0xFD4E then
+                else if r 0xFD40 0xFD4E then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if
-                (code == 0xFD4F)
-                    || (code == 0xFDCF)
-                    || (code >= 0xFDFD && code <= 0xFDFF)
-            then
+            else if e 0xFD4F || e 0xFDCF || r 0xFDFD 0xFDFF then
                 Just SymbolOther
 
-            else if
-                (code >= 0xFD50 && code <= 0xFD8F)
-                    || (code >= 0xFD92 && code <= 0xFDC7)
-                    || (code >= 0xFDF0 && code <= 0xFDFB)
-            then
+            else if r 0xFD50 0xFD8F || r 0xFD92 0xFDC7 || r 0xFDF0 0xFDFB then
                 Just LetterOther
 
-            else if code == 0xFDFC then
+            else if e 0xFDFC then
                 Just SymbolCurrency
 
-            else if code >= 0xFE00 && code <= 0xFE0E then
+            else if r 0xFE00 0xFE0E then
                 Just MarkNonSpacing
 
             else
                 Nothing
 
-        else if code < 0xFE30 then
-            if (code == 0xFE0F) || (code >= 0xFE20 && code <= 0xFE2F) then
+        else if l 0xFE30 then
+            if e 0xFE0F || r 0xFE20 0xFE2F then
                 Just MarkNonSpacing
 
-            else if (code >= 0xFE10 && code <= 0xFE16) || (code == 0xFE19) then
+            else if r 0xFE10 0xFE16 || e 0xFE19 then
                 Just PunctuationOther
 
-            else if code == 0xFE17 then
+            else if e 0xFE17 then
                 Just PunctuationOpen
 
-            else if code == 0xFE18 then
+            else if e 0xFE18 then
                 Just PunctuationClose
 
             else
                 Nothing
 
-        else if code == 0xFE30 then
+        else if e 0xFE30 then
             Just PunctuationOther
 
-        else if code >= 0xFE31 && code <= 0xFE32 then
+        else if r 0xFE31 0xFE32 then
             Just PunctuationDash
 
-        else if code >= 0xFE33 && code <= 0xFE34 then
+        else if r 0xFE33 0xFE34 then
             Just PunctuationConnector
 
-        else if (code == 0xFE35) || (code == 0xFE37) || (code == 0xFE39) then
+        else if e 0xFE35 || e 0xFE37 || e 0xFE39 then
             Just PunctuationOpen
 
-        else if (code == 0xFE36) || (code == 0xFE38) then
+        else if e 0xFE36 || e 0xFE38 then
             Just PunctuationClose
 
         else
             Nothing
 
-    else if code < 0x00011838 then
-        if code < 0x00010B7F then
-            if code < 0x0001018B then
-                if code < 0xFF3A then
-                    if code < 0xFE5E then
-                        if code < 0xFE46 then
+    else if l 0x00011838 then
+        if l 0x00010B7F then
+            if l 0x0001018B then
+                if l 0xFF3A then
+                    if l 0xFE5E then
+                        if l 0xFE46 then
                             if
-                                (code == 0xFE3A)
-                                    || (code == 0xFE3C)
-                                    || (code == 0xFE3E)
-                                    || (code == 0xFE40)
-                                    || (code == 0xFE42)
-                                    || (code == 0xFE44)
+                                e 0xFE3A
+                                    || e 0xFE3C
+                                    || e 0xFE3E
+                                    || e 0xFE40
+                                    || e 0xFE42
+                                    || e 0xFE44
                             then
                                 Just PunctuationClose
 
                             else if
-                                (code == 0xFE3B)
-                                    || (code == 0xFE3D)
-                                    || (code == 0xFE3F)
-                                    || (code == 0xFE41)
-                                    || (code == 0xFE43)
+                                e 0xFE3B
+                                    || e 0xFE3D
+                                    || e 0xFE3F
+                                    || e 0xFE41
+                                    || e 0xFE43
                             then
                                 Just PunctuationOpen
 
-                            else if code == 0xFE45 then
+                            else if e 0xFE45 then
                                 Just PunctuationOther
 
                             else
                                 Nothing
 
-                        else if code < 0xFE53 then
-                            if
-                                (code == 0xFE46)
-                                    || (code >= 0xFE49 && code <= 0xFE4C)
-                                    || (code >= 0xFE50 && code <= 0xFE52)
-                            then
+                        else if l 0xFE53 then
+                            if e 0xFE46 || r 0xFE49 0xFE4C || r 0xFE50 0xFE52 then
                                 Just PunctuationOther
 
-                            else if code == 0xFE47 then
+                            else if e 0xFE47 then
                                 Just PunctuationOpen
 
-                            else if code == 0xFE48 then
+                            else if e 0xFE48 then
                                 Just PunctuationClose
 
-                            else if code >= 0xFE4D && code <= 0xFE4F then
+                            else if r 0xFE4D 0xFE4F then
                                 Just PunctuationConnector
 
                             else
                                 Nothing
 
-                        else if code >= 0xFE54 && code <= 0xFE57 then
+                        else if r 0xFE54 0xFE57 then
                             Just PunctuationOther
 
-                        else if code == 0xFE58 then
+                        else if e 0xFE58 then
                             Just PunctuationDash
 
-                        else if
-                            (code == 0xFE59)
-                                || (code == 0xFE5B)
-                                || (code == 0xFE5D)
-                        then
+                        else if e 0xFE59 || e 0xFE5B || e 0xFE5D then
                             Just PunctuationOpen
 
-                        else if (code == 0xFE5A) || (code == 0xFE5C) then
+                        else if e 0xFE5A || e 0xFE5C then
                             Just PunctuationClose
 
                         else
                             Nothing
 
-                    else if code < 0xFF04 then
-                        if code == 0xFE5E then
+                    else if l 0xFF04 then
+                        if e 0xFE5E then
                             Just PunctuationClose
 
                         else if
-                            (code >= 0xFE5F && code <= 0xFE61)
-                                || (code == 0xFE68)
-                                || (code >= 0xFE6A && code <= 0xFE6B)
-                                || (code >= 0xFF01 && code <= 0xFF03)
+                            r 0xFE5F 0xFE61
+                                || e 0xFE68
+                                || r 0xFE6A 0xFE6B
+                                || r 0xFF01 0xFF03
                         then
                             Just PunctuationOther
 
-                        else if
-                            (code == 0xFE62)
-                                || (code >= 0xFE64 && code <= 0xFE66)
-                        then
+                        else if e 0xFE62 || r 0xFE64 0xFE66 then
                             Just SymbolMath
 
-                        else if code == 0xFE63 then
+                        else if e 0xFE63 then
                             Just PunctuationDash
 
-                        else if code == 0xFE69 then
+                        else if e 0xFE69 then
                             Just SymbolCurrency
 
-                        else if
-                            (code >= 0xFE70 && code <= 0xFE74)
-                                || (code >= 0xFE76 && code <= 0xFEFC)
-                        then
+                        else if r 0xFE70 0xFE74 || r 0xFE76 0xFEFC then
                             Just LetterOther
 
-                        else if code == 0xFEFF then
+                        else if e 0xFEFF then
                             Just OtherFormat
 
                         else
                             Nothing
 
-                    else if code < 0xFF0C then
-                        if code == 0xFF04 then
+                    else if l 0xFF0C then
+                        if e 0xFF04 then
                             Just SymbolCurrency
 
-                        else if
-                            (code >= 0xFF05 && code <= 0xFF07)
-                                || (code == 0xFF0A)
-                        then
+                        else if r 0xFF05 0xFF07 || e 0xFF0A then
                             Just PunctuationOther
 
-                        else if code == 0xFF08 then
+                        else if e 0xFF08 then
                             Just PunctuationOpen
 
-                        else if code == 0xFF09 then
+                        else if e 0xFF09 then
                             Just PunctuationClose
 
-                        else if code == 0xFF0B then
+                        else if e 0xFF0B then
                             Just SymbolMath
 
                         else
                             Nothing
 
                     else if
-                        (code == 0xFF0C)
-                            || (code >= 0xFF0E && code <= 0xFF0F)
-                            || (code >= 0xFF1A && code <= 0xFF1B)
-                            || (code >= 0xFF1F && code <= 0xFF20)
+                        e 0xFF0C
+                            || r 0xFF0E 0xFF0F
+                            || r 0xFF1A 0xFF1B
+                            || r 0xFF1F 0xFF20
                     then
                         Just PunctuationOther
 
-                    else if code == 0xFF0D then
+                    else if e 0xFF0D then
                         Just PunctuationDash
 
-                    else if code >= 0xFF10 && code <= 0xFF19 then
+                    else if r 0xFF10 0xFF19 then
                         Just NumberDecimalDigit
 
-                    else if code >= 0xFF1C && code <= 0xFF1E then
+                    else if r 0xFF1C 0xFF1E then
                         Just SymbolMath
 
-                    else if code >= 0xFF21 && code <= 0xFF39 then
+                    else if r 0xFF21 0xFF39 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0xFFD1 then
-                    if code < 0xFF5E then
-                        if code == 0xFF3A then
+                else if l 0xFFD1 then
+                    if l 0xFF5E then
+                        if e 0xFF3A then
                             Just LetterUppercase
 
-                        else if (code == 0xFF3B) || (code == 0xFF5B) then
+                        else if e 0xFF3B || e 0xFF5B then
                             Just PunctuationOpen
 
-                        else if code == 0xFF3C then
+                        else if e 0xFF3C then
                             Just PunctuationOther
 
-                        else if (code == 0xFF3D) || (code == 0xFF5D) then
+                        else if e 0xFF3D || e 0xFF5D then
                             Just PunctuationClose
 
-                        else if (code == 0xFF3E) || (code == 0xFF40) then
+                        else if e 0xFF3E || e 0xFF40 then
                             Just SymbolModifier
 
-                        else if code == 0xFF3F then
+                        else if e 0xFF3F then
                             Just PunctuationConnector
 
-                        else if code >= 0xFF41 && code <= 0xFF5A then
+                        else if r 0xFF41 0xFF5A then
                             Just LetterLowercase
 
-                        else if code == 0xFF5C then
+                        else if e 0xFF5C then
                             Just SymbolMath
 
                         else
                             Nothing
 
-                    else if code < 0xFF65 then
-                        if code == 0xFF5E then
+                    else if l 0xFF65 then
+                        if e 0xFF5E then
                             Just SymbolMath
 
-                        else if (code == 0xFF5F) || (code == 0xFF62) then
+                        else if e 0xFF5F || e 0xFF62 then
                             Just PunctuationOpen
 
-                        else if (code == 0xFF60) || (code == 0xFF63) then
+                        else if e 0xFF60 || e 0xFF63 then
                             Just PunctuationClose
 
-                        else if (code == 0xFF61) || (code == 0xFF64) then
+                        else if e 0xFF61 || e 0xFF64 then
                             Just PunctuationOther
 
                         else
                             Nothing
 
-                    else if code == 0xFF65 then
+                    else if e 0xFF65 then
                         Just PunctuationOther
 
                     else if
-                        (code >= 0xFF66 && code <= 0xFF6F)
-                            || (code >= 0xFF71 && code <= 0xFF9D)
-                            || (code >= 0xFFA0 && code <= 0xFFBE)
-                            || (code >= 0xFFC2 && code <= 0xFFC7)
-                            || (code >= 0xFFCA && code <= 0xFFCF)
+                        r 0xFF66 0xFF6F
+                            || r 0xFF71 0xFF9D
+                            || r 0xFFA0 0xFFBE
+                            || r 0xFFC2 0xFFC7
+                            || r 0xFFCA 0xFFCF
                     then
                         Just LetterOther
 
-                    else if (code == 0xFF70) || (code >= 0xFF9E && code <= 0xFF9F) then
+                    else if e 0xFF70 || r 0xFF9E 0xFF9F then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if code < 0x0001000C then
-                    if code < 0xFFE4 then
-                        if
-                            (code >= 0xFFD2 && code <= 0xFFD7)
-                                || (code >= 0xFFDA && code <= 0xFFDC)
-                        then
+                else if l 0x0001000C then
+                    if l 0xFFE4 then
+                        if r 0xFFD2 0xFFD7 || r 0xFFDA 0xFFDC then
                             Just LetterOther
 
-                        else if code >= 0xFFE0 && code <= 0xFFE1 then
+                        else if r 0xFFE0 0xFFE1 then
                             Just SymbolCurrency
 
-                        else if code == 0xFFE2 then
+                        else if e 0xFFE2 then
                             Just SymbolMath
 
-                        else if code == 0xFFE3 then
+                        else if e 0xFFE3 then
                             Just SymbolModifier
 
                         else
                             Nothing
 
                     else if
-                        (code == 0xFFE4)
-                            || (code == 0xFFE8)
-                            || (code >= 0xFFED && code <= 0xFFEE)
-                            || (code >= 0xFFFC && code <= 0xFFFD)
+                        e 0xFFE4
+                            || e 0xFFE8
+                            || r 0xFFED 0xFFEE
+                            || r 0xFFFC 0xFFFD
                     then
                         Just SymbolOther
 
-                    else if code >= 0xFFE5 && code <= 0xFFE6 then
+                    else if r 0xFFE5 0xFFE6 then
                         Just SymbolCurrency
 
-                    else if code >= 0xFFE9 && code <= 0xFFEC then
+                    else if r 0xFFE9 0xFFEC then
                         Just SymbolMath
 
-                    else if code >= 0xFFF9 && code <= 0xFFFB then
+                    else if r 0xFFF9 0xFFFB then
                         Just OtherFormat
 
-                    else if code >= 0x00010000 && code <= 0x0001000B then
+                    else if r 0x00010000 0x0001000B then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x000100FF then
+                else if l 0x000100FF then
                     if
-                        (code >= 0x0001000D && code <= 0x00010026)
-                            || (code >= 0x00010028 && code <= 0x0001003A)
-                            || (code >= 0x0001003C && code <= 0x0001003D)
-                            || (code >= 0x0001003F && code <= 0x0001004D)
-                            || (code >= 0x00010050 && code <= 0x0001005D)
-                            || (code >= 0x00010080 && code <= 0x000100FA)
+                        r 0x0001000D 0x00010026
+                            || r 0x00010028 0x0001003A
+                            || r 0x0001003C 0x0001003D
+                            || r 0x0001003F 0x0001004D
+                            || r 0x00010050 0x0001005D
+                            || r 0x00010080 0x000100FA
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code >= 0x00010100 && code <= 0x00010102 then
+                else if r 0x00010100 0x00010102 then
                     Just PunctuationOther
 
                 else if
-                    (code >= 0x00010107 && code <= 0x00010133)
-                        || (code >= 0x00010175 && code <= 0x00010178)
-                        || (code == 0x0001018A)
+                    r 0x00010107 0x00010133
+                        || r 0x00010175 0x00010178
+                        || e 0x0001018A
                 then
                     Just NumberOther
 
-                else if
-                    (code >= 0x00010137 && code <= 0x0001013F)
-                        || (code >= 0x00010179 && code <= 0x00010189)
-                then
+                else if r 0x00010137 0x0001013F || r 0x00010179 0x00010189 then
                     Just SymbolOther
 
-                else if code >= 0x00010140 && code <= 0x00010174 then
+                else if r 0x00010140 0x00010174 then
                     Just NumberLetter
 
                 else
                     Nothing
 
-            else if code < 0x00010836 then
-                if code < 0x00010427 then
-                    if code < 0x0001032C then
+            else if l 0x00010836 then
+                if l 0x00010427 then
+                    if l 0x0001032C then
                         if
-                            (code == 0x0001018B)
-                                || (code >= 0x000102E1 && code <= 0x000102FB)
-                                || (code >= 0x00010320 && code <= 0x00010323)
+                            e 0x0001018B
+                                || r 0x000102E1 0x000102FB
+                                || r 0x00010320 0x00010323
                         then
                             Just NumberOther
 
                         else if
-                            (code >= 0x0001018C && code <= 0x0001018E)
-                                || (code >= 0x00010190 && code <= 0x0001019C)
-                                || (code == 0x000101A0)
-                                || (code >= 0x000101D0 && code <= 0x000101FC)
+                            r 0x0001018C 0x0001018E
+                                || r 0x00010190 0x0001019C
+                                || e 0x000101A0
+                                || r 0x000101D0 0x000101FC
                         then
                             Just SymbolOther
 
-                        else if (code == 0x000101FD) || (code == 0x000102E0) then
+                        else if e 0x000101FD || e 0x000102E0 then
                             Just MarkNonSpacing
 
                         else if
-                            (code >= 0x00010280 && code <= 0x0001029C)
-                                || (code >= 0x000102A0 && code <= 0x000102D0)
-                                || (code >= 0x00010300 && code <= 0x0001031F)
+                            r 0x00010280 0x0001029C
+                                || r 0x000102A0 0x000102D0
+                                || r 0x00010300 0x0001031F
                         then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if code < 0x0001037F then
+                    else if l 0x0001037F then
                         if
-                            (code >= 0x0001032D && code <= 0x00010340)
-                                || (code >= 0x00010342 && code <= 0x00010349)
-                                || (code >= 0x00010350 && code <= 0x00010375)
+                            r 0x0001032D 0x00010340
+                                || r 0x00010342 0x00010349
+                                || r 0x00010350 0x00010375
                         then
                             Just LetterOther
 
-                        else if (code == 0x00010341) || (code == 0x0001034A) then
+                        else if e 0x00010341 || e 0x0001034A then
                             Just NumberLetter
 
-                        else if code >= 0x00010376 && code <= 0x0001037A then
+                        else if r 0x00010376 0x0001037A then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x00010380 && code <= 0x0001039D)
-                            || (code >= 0x000103A0 && code <= 0x000103C3)
-                            || (code >= 0x000103C8 && code <= 0x000103CF)
+                        r 0x00010380 0x0001039D
+                            || r 0x000103A0 0x000103C3
+                            || r 0x000103C8 0x000103CF
                     then
                         Just LetterOther
 
-                    else if (code == 0x0001039F) || (code == 0x000103D0) then
+                    else if e 0x0001039F || e 0x000103D0 then
                         Just PunctuationOther
 
-                    else if code >= 0x000103D1 && code <= 0x000103D5 then
+                    else if r 0x000103D1 0x000103D5 then
                         Just NumberLetter
 
-                    else if code >= 0x00010400 && code <= 0x00010426 then
+                    else if r 0x00010400 0x00010426 then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x00010596 then
-                    if code < 0x000104FF then
-                        if
-                            (code == 0x00010427)
-                                || (code >= 0x000104B0 && code <= 0x000104D3)
-                        then
+                else if l 0x00010596 then
+                    if l 0x000104FF then
+                        if e 0x00010427 || r 0x000104B0 0x000104D3 then
                             Just LetterUppercase
 
-                        else if
-                            (code >= 0x00010428 && code <= 0x0001044F)
-                                || (code >= 0x000104D8 && code <= 0x000104FB)
-                        then
+                        else if r 0x00010428 0x0001044F || r 0x000104D8 0x000104FB then
                             Just LetterLowercase
 
-                        else if code >= 0x00010450 && code <= 0x0001049D then
+                        else if r 0x00010450 0x0001049D then
                             Just LetterOther
 
-                        else if code >= 0x000104A0 && code <= 0x000104A9 then
+                        else if r 0x000104A0 0x000104A9 then
                             Just NumberDecimalDigit
 
                         else
                             Nothing
 
-                    else if
-                        (code >= 0x00010500 && code <= 0x00010527)
-                            || (code >= 0x00010530 && code <= 0x00010563)
-                    then
+                    else if r 0x00010500 0x00010527 || r 0x00010530 0x00010563 then
                         Just LetterOther
 
-                    else if code == 0x0001056F then
+                    else if e 0x0001056F then
                         Just PunctuationOther
 
                     else if
-                        (code >= 0x00010570 && code <= 0x0001057A)
-                            || (code >= 0x0001057C && code <= 0x0001058A)
-                            || (code >= 0x0001058C && code <= 0x00010592)
-                            || (code >= 0x00010594 && code <= 0x00010595)
+                        r 0x00010570 0x0001057A
+                            || r 0x0001057C 0x0001058A
+                            || r 0x0001058C 0x00010592
+                            || r 0x00010594 0x00010595
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x0001075F then
+                else if l 0x0001075F then
                     if
-                        (code >= 0x00010597 && code <= 0x000105A1)
-                            || (code >= 0x000105A3 && code <= 0x000105B1)
-                            || (code >= 0x000105B3 && code <= 0x000105B9)
-                            || (code >= 0x000105BB && code <= 0x000105BC)
+                        r 0x00010597 0x000105A1
+                            || r 0x000105A3 0x000105B1
+                            || r 0x000105B3 0x000105B9
+                            || r 0x000105BB 0x000105BC
                     then
                         Just LetterLowercase
 
-                    else if
-                        (code >= 0x00010600 && code <= 0x00010736)
-                            || (code >= 0x00010740 && code <= 0x00010755)
-                    then
+                    else if r 0x00010600 0x00010736 || r 0x00010740 0x00010755 then
                         Just LetterOther
 
                     else
                         Nothing
 
                 else if
-                    (code >= 0x00010760 && code <= 0x00010767)
-                        || (code >= 0x00010800 && code <= 0x00010805)
-                        || (code == 0x00010808)
-                        || (code >= 0x0001080A && code <= 0x00010835)
+                    r 0x00010760 0x00010767
+                        || r 0x00010800 0x00010805
+                        || e 0x00010808
+                        || r 0x0001080A 0x00010835
                 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x00010780 && code <= 0x00010785)
-                        || (code >= 0x00010787 && code <= 0x000107B0)
-                        || (code >= 0x000107B2 && code <= 0x000107BA)
+                    r 0x00010780 0x00010785
+                        || r 0x00010787 0x000107B0
+                        || r 0x000107B2 0x000107BA
                 then
                     Just LetterModifier
 
                 else
                     Nothing
 
-            else if code < 0x00010A04 then
-                if code < 0x000108FA then
+            else if l 0x00010A04 then
+                if l 0x000108FA then
                     if
-                        (code >= 0x00010837 && code <= 0x00010838)
-                            || (code == 0x0001083C)
-                            || (code >= 0x0001083F && code <= 0x00010855)
-                            || (code >= 0x00010860 && code <= 0x00010876)
-                            || (code >= 0x00010880 && code <= 0x0001089E)
-                            || (code >= 0x000108E0 && code <= 0x000108F2)
-                            || (code >= 0x000108F4 && code <= 0x000108F5)
+                        r 0x00010837 0x00010838
+                            || e 0x0001083C
+                            || r 0x0001083F 0x00010855
+                            || r 0x00010860 0x00010876
+                            || r 0x00010880 0x0001089E
+                            || r 0x000108E0 0x000108F2
+                            || r 0x000108F4 0x000108F5
                     then
                         Just LetterOther
 
-                    else if code == 0x00010857 then
+                    else if e 0x00010857 then
                         Just PunctuationOther
 
                     else if
-                        (code >= 0x00010858 && code <= 0x0001085F)
-                            || (code >= 0x00010879 && code <= 0x0001087F)
-                            || (code >= 0x000108A7 && code <= 0x000108AF)
+                        r 0x00010858 0x0001085F
+                            || r 0x00010879 0x0001087F
+                            || r 0x000108A7 0x000108AF
                     then
                         Just NumberOther
 
-                    else if code >= 0x00010877 && code <= 0x00010878 then
+                    else if r 0x00010877 0x00010878 then
                         Just SymbolOther
 
                     else
                         Nothing
 
-                else if code < 0x0001097F then
-                    if
-                        (code >= 0x000108FB && code <= 0x000108FF)
-                            || (code >= 0x00010916 && code <= 0x0001091B)
-                    then
+                else if l 0x0001097F then
+                    if r 0x000108FB 0x000108FF || r 0x00010916 0x0001091B then
                         Just NumberOther
 
-                    else if
-                        (code >= 0x00010900 && code <= 0x00010915)
-                            || (code >= 0x00010920 && code <= 0x00010939)
-                    then
+                    else if r 0x00010900 0x00010915 || r 0x00010920 0x00010939 then
                         Just LetterOther
 
-                    else if (code == 0x0001091F) || (code == 0x0001093F) then
+                    else if e 0x0001091F || e 0x0001093F then
                         Just PunctuationOther
 
                     else
                         Nothing
 
                 else if
-                    (code >= 0x00010980 && code <= 0x000109B7)
-                        || (code >= 0x000109BE && code <= 0x000109BF)
-                        || (code == 0x00010A00)
+                    r 0x00010980 0x000109B7
+                        || r 0x000109BE 0x000109BF
+                        || e 0x00010A00
                 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x000109BC && code <= 0x000109BD)
-                        || (code >= 0x000109C0 && code <= 0x000109CF)
-                        || (code >= 0x000109D2 && code <= 0x000109FF)
+                    r 0x000109BC 0x000109BD
+                        || r 0x000109C0 0x000109CF
+                        || r 0x000109D2 0x000109FF
                 then
                     Just NumberOther
 
-                else if code >= 0x00010A01 && code <= 0x00010A03 then
+                else if r 0x00010A01 0x00010A03 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code < 0x00010A9C then
-                if code < 0x00010A3E then
+            else if l 0x00010A9C then
+                if l 0x00010A3E then
                     if
-                        (code >= 0x00010A05 && code <= 0x00010A06)
-                            || (code >= 0x00010A0C && code <= 0x00010A0F)
-                            || (code >= 0x00010A38 && code <= 0x00010A3A)
+                        r 0x00010A05 0x00010A06
+                            || r 0x00010A0C 0x00010A0F
+                            || r 0x00010A38 0x00010A3A
                     then
                         Just MarkNonSpacing
 
                     else if
-                        (code >= 0x00010A10 && code <= 0x00010A13)
-                            || (code >= 0x00010A15 && code <= 0x00010A17)
-                            || (code >= 0x00010A19 && code <= 0x00010A35)
+                        r 0x00010A10 0x00010A13
+                            || r 0x00010A15 0x00010A17
+                            || r 0x00010A19 0x00010A35
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code == 0x00010A3F then
+                else if e 0x00010A3F then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0x00010A40 && code <= 0x00010A48)
-                        || (code >= 0x00010A7D && code <= 0x00010A7E)
-                then
+                else if r 0x00010A40 0x00010A48 || r 0x00010A7D 0x00010A7E then
                     Just NumberOther
 
-                else if
-                    (code >= 0x00010A50 && code <= 0x00010A58)
-                        || (code == 0x00010A7F)
-                then
+                else if r 0x00010A50 0x00010A58 || e 0x00010A7F then
                     Just PunctuationOther
 
-                else if
-                    (code >= 0x00010A60 && code <= 0x00010A7C)
-                        || (code >= 0x00010A80 && code <= 0x00010A9B)
-                then
+                else if r 0x00010A60 0x00010A7C || r 0x00010A80 0x00010A9B then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0x00010AEF then
+            else if l 0x00010AEF then
                 if
-                    (code == 0x00010A9C)
-                        || (code >= 0x00010AC0 && code <= 0x00010AC7)
-                        || (code >= 0x00010AC9 && code <= 0x00010AE4)
+                    e 0x00010A9C
+                        || r 0x00010AC0 0x00010AC7
+                        || r 0x00010AC9 0x00010AE4
                 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x00010A9D && code <= 0x00010A9F)
-                        || (code >= 0x00010AEB && code <= 0x00010AEE)
-                then
+                else if r 0x00010A9D 0x00010A9F || r 0x00010AEB 0x00010AEE then
                     Just NumberOther
 
-                else if code == 0x00010AC8 then
+                else if e 0x00010AC8 then
                     Just SymbolOther
 
-                else if code >= 0x00010AE5 && code <= 0x00010AE6 then
+                else if r 0x00010AE5 0x00010AE6 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
             else if
-                (code == 0x00010AEF)
-                    || (code >= 0x00010B58 && code <= 0x00010B5F)
-                    || (code >= 0x00010B78 && code <= 0x00010B7E)
+                e 0x00010AEF
+                    || r 0x00010B58 0x00010B5F
+                    || r 0x00010B78 0x00010B7E
             then
                 Just NumberOther
 
-            else if
-                (code >= 0x00010AF0 && code <= 0x00010AF6)
-                    || (code >= 0x00010B39 && code <= 0x00010B3F)
-            then
+            else if r 0x00010AF0 0x00010AF6 || r 0x00010B39 0x00010B3F then
                 Just PunctuationOther
 
             else if
-                (code >= 0x00010B00 && code <= 0x00010B35)
-                    || (code >= 0x00010B40 && code <= 0x00010B55)
-                    || (code >= 0x00010B60 && code <= 0x00010B72)
+                r 0x00010B00 0x00010B35
+                    || r 0x00010B40 0x00010B55
+                    || r 0x00010B60 0x00010B72
             then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if code < 0x0001129E then
-            if code < 0x000110BD then
-                if code < 0x00010F81 then
-                    if code < 0x00010E7F then
+        else if l 0x0001129E then
+            if l 0x000110BD then
+                if l 0x00010F81 then
+                    if l 0x00010E7F then
                         if
-                            (code == 0x00010B7F)
-                                || (code >= 0x00010BA9 && code <= 0x00010BAF)
-                                || (code >= 0x00010CFA && code <= 0x00010CFF)
-                                || (code >= 0x00010E60 && code <= 0x00010E7E)
+                            e 0x00010B7F
+                                || r 0x00010BA9 0x00010BAF
+                                || r 0x00010CFA 0x00010CFF
+                                || r 0x00010E60 0x00010E7E
                         then
                             Just NumberOther
 
                         else if
-                            (code >= 0x00010B80 && code <= 0x00010B91)
-                                || (code >= 0x00010C00 && code <= 0x00010C48)
-                                || (code >= 0x00010D00 && code <= 0x00010D23)
+                            r 0x00010B80 0x00010B91
+                                || r 0x00010C00 0x00010C48
+                                || r 0x00010D00 0x00010D23
                         then
                             Just LetterOther
 
-                        else if code >= 0x00010B99 && code <= 0x00010B9C then
+                        else if r 0x00010B99 0x00010B9C then
                             Just PunctuationOther
 
-                        else if code >= 0x00010C80 && code <= 0x00010CB2 then
+                        else if r 0x00010C80 0x00010CB2 then
                             Just LetterUppercase
 
-                        else if code >= 0x00010CC0 && code <= 0x00010CF2 then
+                        else if r 0x00010CC0 0x00010CF2 then
                             Just LetterLowercase
 
-                        else if code >= 0x00010D24 && code <= 0x00010D27 then
+                        else if r 0x00010D24 0x00010D27 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x00010D30 && code <= 0x00010D39 then
+                        else if r 0x00010D30 0x00010D39 then
                             Just NumberDecimalDigit
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x00010E80 && code <= 0x00010EA9)
-                            || (code >= 0x00010EB0 && code <= 0x00010EB1)
-                            || (code >= 0x00010F00 && code <= 0x00010F1C)
-                            || (code == 0x00010F27)
-                            || (code >= 0x00010F30 && code <= 0x00010F45)
-                            || (code >= 0x00010F70 && code <= 0x00010F80)
+                        r 0x00010E80 0x00010EA9
+                            || r 0x00010EB0 0x00010EB1
+                            || r 0x00010F00 0x00010F1C
+                            || e 0x00010F27
+                            || r 0x00010F30 0x00010F45
+                            || r 0x00010F70 0x00010F80
                     then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x00010EAB && code <= 0x00010EAC)
-                            || (code >= 0x00010F46 && code <= 0x00010F50)
-                    then
+                    else if r 0x00010EAB 0x00010EAC || r 0x00010F46 0x00010F50 then
                         Just MarkNonSpacing
 
-                    else if code == 0x00010EAD then
+                    else if e 0x00010EAD then
                         Just PunctuationDash
 
-                    else if
-                        (code >= 0x00010F1D && code <= 0x00010F26)
-                            || (code >= 0x00010F51 && code <= 0x00010F54)
-                    then
+                    else if r 0x00010F1D 0x00010F26 || r 0x00010F51 0x00010F54 then
                         Just NumberOther
 
-                    else if code >= 0x00010F55 && code <= 0x00010F59 then
+                    else if r 0x00010F55 0x00010F59 then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if code < 0x00011065 then
-                    if code < 0x00010FFF then
+                else if l 0x00011065 then
+                    if l 0x00010FFF then
                         if
-                            (code == 0x00010F81)
-                                || (code >= 0x00010FB0 && code <= 0x00010FC4)
-                                || (code >= 0x00010FE0 && code <= 0x00010FF6)
+                            e 0x00010F81
+                                || r 0x00010FB0 0x00010FC4
+                                || r 0x00010FE0 0x00010FF6
                         then
                             Just LetterOther
 
-                        else if code >= 0x00010F82 && code <= 0x00010F85 then
+                        else if r 0x00010F82 0x00010F85 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x00010F86 && code <= 0x00010F89 then
+                        else if r 0x00010F86 0x00010F89 then
                             Just PunctuationOther
 
-                        else if code >= 0x00010FC5 && code <= 0x00010FCB then
+                        else if r 0x00010FC5 0x00010FCB then
                             Just NumberOther
 
                         else
                             Nothing
 
-                    else if (code == 0x00011000) || (code == 0x00011002) then
+                    else if e 0x00011000 || e 0x00011002 then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code == 0x00011001)
-                            || (code >= 0x00011038 && code <= 0x00011046)
-                    then
+                    else if e 0x00011001 || r 0x00011038 0x00011046 then
                         Just MarkNonSpacing
 
-                    else if code >= 0x00011003 && code <= 0x00011037 then
+                    else if r 0x00011003 0x00011037 then
                         Just LetterOther
 
-                    else if code >= 0x00011047 && code <= 0x0001104D then
+                    else if r 0x00011047 0x0001104D then
                         Just PunctuationOther
 
-                    else if code >= 0x00011052 && code <= 0x00011064 then
+                    else if r 0x00011052 0x00011064 then
                         Just NumberOther
 
                     else
                         Nothing
 
-                else if code < 0x00011081 then
-                    if code == 0x00011065 then
+                else if l 0x00011081 then
+                    if e 0x00011065 then
                         Just NumberOther
 
-                    else if code >= 0x00011066 && code <= 0x0001106F then
+                    else if r 0x00011066 0x0001106F then
                         Just NumberDecimalDigit
 
                     else if
-                        (code == 0x00011070)
-                            || (code >= 0x00011073 && code <= 0x00011074)
-                            || (code >= 0x0001107F && code <= 0x00011080)
+                        e 0x00011070
+                            || r 0x00011073 0x00011074
+                            || r 0x0001107F 0x00011080
                     then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x00011071 && code <= 0x00011072)
-                            || (code == 0x00011075)
-                    then
+                    else if r 0x00011071 0x00011072 || e 0x00011075 then
                         Just LetterOther
 
                     else
                         Nothing
 
                 else if
-                    (code == 0x00011081)
-                        || (code >= 0x000110B3 && code <= 0x000110B6)
-                        || (code >= 0x000110B9 && code <= 0x000110BA)
+                    e 0x00011081
+                        || r 0x000110B3 0x000110B6
+                        || r 0x000110B9 0x000110BA
                 then
                     Just MarkNonSpacing
 
                 else if
-                    (code == 0x00011082)
-                        || (code >= 0x000110B0 && code <= 0x000110B2)
-                        || (code >= 0x000110B7 && code <= 0x000110B8)
+                    e 0x00011082
+                        || r 0x000110B0 0x000110B2
+                        || r 0x000110B7 0x000110B8
                 then
                     Just MarkSpacingCombining
 
-                else if code >= 0x00011083 && code <= 0x000110AF then
+                else if r 0x00011083 0x000110AF then
                     Just LetterOther
 
-                else if code >= 0x000110BB && code <= 0x000110BC then
+                else if r 0x000110BB 0x000110BC then
                     Just PunctuationOther
 
                 else
                     Nothing
 
-            else if code < 0x000111C0 then
-                if code < 0x00011143 then
-                    if code < 0x000110FF then
-                        if (code == 0x000110BD) || (code == 0x000110CD) then
+            else if l 0x000111C0 then
+                if l 0x00011143 then
+                    if l 0x000110FF then
+                        if e 0x000110BD || e 0x000110CD then
                             Just OtherFormat
 
-                        else if code >= 0x000110BE && code <= 0x000110C1 then
+                        else if r 0x000110BE 0x000110C1 then
                             Just PunctuationOther
 
-                        else if code == 0x000110C2 then
+                        else if e 0x000110C2 then
                             Just MarkNonSpacing
 
-                        else if code >= 0x000110D0 && code <= 0x000110E8 then
+                        else if r 0x000110D0 0x000110E8 then
                             Just LetterOther
 
-                        else if code >= 0x000110F0 && code <= 0x000110F9 then
+                        else if r 0x000110F0 0x000110F9 then
                             Just NumberDecimalDigit
 
                         else
                             Nothing
 
                     else if
-                        (code >= 0x00011100 && code <= 0x00011102)
-                            || (code >= 0x00011127 && code <= 0x0001112B)
-                            || (code >= 0x0001112D && code <= 0x00011134)
+                        r 0x00011100 0x00011102
+                            || r 0x00011127 0x0001112B
+                            || r 0x0001112D 0x00011134
                     then
                         Just MarkNonSpacing
 
-                    else if code >= 0x00011103 && code <= 0x00011126 then
+                    else if r 0x00011103 0x00011126 then
                         Just LetterOther
 
-                    else if code == 0x0001112C then
+                    else if e 0x0001112C then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x00011136 && code <= 0x0001113F then
+                    else if r 0x00011136 0x0001113F then
                         Just NumberDecimalDigit
 
-                    else if code >= 0x00011140 && code <= 0x00011142 then
+                    else if r 0x00011140 0x00011142 then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if code < 0x00011175 then
-                    if (code == 0x00011143) || (code == 0x00011174) then
+                else if l 0x00011175 then
+                    if e 0x00011143 || e 0x00011174 then
                         Just PunctuationOther
 
-                    else if
-                        (code == 0x00011144)
-                            || (code == 0x00011147)
-                            || (code >= 0x00011150 && code <= 0x00011172)
-                    then
+                    else if e 0x00011144 || e 0x00011147 || r 0x00011150 0x00011172 then
                         Just LetterOther
 
-                    else if code >= 0x00011145 && code <= 0x00011146 then
+                    else if r 0x00011145 0x00011146 then
                         Just MarkSpacingCombining
 
-                    else if code == 0x00011173 then
+                    else if e 0x00011173 then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code == 0x00011175 then
+                else if e 0x00011175 then
                     Just PunctuationOther
 
-                else if
-                    (code == 0x00011176)
-                        || (code >= 0x00011183 && code <= 0x000111B2)
-                then
+                else if e 0x00011176 || r 0x00011183 0x000111B2 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x00011180 && code <= 0x00011181)
-                        || (code >= 0x000111B6 && code <= 0x000111BE)
-                then
+                else if r 0x00011180 0x00011181 || r 0x000111B6 0x000111BE then
                     Just MarkNonSpacing
 
-                else if
-                    (code == 0x00011182)
-                        || (code >= 0x000111B3 && code <= 0x000111B5)
-                        || (code == 0x000111BF)
-                then
+                else if e 0x00011182 || r 0x000111B3 0x000111B5 || e 0x000111BF then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x000111FF then
-                if code < 0x000111CE then
-                    if code == 0x000111C0 then
+            else if l 0x000111FF then
+                if l 0x000111CE then
+                    if e 0x000111C0 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x000111C1 && code <= 0x000111C4 then
+                    else if r 0x000111C1 0x000111C4 then
                         Just LetterOther
 
-                    else if
-                        (code >= 0x000111C5 && code <= 0x000111C8)
-                            || (code == 0x000111CD)
-                    then
+                    else if r 0x000111C5 0x000111C8 || e 0x000111CD then
                         Just PunctuationOther
 
-                    else if code >= 0x000111C9 && code <= 0x000111CC then
+                    else if r 0x000111C9 0x000111CC then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if code == 0x000111CE then
+                else if e 0x000111CE then
                     Just MarkSpacingCombining
 
-                else if code == 0x000111CF then
+                else if e 0x000111CF then
                     Just MarkNonSpacing
 
-                else if code >= 0x000111D0 && code <= 0x000111D9 then
+                else if r 0x000111D0 0x000111D9 then
                     Just NumberDecimalDigit
 
-                else if (code == 0x000111DA) || (code == 0x000111DC) then
+                else if e 0x000111DA || e 0x000111DC then
                     Just LetterOther
 
-                else if
-                    (code == 0x000111DB)
-                        || (code >= 0x000111DD && code <= 0x000111DF)
-                then
+                else if e 0x000111DB || r 0x000111DD 0x000111DF then
                     Just PunctuationOther
 
-                else if code >= 0x000111E1 && code <= 0x000111F4 then
+                else if r 0x000111E1 0x000111F4 then
                     Just NumberOther
 
                 else
                     Nothing
 
-            else if code < 0x00011235 then
-                if
-                    (code >= 0x00011200 && code <= 0x00011211)
-                        || (code >= 0x00011213 && code <= 0x0001122B)
-                then
+            else if l 0x00011235 then
+                if r 0x00011200 0x00011211 || r 0x00011213 0x0001122B then
                     Just LetterOther
 
-                else if
-                    (code >= 0x0001122C && code <= 0x0001122E)
-                        || (code >= 0x00011232 && code <= 0x00011233)
-                then
+                else if r 0x0001122C 0x0001122E || r 0x00011232 0x00011233 then
                     Just MarkSpacingCombining
 
-                else if
-                    (code >= 0x0001122F && code <= 0x00011231)
-                        || (code == 0x00011234)
-                then
+                else if r 0x0001122F 0x00011231 || e 0x00011234 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code == 0x00011235 then
+            else if e 0x00011235 then
                 Just MarkSpacingCombining
 
-            else if
-                (code >= 0x00011236 && code <= 0x00011237)
-                    || (code == 0x0001123E)
-            then
+            else if r 0x00011236 0x00011237 || e 0x0001123E then
                 Just MarkNonSpacing
 
-            else if code >= 0x00011238 && code <= 0x0001123D then
+            else if r 0x00011238 0x0001123D then
                 Just PunctuationOther
 
             else if
-                (code >= 0x00011280 && code <= 0x00011286)
-                    || (code == 0x00011288)
-                    || (code >= 0x0001128A && code <= 0x0001128D)
-                    || (code >= 0x0001128F && code <= 0x0001129D)
+                r 0x00011280 0x00011286
+                    || e 0x00011288
+                    || r 0x0001128A 0x0001128D
+                    || r 0x0001128F 0x0001129D
             then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if code < 0x000114C1 then
-            if code < 0x0001135C then
-                if code < 0x00011329 then
+        else if l 0x000114C1 then
+            if l 0x0001135C then
+                if l 0x00011329 then
                     if
-                        (code >= 0x0001129F && code <= 0x000112A8)
-                            || (code >= 0x000112B0 && code <= 0x000112DE)
-                            || (code >= 0x00011305 && code <= 0x0001130C)
-                            || (code >= 0x0001130F && code <= 0x00011310)
-                            || (code >= 0x00011313 && code <= 0x00011328)
+                        r 0x0001129F 0x000112A8
+                            || r 0x000112B0 0x000112DE
+                            || r 0x00011305 0x0001130C
+                            || r 0x0001130F 0x00011310
+                            || r 0x00011313 0x00011328
                     then
                         Just LetterOther
 
-                    else if code == 0x000112A9 then
+                    else if e 0x000112A9 then
                         Just PunctuationOther
 
                     else if
-                        (code == 0x000112DF)
-                            || (code >= 0x000112E3 && code <= 0x000112EA)
-                            || (code >= 0x00011300 && code <= 0x00011301)
+                        e 0x000112DF
+                            || r 0x000112E3 0x000112EA
+                            || r 0x00011300 0x00011301
                     then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x000112E0 && code <= 0x000112E2)
-                            || (code >= 0x00011302 && code <= 0x00011303)
-                    then
+                    else if r 0x000112E0 0x000112E2 || r 0x00011302 0x00011303 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x000112F0 && code <= 0x000112F9 then
+                    else if r 0x000112F0 0x000112F9 then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
                 else if
-                    (code >= 0x0001132A && code <= 0x00011330)
-                        || (code >= 0x00011332 && code <= 0x00011333)
-                        || (code >= 0x00011335 && code <= 0x00011339)
-                        || (code == 0x0001133D)
-                        || (code == 0x00011350)
+                    r 0x0001132A 0x00011330
+                        || r 0x00011332 0x00011333
+                        || r 0x00011335 0x00011339
+                        || e 0x0001133D
+                        || e 0x00011350
                 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x0001133B && code <= 0x0001133C)
-                        || (code == 0x00011340)
-                then
+                else if r 0x0001133B 0x0001133C || e 0x00011340 then
                     Just MarkNonSpacing
 
                 else if
-                    (code >= 0x0001133E && code <= 0x0001133F)
-                        || (code >= 0x00011341 && code <= 0x00011344)
-                        || (code >= 0x00011347 && code <= 0x00011348)
-                        || (code >= 0x0001134B && code <= 0x0001134D)
-                        || (code == 0x00011357)
+                    r 0x0001133E 0x0001133F
+                        || r 0x00011341 0x00011344
+                        || r 0x00011347 0x00011348
+                        || r 0x0001134B 0x0001134D
+                        || e 0x00011357
                 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x0001144A then
+            else if l 0x0001144A then
                 if
-                    (code >= 0x0001135D && code <= 0x00011361)
-                        || (code >= 0x00011400 && code <= 0x00011434)
-                        || (code >= 0x00011447 && code <= 0x00011449)
+                    r 0x0001135D 0x00011361
+                        || r 0x00011400 0x00011434
+                        || r 0x00011447 0x00011449
                 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x00011362 && code <= 0x00011363)
-                        || (code >= 0x00011435 && code <= 0x00011437)
-                        || (code >= 0x00011440 && code <= 0x00011441)
-                        || (code == 0x00011445)
+                    r 0x00011362 0x00011363
+                        || r 0x00011435 0x00011437
+                        || r 0x00011440 0x00011441
+                        || e 0x00011445
                 then
                     Just MarkSpacingCombining
 
                 else if
-                    (code >= 0x00011366 && code <= 0x0001136C)
-                        || (code >= 0x00011370 && code <= 0x00011374)
-                        || (code >= 0x00011438 && code <= 0x0001143F)
-                        || (code >= 0x00011442 && code <= 0x00011444)
-                        || (code == 0x00011446)
+                    r 0x00011366 0x0001136C
+                        || r 0x00011370 0x00011374
+                        || r 0x00011438 0x0001143F
+                        || r 0x00011442 0x00011444
+                        || e 0x00011446
                 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code < 0x0001147F then
-                if
-                    (code == 0x0001144A)
-                        || (code >= 0x0001145F && code <= 0x00011461)
-                then
+            else if l 0x0001147F then
+                if e 0x0001144A || r 0x0001145F 0x00011461 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x0001144B && code <= 0x0001144F)
-                        || (code >= 0x0001145A && code <= 0x0001145B)
-                        || (code == 0x0001145D)
+                    r 0x0001144B 0x0001144F
+                        || r 0x0001145A 0x0001145B
+                        || e 0x0001145D
                 then
                     Just PunctuationOther
 
-                else if code >= 0x00011450 && code <= 0x00011459 then
+                else if r 0x00011450 0x00011459 then
                     Just NumberDecimalDigit
 
-                else if code == 0x0001145E then
+                else if e 0x0001145E then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code >= 0x00011480 && code <= 0x000114AF then
+            else if r 0x00011480 0x000114AF then
                 Just LetterOther
 
             else if
-                (code >= 0x000114B0 && code <= 0x000114B2)
-                    || (code == 0x000114B9)
-                    || (code >= 0x000114BB && code <= 0x000114BE)
+                r 0x000114B0 0x000114B2
+                    || e 0x000114B9
+                    || r 0x000114BB 0x000114BE
             then
                 Just MarkSpacingCombining
 
             else if
-                (code >= 0x000114B3 && code <= 0x000114B8)
-                    || (code == 0x000114BA)
-                    || (code >= 0x000114BF && code <= 0x000114C0)
+                r 0x000114B3 0x000114B8
+                    || e 0x000114BA
+                    || r 0x000114BF 0x000114C0
             then
                 Just MarkNonSpacing
 
             else
                 Nothing
 
-        else if code < 0x0001165F then
-            if code < 0x000115C0 then
-                if code < 0x0001157F then
-                    if code == 0x000114C1 then
+        else if l 0x0001165F then
+            if l 0x000115C0 then
+                if l 0x0001157F then
+                    if e 0x000114C1 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x000114C2 && code <= 0x000114C3 then
+                    else if r 0x000114C2 0x000114C3 then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x000114C4 && code <= 0x000114C5)
-                            || (code == 0x000114C7)
-                    then
+                    else if r 0x000114C4 0x000114C5 || e 0x000114C7 then
                         Just LetterOther
 
-                    else if code == 0x000114C6 then
+                    else if e 0x000114C6 then
                         Just PunctuationOther
 
-                    else if code >= 0x000114D0 && code <= 0x000114D9 then
+                    else if r 0x000114D0 0x000114D9 then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code >= 0x00011580 && code <= 0x000115AE then
+                else if r 0x00011580 0x000115AE then
                     Just LetterOther
 
                 else if
-                    (code >= 0x000115AF && code <= 0x000115B1)
-                        || (code >= 0x000115B8 && code <= 0x000115BB)
-                        || (code == 0x000115BE)
+                    r 0x000115AF 0x000115B1
+                        || r 0x000115B8 0x000115BB
+                        || e 0x000115BE
                 then
                     Just MarkSpacingCombining
 
                 else if
-                    (code >= 0x000115B2 && code <= 0x000115B5)
-                        || (code >= 0x000115BC && code <= 0x000115BD)
-                        || (code == 0x000115BF)
+                    r 0x000115B2 0x000115B5
+                        || r 0x000115BC 0x000115BD
+                        || e 0x000115BF
                 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code < 0x0001163A then
+            else if l 0x0001163A then
                 if
-                    (code == 0x000115C0)
-                        || (code >= 0x000115DC && code <= 0x000115DD)
-                        || (code >= 0x00011633 && code <= 0x00011639)
+                    e 0x000115C0
+                        || r 0x000115DC 0x000115DD
+                        || r 0x00011633 0x00011639
                 then
                     Just MarkNonSpacing
 
-                else if code >= 0x000115C1 && code <= 0x000115D7 then
+                else if r 0x000115C1 0x000115D7 then
                     Just PunctuationOther
 
-                else if
-                    (code >= 0x000115D8 && code <= 0x000115DB)
-                        || (code >= 0x00011600 && code <= 0x0001162F)
-                then
+                else if r 0x000115D8 0x000115DB || r 0x00011600 0x0001162F then
                     Just LetterOther
 
-                else if code >= 0x00011630 && code <= 0x00011632 then
+                else if r 0x00011630 0x00011632 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if
-                (code == 0x0001163A)
-                    || (code == 0x0001163D)
-                    || (code >= 0x0001163F && code <= 0x00011640)
-            then
+            else if e 0x0001163A || e 0x0001163D || r 0x0001163F 0x00011640 then
                 Just MarkNonSpacing
 
-            else if
-                (code >= 0x0001163B && code <= 0x0001163C)
-                    || (code == 0x0001163E)
-            then
+            else if r 0x0001163B 0x0001163C || e 0x0001163E then
                 Just MarkSpacingCombining
 
-            else if code >= 0x00011641 && code <= 0x00011643 then
+            else if r 0x00011641 0x00011643 then
                 Just PunctuationOther
 
-            else if code == 0x00011644 then
+            else if e 0x00011644 then
                 Just LetterOther
 
-            else if code >= 0x00011650 && code <= 0x00011659 then
+            else if r 0x00011650 0x00011659 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
-        else if code < 0x0001171C then
-            if code < 0x000116AF then
-                if code >= 0x00011660 && code <= 0x0001166C then
+        else if l 0x0001171C then
+            if l 0x000116AF then
+                if r 0x00011660 0x0001166C then
                     Just PunctuationOther
 
-                else if code >= 0x00011680 && code <= 0x000116AA then
+                else if r 0x00011680 0x000116AA then
                     Just LetterOther
 
-                else if (code == 0x000116AB) || (code == 0x000116AD) then
+                else if e 0x000116AB || e 0x000116AD then
                     Just MarkNonSpacing
 
-                else if (code == 0x000116AC) || (code == 0x000116AE) then
+                else if e 0x000116AC || e 0x000116AE then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if (code == 0x000116AF) || (code == 0x000116B6) then
+            else if e 0x000116AF || e 0x000116B6 then
                 Just MarkSpacingCombining
 
-            else if
-                (code >= 0x000116B0 && code <= 0x000116B5)
-                    || (code == 0x000116B7)
-            then
+            else if r 0x000116B0 0x000116B5 || e 0x000116B7 then
                 Just MarkNonSpacing
 
-            else if
-                (code == 0x000116B8)
-                    || (code >= 0x00011700 && code <= 0x0001171A)
-            then
+            else if e 0x000116B8 || r 0x00011700 0x0001171A then
                 Just LetterOther
 
-            else if code == 0x000116B9 then
+            else if e 0x000116B9 then
                 Just PunctuationOther
 
-            else if code >= 0x000116C0 && code <= 0x000116C9 then
+            else if r 0x000116C0 0x000116C9 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
-        else if code < 0x00011739 then
+        else if l 0x00011739 then
             if
-                (code >= 0x0001171D && code <= 0x0001171F)
-                    || (code >= 0x00011722 && code <= 0x00011725)
-                    || (code >= 0x00011727 && code <= 0x0001172B)
+                r 0x0001171D 0x0001171F
+                    || r 0x00011722 0x00011725
+                    || r 0x00011727 0x0001172B
             then
                 Just MarkNonSpacing
 
-            else if
-                (code >= 0x00011720 && code <= 0x00011721)
-                    || (code == 0x00011726)
-            then
+            else if r 0x00011720 0x00011721 || e 0x00011726 then
                 Just MarkSpacingCombining
 
-            else if code >= 0x00011730 && code <= 0x00011738 then
+            else if r 0x00011730 0x00011738 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
-        else if code == 0x00011739 then
+        else if e 0x00011739 then
             Just NumberDecimalDigit
 
-        else if code >= 0x0001173A && code <= 0x0001173B then
+        else if r 0x0001173A 0x0001173B then
             Just NumberOther
 
-        else if code >= 0x0001173C && code <= 0x0001173E then
+        else if r 0x0001173C 0x0001173E then
             Just PunctuationOther
 
-        else if code == 0x0001173F then
+        else if e 0x0001173F then
             Just SymbolOther
 
-        else if
-            (code >= 0x00011740 && code <= 0x00011746)
-                || (code >= 0x00011800 && code <= 0x0001182B)
-        then
+        else if r 0x00011740 0x00011746 || r 0x00011800 0x0001182B then
             Just LetterOther
 
-        else if code >= 0x0001182C && code <= 0x0001182E then
+        else if r 0x0001182C 0x0001182E then
             Just MarkSpacingCombining
 
-        else if code >= 0x0001182F && code <= 0x00011837 then
+        else if r 0x0001182F 0x00011837 then
             Just MarkNonSpacing
 
         else
             Nothing
 
-    else if code < 0x0001D49B then
-        if code < 0x00011EF6 then
-            if code < 0x00011A96 then
-                if code < 0x000119A9 then
-                    if code < 0x0001192F then
-                        if code == 0x00011838 then
+    else if l 0x0001D49B then
+        if l 0x00011EF6 then
+            if l 0x00011A96 then
+                if l 0x000119A9 then
+                    if l 0x0001192F then
+                        if e 0x00011838 then
                             Just MarkSpacingCombining
 
-                        else if code >= 0x00011839 && code <= 0x0001183A then
+                        else if r 0x00011839 0x0001183A then
                             Just MarkNonSpacing
 
-                        else if code == 0x0001183B then
+                        else if e 0x0001183B then
                             Just PunctuationOther
 
-                        else if code >= 0x000118A0 && code <= 0x000118BF then
+                        else if r 0x000118A0 0x000118BF then
                             Just LetterUppercase
 
-                        else if code >= 0x000118C0 && code <= 0x000118DF then
+                        else if r 0x000118C0 0x000118DF then
                             Just LetterLowercase
 
-                        else if code >= 0x000118E0 && code <= 0x000118E9 then
+                        else if r 0x000118E0 0x000118E9 then
                             Just NumberDecimalDigit
 
-                        else if code >= 0x000118EA && code <= 0x000118F2 then
+                        else if r 0x000118EA 0x000118F2 then
                             Just NumberOther
 
                         else if
-                            (code >= 0x000118FF && code <= 0x00011906)
-                                || (code == 0x00011909)
-                                || (code >= 0x0001190C && code <= 0x00011913)
-                                || (code >= 0x00011915 && code <= 0x00011916)
-                                || (code >= 0x00011918 && code <= 0x0001192E)
+                            r 0x000118FF 0x00011906
+                                || e 0x00011909
+                                || r 0x0001190C 0x00011913
+                                || r 0x00011915 0x00011916
+                                || r 0x00011918 0x0001192E
                         then
                             Just LetterOther
 
                         else
                             Nothing
 
-                    else if code < 0x0001193F then
-                        if code == 0x0001192F then
+                    else if l 0x0001193F then
+                        if e 0x0001192F then
                             Just LetterOther
 
                         else if
-                            (code >= 0x00011930 && code <= 0x00011935)
-                                || (code >= 0x00011937 && code <= 0x00011938)
-                                || (code == 0x0001193D)
+                            r 0x00011930 0x00011935
+                                || r 0x00011937 0x00011938
+                                || e 0x0001193D
                         then
                             Just MarkSpacingCombining
 
-                        else if
-                            (code >= 0x0001193B && code <= 0x0001193C)
-                                || (code == 0x0001193E)
-                        then
+                        else if r 0x0001193B 0x0001193C || e 0x0001193E then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if
-                        (code == 0x0001193F)
-                            || (code == 0x00011941)
-                            || (code >= 0x000119A0 && code <= 0x000119A7)
-                    then
+                    else if e 0x0001193F || e 0x00011941 || r 0x000119A0 0x000119A7 then
                         Just LetterOther
 
-                    else if (code == 0x00011940) || (code == 0x00011942) then
+                    else if e 0x00011940 || e 0x00011942 then
                         Just MarkSpacingCombining
 
-                    else if code == 0x00011943 then
+                    else if e 0x00011943 then
                         Just MarkNonSpacing
 
-                    else if code >= 0x00011944 && code <= 0x00011946 then
+                    else if r 0x00011944 0x00011946 then
                         Just PunctuationOther
 
-                    else if code >= 0x00011950 && code <= 0x00011959 then
+                    else if r 0x00011950 0x00011959 then
                         Just NumberDecimalDigit
 
                     else
                         Nothing
 
-                else if code < 0x00011A0A then
+                else if l 0x00011A0A then
                     if
-                        (code >= 0x000119AA && code <= 0x000119D0)
-                            || (code == 0x000119E1)
-                            || (code == 0x000119E3)
-                            || (code == 0x00011A00)
+                        r 0x000119AA 0x000119D0
+                            || e 0x000119E1
+                            || e 0x000119E3
+                            || e 0x00011A00
                     then
                         Just LetterOther
 
                     else if
-                        (code >= 0x000119D1 && code <= 0x000119D3)
-                            || (code >= 0x000119DC && code <= 0x000119DF)
-                            || (code == 0x000119E4)
+                        r 0x000119D1 0x000119D3
+                            || r 0x000119DC 0x000119DF
+                            || e 0x000119E4
                     then
                         Just MarkSpacingCombining
 
                     else if
-                        (code >= 0x000119D4 && code <= 0x000119D7)
-                            || (code >= 0x000119DA && code <= 0x000119DB)
-                            || (code == 0x000119E0)
-                            || (code >= 0x00011A01 && code <= 0x00011A09)
+                        r 0x000119D4 0x000119D7
+                            || r 0x000119DA 0x000119DB
+                            || e 0x000119E0
+                            || r 0x00011A01 0x00011A09
                     then
                         Just MarkNonSpacing
 
-                    else if code == 0x000119E2 then
+                    else if e 0x000119E2 then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if code < 0x00011A46 then
+                else if l 0x00011A46 then
                     if
-                        (code == 0x00011A0A)
-                            || (code >= 0x00011A33 && code <= 0x00011A38)
-                            || (code >= 0x00011A3B && code <= 0x00011A3E)
+                        e 0x00011A0A
+                            || r 0x00011A33 0x00011A38
+                            || r 0x00011A3B 0x00011A3E
                     then
                         Just MarkNonSpacing
 
-                    else if
-                        (code >= 0x00011A0B && code <= 0x00011A32)
-                            || (code == 0x00011A3A)
-                    then
+                    else if r 0x00011A0B 0x00011A32 || e 0x00011A3A then
                         Just LetterOther
 
-                    else if code == 0x00011A39 then
+                    else if e 0x00011A39 then
                         Just MarkSpacingCombining
 
-                    else if code >= 0x00011A3F && code <= 0x00011A45 then
+                    else if r 0x00011A3F 0x00011A45 then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if code == 0x00011A46 then
+                else if e 0x00011A46 then
                     Just PunctuationOther
 
                 else if
-                    (code == 0x00011A47)
-                        || (code >= 0x00011A51 && code <= 0x00011A56)
-                        || (code >= 0x00011A59 && code <= 0x00011A5B)
-                        || (code >= 0x00011A8A && code <= 0x00011A95)
+                    e 0x00011A47
+                        || r 0x00011A51 0x00011A56
+                        || r 0x00011A59 0x00011A5B
+                        || r 0x00011A8A 0x00011A95
                 then
                     Just MarkNonSpacing
 
-                else if
-                    (code == 0x00011A50)
-                        || (code >= 0x00011A5C && code <= 0x00011A89)
-                then
+                else if e 0x00011A50 || r 0x00011A5C 0x00011A89 then
                     Just LetterOther
 
-                else if code >= 0x00011A57 && code <= 0x00011A58 then
+                else if r 0x00011A57 0x00011A58 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x00011CB3 then
-                if code < 0x00011C3D then
+            else if l 0x00011CB3 then
+                if l 0x00011C3D then
                     if
-                        (code == 0x00011A96)
-                            || (code >= 0x00011A98 && code <= 0x00011A99)
-                            || (code >= 0x00011C30 && code <= 0x00011C36)
-                            || (code >= 0x00011C38 && code <= 0x00011C3C)
+                        e 0x00011A96
+                            || r 0x00011A98 0x00011A99
+                            || r 0x00011C30 0x00011C36
+                            || r 0x00011C38 0x00011C3C
                     then
                         Just MarkNonSpacing
 
-                    else if (code == 0x00011A97) || (code == 0x00011C2F) then
+                    else if e 0x00011A97 || e 0x00011C2F then
                         Just MarkSpacingCombining
 
-                    else if
-                        (code >= 0x00011A9A && code <= 0x00011A9C)
-                            || (code >= 0x00011A9E && code <= 0x00011AA2)
-                    then
+                    else if r 0x00011A9A 0x00011A9C || r 0x00011A9E 0x00011AA2 then
                         Just PunctuationOther
 
                     else if
-                        (code == 0x00011A9D)
-                            || (code >= 0x00011AB0 && code <= 0x00011AF8)
-                            || (code >= 0x00011C00 && code <= 0x00011C08)
-                            || (code >= 0x00011C0A && code <= 0x00011C2E)
+                        e 0x00011A9D
+                            || r 0x00011AB0 0x00011AF8
+                            || r 0x00011C00 0x00011C08
+                            || r 0x00011C0A 0x00011C2E
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if code < 0x00011C6F then
-                    if (code == 0x00011C3D) || (code == 0x00011C3F) then
+                else if l 0x00011C6F then
+                    if e 0x00011C3D || e 0x00011C3F then
                         Just MarkNonSpacing
 
-                    else if code == 0x00011C3E then
+                    else if e 0x00011C3E then
                         Just MarkSpacingCombining
 
-                    else if code == 0x00011C40 then
+                    else if e 0x00011C40 then
                         Just LetterOther
 
-                    else if code >= 0x00011C41 && code <= 0x00011C45 then
+                    else if r 0x00011C41 0x00011C45 then
                         Just PunctuationOther
 
-                    else if code >= 0x00011C50 && code <= 0x00011C59 then
+                    else if r 0x00011C50 0x00011C59 then
                         Just NumberDecimalDigit
 
-                    else if code >= 0x00011C5A && code <= 0x00011C6C then
+                    else if r 0x00011C5A 0x00011C6C then
                         Just NumberOther
 
                     else
                         Nothing
 
-                else if code >= 0x00011C70 && code <= 0x00011C71 then
+                else if r 0x00011C70 0x00011C71 then
                     Just PunctuationOther
 
-                else if code >= 0x00011C72 && code <= 0x00011C8F then
+                else if r 0x00011C72 0x00011C8F then
                     Just LetterOther
 
                 else if
-                    (code >= 0x00011C92 && code <= 0x00011CA7)
-                        || (code >= 0x00011CAA && code <= 0x00011CB0)
-                        || (code == 0x00011CB2)
+                    r 0x00011C92 0x00011CA7
+                        || r 0x00011CAA 0x00011CB0
+                        || e 0x00011CB2
                 then
                     Just MarkNonSpacing
 
-                else if (code == 0x00011CA9) || (code == 0x00011CB1) then
+                else if e 0x00011CA9 || e 0x00011CB1 then
                     Just MarkSpacingCombining
 
                 else
                     Nothing
 
-            else if code < 0x00011D5F then
-                if code < 0x00011D30 then
-                    if
-                        (code == 0x00011CB3)
-                            || (code >= 0x00011CB5 && code <= 0x00011CB6)
-                    then
+            else if l 0x00011D5F then
+                if l 0x00011D30 then
+                    if e 0x00011CB3 || r 0x00011CB5 0x00011CB6 then
                         Just MarkNonSpacing
 
-                    else if code == 0x00011CB4 then
+                    else if e 0x00011CB4 then
                         Just MarkSpacingCombining
 
                     else if
-                        (code >= 0x00011D00 && code <= 0x00011D06)
-                            || (code >= 0x00011D08 && code <= 0x00011D09)
-                            || (code >= 0x00011D0B && code <= 0x00011D2F)
+                        r 0x00011D00 0x00011D06
+                            || r 0x00011D08 0x00011D09
+                            || r 0x00011D0B 0x00011D2F
                     then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if (code == 0x00011D30) || (code == 0x00011D46) then
+                else if e 0x00011D30 || e 0x00011D46 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x00011D31 && code <= 0x00011D36)
-                        || (code == 0x00011D3A)
-                        || (code >= 0x00011D3C && code <= 0x00011D3D)
-                        || (code >= 0x00011D3F && code <= 0x00011D45)
-                        || (code == 0x00011D47)
+                    r 0x00011D31 0x00011D36
+                        || e 0x00011D3A
+                        || r 0x00011D3C 0x00011D3D
+                        || r 0x00011D3F 0x00011D45
+                        || e 0x00011D47
                 then
                     Just MarkNonSpacing
 
-                else if code >= 0x00011D50 && code <= 0x00011D59 then
+                else if r 0x00011D50 0x00011D59 then
                     Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if code < 0x00011D95 then
+            else if l 0x00011D95 then
                 if
-                    (code >= 0x00011D60 && code <= 0x00011D65)
-                        || (code >= 0x00011D67 && code <= 0x00011D68)
-                        || (code >= 0x00011D6A && code <= 0x00011D89)
+                    r 0x00011D60 0x00011D65
+                        || r 0x00011D67 0x00011D68
+                        || r 0x00011D6A 0x00011D89
                 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x00011D8A && code <= 0x00011D8E)
-                        || (code >= 0x00011D93 && code <= 0x00011D94)
-                then
+                else if r 0x00011D8A 0x00011D8E || r 0x00011D93 0x00011D94 then
                     Just MarkSpacingCombining
 
-                else if code >= 0x00011D90 && code <= 0x00011D91 then
+                else if r 0x00011D90 0x00011D91 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if
-                (code == 0x00011D95)
-                    || (code == 0x00011D97)
-                    || (code >= 0x00011EF3 && code <= 0x00011EF4)
-            then
+            else if e 0x00011D95 || e 0x00011D97 || r 0x00011EF3 0x00011EF4 then
                 Just MarkNonSpacing
 
-            else if (code == 0x00011D96) || (code == 0x00011EF5) then
+            else if e 0x00011D96 || e 0x00011EF5 then
                 Just MarkSpacingCombining
 
-            else if
-                (code == 0x00011D98)
-                    || (code >= 0x00011EE0 && code <= 0x00011EF2)
-            then
+            else if e 0x00011D98 || r 0x00011EE0 0x00011EF2 then
                 Just LetterOther
 
-            else if code >= 0x00011DA0 && code <= 0x00011DA9 then
+            else if r 0x00011DA0 0x00011DA9 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
-        else if code < 0x00016FEF then
-            if code < 0x00016AF4 then
-                if code < 0x00012F8F then
-                    if code == 0x00011EF6 then
+        else if l 0x00016FEF then
+            if l 0x00016AF4 then
+                if l 0x00012F8F then
+                    if e 0x00011EF6 then
                         Just MarkSpacingCombining
 
                     else if
-                        (code >= 0x00011EF7 && code <= 0x00011EF8)
-                            || (code == 0x00011FFF)
-                            || (code >= 0x00012470 && code <= 0x00012474)
+                        r 0x00011EF7 0x00011EF8
+                            || e 0x00011FFF
+                            || r 0x00012470 0x00012474
                     then
                         Just PunctuationOther
 
                     else if
-                        (code == 0x00011FB0)
-                            || (code >= 0x00012000 && code <= 0x00012399)
-                            || (code >= 0x00012480 && code <= 0x00012543)
+                        e 0x00011FB0
+                            || r 0x00012000 0x00012399
+                            || r 0x00012480 0x00012543
                     then
                         Just LetterOther
 
-                    else if code >= 0x00011FC0 && code <= 0x00011FD4 then
+                    else if r 0x00011FC0 0x00011FD4 then
                         Just NumberOther
 
-                    else if
-                        (code >= 0x00011FD5 && code <= 0x00011FDC)
-                            || (code >= 0x00011FE1 && code <= 0x00011FF1)
-                    then
+                    else if r 0x00011FD5 0x00011FDC || r 0x00011FE1 0x00011FF1 then
                         Just SymbolOther
 
-                    else if code >= 0x00011FDD && code <= 0x00011FE0 then
+                    else if r 0x00011FDD 0x00011FE0 then
                         Just SymbolCurrency
 
-                    else if code >= 0x00012400 && code <= 0x0001246E then
+                    else if r 0x00012400 0x0001246E then
                         Just NumberLetter
 
                     else
                         Nothing
 
-                else if code < 0x00016A3F then
+                else if l 0x00016A3F then
                     if
-                        (code >= 0x00012F90 && code <= 0x00012FF0)
-                            || (code >= 0x00013000 && code <= 0x0001342E)
-                            || (code >= 0x00014400 && code <= 0x00014646)
-                            || (code >= 0x00016800 && code <= 0x00016A38)
+                        r 0x00012F90 0x00012FF0
+                            || r 0x00013000 0x0001342E
+                            || r 0x00014400 0x00014646
+                            || r 0x00016800 0x00016A38
                     then
                         Just LetterOther
 
-                    else if code >= 0x00012FF1 && code <= 0x00012FF2 then
+                    else if r 0x00012FF1 0x00012FF2 then
                         Just PunctuationOther
 
-                    else if code >= 0x00013430 && code <= 0x00013438 then
+                    else if r 0x00013430 0x00013438 then
                         Just OtherFormat
 
                     else
                         Nothing
 
                 else if
-                    (code >= 0x00016A40 && code <= 0x00016A5E)
-                        || (code >= 0x00016A70 && code <= 0x00016ABE)
-                        || (code >= 0x00016AD0 && code <= 0x00016AED)
+                    r 0x00016A40 0x00016A5E
+                        || r 0x00016A70 0x00016ABE
+                        || r 0x00016AD0 0x00016AED
                 then
                     Just LetterOther
 
-                else if
-                    (code >= 0x00016A60 && code <= 0x00016A69)
-                        || (code >= 0x00016AC0 && code <= 0x00016AC9)
-                then
+                else if r 0x00016A60 0x00016A69 || r 0x00016AC0 0x00016AC9 then
                     Just NumberDecimalDigit
 
-                else if code >= 0x00016A6E && code <= 0x00016A6F then
+                else if r 0x00016A6E 0x00016A6F then
                     Just PunctuationOther
 
-                else if code >= 0x00016AF0 && code <= 0x00016AF3 then
+                else if r 0x00016AF0 0x00016AF3 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code < 0x00016E3F then
-                if code < 0x00016B3F then
-                    if
-                        (code == 0x00016AF4)
-                            || (code >= 0x00016B30 && code <= 0x00016B36)
-                    then
+            else if l 0x00016E3F then
+                if l 0x00016B3F then
+                    if e 0x00016AF4 || r 0x00016B30 0x00016B36 then
                         Just MarkNonSpacing
 
-                    else if
-                        (code == 0x00016AF5)
-                            || (code >= 0x00016B37 && code <= 0x00016B3B)
-                    then
+                    else if e 0x00016AF5 || r 0x00016B37 0x00016B3B then
                         Just PunctuationOther
 
-                    else if code >= 0x00016B00 && code <= 0x00016B2F then
+                    else if r 0x00016B00 0x00016B2F then
                         Just LetterOther
 
-                    else if code >= 0x00016B3C && code <= 0x00016B3E then
+                    else if r 0x00016B3C 0x00016B3E then
                         Just SymbolOther
 
                     else
                         Nothing
 
-                else if (code == 0x00016B3F) || (code == 0x00016B45) then
+                else if e 0x00016B3F || e 0x00016B45 then
                     Just SymbolOther
 
-                else if code >= 0x00016B40 && code <= 0x00016B43 then
+                else if r 0x00016B40 0x00016B43 then
                     Just LetterModifier
 
-                else if code == 0x00016B44 then
+                else if e 0x00016B44 then
                     Just PunctuationOther
 
-                else if code >= 0x00016B50 && code <= 0x00016B59 then
+                else if r 0x00016B50 0x00016B59 then
                     Just NumberDecimalDigit
 
-                else if code >= 0x00016B5B && code <= 0x00016B61 then
+                else if r 0x00016B5B 0x00016B61 then
                     Just NumberOther
 
-                else if
-                    (code >= 0x00016B63 && code <= 0x00016B77)
-                        || (code >= 0x00016B7D && code <= 0x00016B8F)
-                then
+                else if r 0x00016B63 0x00016B77 || r 0x00016B7D 0x00016B8F then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if code < 0x00016F50 then
-                if code >= 0x00016E40 && code <= 0x00016E5F then
+            else if l 0x00016F50 then
+                if r 0x00016E40 0x00016E5F then
                     Just LetterUppercase
 
-                else if code >= 0x00016E60 && code <= 0x00016E7F then
+                else if r 0x00016E60 0x00016E7F then
                     Just LetterLowercase
 
-                else if code >= 0x00016E80 && code <= 0x00016E96 then
+                else if r 0x00016E80 0x00016E96 then
                     Just NumberOther
 
-                else if code >= 0x00016E97 && code <= 0x00016E9A then
+                else if r 0x00016E97 0x00016E9A then
                     Just PunctuationOther
 
-                else if code >= 0x00016F00 && code <= 0x00016F4A then
+                else if r 0x00016F00 0x00016F4A then
                     Just LetterOther
 
-                else if code == 0x00016F4F then
+                else if e 0x00016F4F then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code == 0x00016F50 then
+            else if e 0x00016F50 then
                 Just LetterOther
 
-            else if code >= 0x00016F51 && code <= 0x00016F87 then
+            else if r 0x00016F51 0x00016F87 then
                 Just MarkSpacingCombining
 
-            else if
-                (code >= 0x00016F8F && code <= 0x00016F92)
-                    || (code == 0x00016FE4)
-            then
+            else if r 0x00016F8F 0x00016F92 || e 0x00016FE4 then
                 Just MarkNonSpacing
 
             else if
-                (code >= 0x00016F93 && code <= 0x00016F9F)
-                    || (code >= 0x00016FE0 && code <= 0x00016FE1)
-                    || (code == 0x00016FE3)
+                r 0x00016F93 0x00016F9F
+                    || r 0x00016FE0 0x00016FE1
+                    || e 0x00016FE3
             then
                 Just LetterModifier
 
-            else if code == 0x00016FE2 then
+            else if e 0x00016FE2 then
                 Just PunctuationOther
 
             else
                 Nothing
 
-        else if code < 0x0001D0FF then
-            if code < 0x0001B16F then
-                if code >= 0x00016FF0 && code <= 0x00016FF1 then
+        else if l 0x0001D0FF then
+            if l 0x0001B16F then
+                if r 0x00016FF0 0x00016FF1 then
                     Just MarkSpacingCombining
 
                 else if
-                    (code == 0x00017000)
-                        || (code == 0x000187F7)
-                        || (code >= 0x00018800 && code <= 0x00018CD5)
-                        || (code == 0x00018D00)
-                        || (code == 0x00018D08)
-                        || (code >= 0x0001B000 && code <= 0x0001B122)
-                        || (code >= 0x0001B150 && code <= 0x0001B152)
-                        || (code >= 0x0001B164 && code <= 0x0001B167)
+                    e 0x00017000
+                        || e 0x000187F7
+                        || r 0x00018800 0x00018CD5
+                        || e 0x00018D00
+                        || e 0x00018D08
+                        || r 0x0001B000 0x0001B122
+                        || r 0x0001B150 0x0001B152
+                        || r 0x0001B164 0x0001B167
                 then
                     Just LetterOther
 
                 else if
-                    (code >= 0x0001AFF0 && code <= 0x0001AFF3)
-                        || (code >= 0x0001AFF5 && code <= 0x0001AFFB)
-                        || (code >= 0x0001AFFD && code <= 0x0001AFFE)
+                    r 0x0001AFF0 0x0001AFF3
+                        || r 0x0001AFF5 0x0001AFFB
+                        || r 0x0001AFFD 0x0001AFFE
                 then
                     Just LetterModifier
 
                 else
                     Nothing
 
-            else if code < 0x0001BC9C then
+            else if l 0x0001BC9C then
                 if
-                    (code >= 0x0001B170 && code <= 0x0001B2FB)
-                        || (code >= 0x0001BC00 && code <= 0x0001BC6A)
-                        || (code >= 0x0001BC70 && code <= 0x0001BC7C)
-                        || (code >= 0x0001BC80 && code <= 0x0001BC88)
-                        || (code >= 0x0001BC90 && code <= 0x0001BC99)
+                    r 0x0001B170 0x0001B2FB
+                        || r 0x0001BC00 0x0001BC6A
+                        || r 0x0001BC70 0x0001BC7C
+                        || r 0x0001BC80 0x0001BC88
+                        || r 0x0001BC90 0x0001BC99
                 then
                     Just LetterOther
 
@@ -10612,184 +9127,175 @@ getCategory c =
                     Nothing
 
             else if
-                (code == 0x0001BC9C)
-                    || (code >= 0x0001CF50 && code <= 0x0001CFC3)
-                    || (code >= 0x0001D000 && code <= 0x0001D0F5)
+                e 0x0001BC9C
+                    || r 0x0001CF50 0x0001CFC3
+                    || r 0x0001D000 0x0001D0F5
             then
                 Just SymbolOther
 
             else if
-                (code >= 0x0001BC9D && code <= 0x0001BC9E)
-                    || (code >= 0x0001CF00 && code <= 0x0001CF2D)
-                    || (code >= 0x0001CF30 && code <= 0x0001CF46)
+                r 0x0001BC9D 0x0001BC9E
+                    || r 0x0001CF00 0x0001CF2D
+                    || r 0x0001CF30 0x0001CF46
             then
                 Just MarkNonSpacing
 
-            else if code == 0x0001BC9F then
+            else if e 0x0001BC9F then
                 Just PunctuationOther
 
-            else if code >= 0x0001BCA0 && code <= 0x0001BCA3 then
+            else if r 0x0001BCA0 0x0001BCA3 then
                 Just OtherFormat
 
             else
                 Nothing
 
-        else if code < 0x0001D1FF then
-            if code < 0x0001D172 then
+        else if l 0x0001D1FF then
+            if l 0x0001D172 then
                 if
-                    (code >= 0x0001D100 && code <= 0x0001D126)
-                        || (code >= 0x0001D129 && code <= 0x0001D164)
-                        || (code >= 0x0001D16A && code <= 0x0001D16C)
+                    r 0x0001D100 0x0001D126
+                        || r 0x0001D129 0x0001D164
+                        || r 0x0001D16A 0x0001D16C
                 then
                     Just SymbolOther
 
-                else if
-                    (code >= 0x0001D165 && code <= 0x0001D166)
-                        || (code >= 0x0001D16D && code <= 0x0001D171)
-                then
+                else if r 0x0001D165 0x0001D166 || r 0x0001D16D 0x0001D171 then
                     Just MarkSpacingCombining
 
-                else if code >= 0x0001D167 && code <= 0x0001D169 then
+                else if r 0x0001D167 0x0001D169 then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if code == 0x0001D172 then
+            else if e 0x0001D172 then
                 Just MarkSpacingCombining
 
-            else if code >= 0x0001D173 && code <= 0x0001D17A then
+            else if r 0x0001D173 0x0001D17A then
                 Just OtherFormat
 
             else if
-                (code >= 0x0001D17B && code <= 0x0001D182)
-                    || (code >= 0x0001D185 && code <= 0x0001D18B)
-                    || (code >= 0x0001D1AA && code <= 0x0001D1AD)
+                r 0x0001D17B 0x0001D182
+                    || r 0x0001D185 0x0001D18B
+                    || r 0x0001D1AA 0x0001D1AD
             then
                 Just MarkNonSpacing
 
             else if
-                (code >= 0x0001D183 && code <= 0x0001D184)
-                    || (code >= 0x0001D18C && code <= 0x0001D1A9)
-                    || (code >= 0x0001D1AE && code <= 0x0001D1EA)
+                r 0x0001D183 0x0001D184
+                    || r 0x0001D18C 0x0001D1A9
+                    || r 0x0001D1AE 0x0001D1EA
             then
                 Just SymbolOther
 
             else
                 Nothing
 
-        else if code < 0x0001D3FF then
+        else if l 0x0001D3FF then
             if
-                (code >= 0x0001D200 && code <= 0x0001D241)
-                    || (code == 0x0001D245)
-                    || (code >= 0x0001D300 && code <= 0x0001D356)
+                r 0x0001D200 0x0001D241
+                    || e 0x0001D245
+                    || r 0x0001D300 0x0001D356
             then
                 Just SymbolOther
 
-            else if code >= 0x0001D242 && code <= 0x0001D244 then
+            else if r 0x0001D242 0x0001D244 then
                 Just MarkNonSpacing
 
-            else if
-                (code >= 0x0001D2E0 && code <= 0x0001D2F3)
-                    || (code >= 0x0001D360 && code <= 0x0001D378)
-            then
+            else if r 0x0001D2E0 0x0001D2F3 || r 0x0001D360 0x0001D378 then
                 Just NumberOther
 
             else
                 Nothing
 
         else if
-            (code >= 0x0001D400 && code <= 0x0001D419)
-                || (code >= 0x0001D434 && code <= 0x0001D44D)
-                || (code >= 0x0001D468 && code <= 0x0001D481)
+            r 0x0001D400 0x0001D419
+                || r 0x0001D434 0x0001D44D
+                || r 0x0001D468 0x0001D481
         then
             Just LetterUppercase
 
         else if
-            (code >= 0x0001D41A && code <= 0x0001D433)
-                || (code >= 0x0001D44E && code <= 0x0001D454)
-                || (code >= 0x0001D456 && code <= 0x0001D467)
-                || (code >= 0x0001D482 && code <= 0x0001D49A)
+            r 0x0001D41A 0x0001D433
+                || r 0x0001D44E 0x0001D454
+                || r 0x0001D456 0x0001D467
+                || r 0x0001D482 0x0001D49A
         then
             Just LetterLowercase
 
         else
             Nothing
 
-    else if code < 0x0001E8C6 then
-        if code < 0x0001D74F then
-            if code < 0x0001D56B then
-                if code < 0x0001D4E9 then
+    else if l 0x0001E8C6 then
+        if l 0x0001D74F then
+            if l 0x0001D56B then
+                if l 0x0001D4E9 then
                     if
-                        (code == 0x0001D49B)
-                            || (code >= 0x0001D4B6 && code <= 0x0001D4B9)
-                            || (code == 0x0001D4BB)
-                            || (code >= 0x0001D4BD && code <= 0x0001D4C3)
-                            || (code >= 0x0001D4C5 && code <= 0x0001D4CF)
+                        e 0x0001D49B
+                            || r 0x0001D4B6 0x0001D4B9
+                            || e 0x0001D4BB
+                            || r 0x0001D4BD 0x0001D4C3
+                            || r 0x0001D4C5 0x0001D4CF
                     then
                         Just LetterLowercase
 
                     else if
-                        (code == 0x0001D49C)
-                            || (code >= 0x0001D49E && code <= 0x0001D49F)
-                            || (code == 0x0001D4A2)
-                            || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                            || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-                            || (code >= 0x0001D4AE && code <= 0x0001D4B5)
-                            || (code >= 0x0001D4D0 && code <= 0x0001D4E8)
+                        e 0x0001D49C
+                            || r 0x0001D49E 0x0001D49F
+                            || e 0x0001D4A2
+                            || r 0x0001D4A5 0x0001D4A6
+                            || r 0x0001D4A9 0x0001D4AC
+                            || r 0x0001D4AE 0x0001D4B5
+                            || r 0x0001D4D0 0x0001D4E8
                     then
                         Just LetterUppercase
 
                     else
                         Nothing
 
-                else if code < 0x0001D51D then
+                else if l 0x0001D51D then
                     if
-                        (code == 0x0001D4E9)
-                            || (code >= 0x0001D504 && code <= 0x0001D505)
-                            || (code >= 0x0001D507 && code <= 0x0001D50A)
-                            || (code >= 0x0001D50D && code <= 0x0001D514)
-                            || (code >= 0x0001D516 && code <= 0x0001D51C)
+                        e 0x0001D4E9
+                            || r 0x0001D504 0x0001D505
+                            || r 0x0001D507 0x0001D50A
+                            || r 0x0001D50D 0x0001D514
+                            || r 0x0001D516 0x0001D51C
                     then
                         Just LetterUppercase
 
-                    else if code >= 0x0001D4EA && code <= 0x0001D503 then
+                    else if r 0x0001D4EA 0x0001D503 then
                         Just LetterLowercase
 
                     else
                         Nothing
 
-                else if
-                    (code >= 0x0001D51E && code <= 0x0001D537)
-                        || (code >= 0x0001D552 && code <= 0x0001D56A)
-                then
+                else if r 0x0001D51E 0x0001D537 || r 0x0001D552 0x0001D56A then
                     Just LetterLowercase
 
                 else if
-                    (code >= 0x0001D538 && code <= 0x0001D539)
-                        || (code >= 0x0001D53B && code <= 0x0001D53E)
-                        || (code >= 0x0001D540 && code <= 0x0001D544)
-                        || (code == 0x0001D546)
-                        || (code >= 0x0001D54A && code <= 0x0001D550)
+                    r 0x0001D538 0x0001D539
+                        || r 0x0001D53B 0x0001D53E
+                        || r 0x0001D540 0x0001D544
+                        || e 0x0001D546
+                        || r 0x0001D54A 0x0001D550
                 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x0001D6A7 then
-                if code < 0x0001D5ED then
+            else if l 0x0001D6A7 then
+                if l 0x0001D5ED then
                     if
-                        (code == 0x0001D56B)
-                            || (code >= 0x0001D586 && code <= 0x0001D59F)
-                            || (code >= 0x0001D5BA && code <= 0x0001D5D3)
+                        e 0x0001D56B
+                            || r 0x0001D586 0x0001D59F
+                            || r 0x0001D5BA 0x0001D5D3
                     then
                         Just LetterLowercase
 
                     else if
-                        (code >= 0x0001D56C && code <= 0x0001D585)
-                            || (code >= 0x0001D5A0 && code <= 0x0001D5B9)
-                            || (code >= 0x0001D5D4 && code <= 0x0001D5EC)
+                        r 0x0001D56C 0x0001D585
+                            || r 0x0001D5A0 0x0001D5B9
+                            || r 0x0001D5D4 0x0001D5EC
                     then
                         Just LetterUppercase
 
@@ -10797,294 +9303,260 @@ getCategory c =
                         Nothing
 
                 else if
-                    (code == 0x0001D5ED)
-                        || (code >= 0x0001D608 && code <= 0x0001D621)
-                        || (code >= 0x0001D63C && code <= 0x0001D655)
-                        || (code >= 0x0001D670 && code <= 0x0001D689)
+                    e 0x0001D5ED
+                        || r 0x0001D608 0x0001D621
+                        || r 0x0001D63C 0x0001D655
+                        || r 0x0001D670 0x0001D689
                 then
                     Just LetterUppercase
 
                 else if
-                    (code >= 0x0001D5EE && code <= 0x0001D607)
-                        || (code >= 0x0001D622 && code <= 0x0001D63B)
-                        || (code >= 0x0001D656 && code <= 0x0001D66F)
-                        || (code >= 0x0001D68A && code <= 0x0001D6A5)
+                    r 0x0001D5EE 0x0001D607
+                        || r 0x0001D622 0x0001D63B
+                        || r 0x0001D656 0x0001D66F
+                        || r 0x0001D68A 0x0001D6A5
                 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if code < 0x0001D6FA then
-                if
-                    (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                        || (code >= 0x0001D6E2 && code <= 0x0001D6F9)
-                then
+            else if l 0x0001D6FA then
+                if r 0x0001D6A8 0x0001D6C0 || r 0x0001D6E2 0x0001D6F9 then
                     Just LetterUppercase
 
-                else if (code == 0x0001D6C1) || (code == 0x0001D6DB) then
+                else if e 0x0001D6C1 || e 0x0001D6DB then
                     Just SymbolMath
 
-                else if
-                    (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                        || (code >= 0x0001D6DC && code <= 0x0001D6E1)
-                then
+                else if r 0x0001D6C2 0x0001D6DA || r 0x0001D6DC 0x0001D6E1 then
                     Just LetterLowercase
 
                 else
                     Nothing
 
-            else if
-                (code == 0x0001D6FA)
-                    || (code >= 0x0001D71C && code <= 0x0001D734)
-            then
+            else if e 0x0001D6FA || r 0x0001D71C 0x0001D734 then
                 Just LetterUppercase
 
-            else if
-                (code == 0x0001D6FB)
-                    || (code == 0x0001D715)
-                    || (code == 0x0001D735)
-            then
+            else if e 0x0001D6FB || e 0x0001D715 || e 0x0001D735 then
                 Just SymbolMath
 
             else if
-                (code >= 0x0001D6FC && code <= 0x0001D714)
-                    || (code >= 0x0001D716 && code <= 0x0001D71B)
-                    || (code >= 0x0001D736 && code <= 0x0001D74E)
+                r 0x0001D6FC 0x0001D714
+                    || r 0x0001D716 0x0001D71B
+                    || r 0x0001D736 0x0001D74E
             then
                 Just LetterLowercase
 
             else
                 Nothing
 
-        else if code < 0x0001DAA0 then
-            if code < 0x0001D7CA then
+        else if l 0x0001DAA0 then
+            if l 0x0001D7CA then
                 if
-                    (code == 0x0001D74F)
-                        || (code == 0x0001D76F)
-                        || (code == 0x0001D789)
-                        || (code == 0x0001D7A9)
-                        || (code == 0x0001D7C3)
+                    e 0x0001D74F
+                        || e 0x0001D76F
+                        || e 0x0001D789
+                        || e 0x0001D7A9
+                        || e 0x0001D7C3
                 then
                     Just SymbolMath
 
                 else if
-                    (code >= 0x0001D750 && code <= 0x0001D755)
-                        || (code >= 0x0001D770 && code <= 0x0001D788)
-                        || (code >= 0x0001D78A && code <= 0x0001D78F)
-                        || (code >= 0x0001D7AA && code <= 0x0001D7C2)
-                        || (code >= 0x0001D7C4 && code <= 0x0001D7C9)
+                    r 0x0001D750 0x0001D755
+                        || r 0x0001D770 0x0001D788
+                        || r 0x0001D78A 0x0001D78F
+                        || r 0x0001D7AA 0x0001D7C2
+                        || r 0x0001D7C4 0x0001D7C9
                 then
                     Just LetterLowercase
 
-                else if
-                    (code >= 0x0001D756 && code <= 0x0001D76E)
-                        || (code >= 0x0001D790 && code <= 0x0001D7A8)
-                then
+                else if r 0x0001D756 0x0001D76E || r 0x0001D790 0x0001D7A8 then
                     Just LetterUppercase
 
                 else
                     Nothing
 
-            else if code < 0x0001DA6C then
-                if code == 0x0001D7CA then
+            else if l 0x0001DA6C then
+                if e 0x0001D7CA then
                     Just LetterUppercase
 
-                else if code == 0x0001D7CB then
+                else if e 0x0001D7CB then
                     Just LetterLowercase
 
-                else if code >= 0x0001D7CE && code <= 0x0001D7FF then
+                else if r 0x0001D7CE 0x0001D7FF then
                     Just NumberDecimalDigit
 
-                else if
-                    (code >= 0x0001D800 && code <= 0x0001D9FF)
-                        || (code >= 0x0001DA37 && code <= 0x0001DA3A)
-                then
+                else if r 0x0001D800 0x0001D9FF || r 0x0001DA37 0x0001DA3A then
                     Just SymbolOther
 
-                else if
-                    (code >= 0x0001DA00 && code <= 0x0001DA36)
-                        || (code >= 0x0001DA3B && code <= 0x0001DA6B)
-                then
+                else if r 0x0001DA00 0x0001DA36 || r 0x0001DA3B 0x0001DA6B then
                     Just MarkNonSpacing
 
                 else
                     Nothing
 
             else if
-                (code == 0x0001DA6C)
-                    || (code == 0x0001DA75)
-                    || (code == 0x0001DA84)
-                    || (code >= 0x0001DA9B && code <= 0x0001DA9F)
+                e 0x0001DA6C
+                    || e 0x0001DA75
+                    || e 0x0001DA84
+                    || r 0x0001DA9B 0x0001DA9F
             then
                 Just MarkNonSpacing
 
             else if
-                (code >= 0x0001DA6D && code <= 0x0001DA74)
-                    || (code >= 0x0001DA76 && code <= 0x0001DA83)
-                    || (code >= 0x0001DA85 && code <= 0x0001DA86)
+                r 0x0001DA6D 0x0001DA74
+                    || r 0x0001DA76 0x0001DA83
+                    || r 0x0001DA85 0x0001DA86
             then
                 Just SymbolOther
 
-            else if code >= 0x0001DA87 && code <= 0x0001DA8B then
+            else if r 0x0001DA87 0x0001DA8B then
                 Just PunctuationOther
 
             else
                 Nothing
 
-        else if code < 0x0001E14D then
-            if code < 0x0001E01A then
+        else if l 0x0001E14D then
+            if l 0x0001E01A then
                 if
-                    (code >= 0x0001DAA1 && code <= 0x0001DAAF)
-                        || (code >= 0x0001E000 && code <= 0x0001E006)
-                        || (code >= 0x0001E008 && code <= 0x0001E018)
+                    r 0x0001DAA1 0x0001DAAF
+                        || r 0x0001E000 0x0001E006
+                        || r 0x0001E008 0x0001E018
                 then
                     Just MarkNonSpacing
 
-                else if
-                    (code >= 0x0001DF00 && code <= 0x0001DF09)
-                        || (code >= 0x0001DF0B && code <= 0x0001DF1E)
-                then
+                else if r 0x0001DF00 0x0001DF09 || r 0x0001DF0B 0x0001DF1E then
                     Just LetterLowercase
 
-                else if code == 0x0001DF0A then
+                else if e 0x0001DF0A then
                     Just LetterOther
 
                 else
                     Nothing
 
             else if
-                (code >= 0x0001E01B && code <= 0x0001E021)
-                    || (code >= 0x0001E023 && code <= 0x0001E024)
-                    || (code >= 0x0001E026 && code <= 0x0001E02A)
-                    || (code >= 0x0001E130 && code <= 0x0001E136)
+                r 0x0001E01B 0x0001E021
+                    || r 0x0001E023 0x0001E024
+                    || r 0x0001E026 0x0001E02A
+                    || r 0x0001E130 0x0001E136
             then
                 Just MarkNonSpacing
 
-            else if code >= 0x0001E100 && code <= 0x0001E12C then
+            else if r 0x0001E100 0x0001E12C then
                 Just LetterOther
 
-            else if code >= 0x0001E137 && code <= 0x0001E13D then
+            else if r 0x0001E137 0x0001E13D then
                 Just LetterModifier
 
-            else if code >= 0x0001E140 && code <= 0x0001E149 then
+            else if r 0x0001E140 0x0001E149 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
-        else if code < 0x0001E2EF then
+        else if l 0x0001E2EF then
             if
-                (code == 0x0001E14E)
-                    || (code >= 0x0001E290 && code <= 0x0001E2AD)
-                    || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
+                e 0x0001E14E
+                    || r 0x0001E290 0x0001E2AD
+                    || r 0x0001E2C0 0x0001E2EB
             then
                 Just LetterOther
 
-            else if code == 0x0001E14F then
+            else if e 0x0001E14F then
                 Just SymbolOther
 
-            else if
-                (code == 0x0001E2AE)
-                    || (code >= 0x0001E2EC && code <= 0x0001E2EE)
-            then
+            else if e 0x0001E2AE || r 0x0001E2EC 0x0001E2EE then
                 Just MarkNonSpacing
 
             else
                 Nothing
 
-        else if code == 0x0001E2EF then
+        else if e 0x0001E2EF then
             Just MarkNonSpacing
 
-        else if code >= 0x0001E2F0 && code <= 0x0001E2F9 then
+        else if r 0x0001E2F0 0x0001E2F9 then
             Just NumberDecimalDigit
 
-        else if code == 0x0001E2FF then
+        else if e 0x0001E2FF then
             Just SymbolCurrency
 
         else if
-            (code >= 0x0001E7E0 && code <= 0x0001E7E6)
-                || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
-                || (code >= 0x0001E7ED && code <= 0x0001E7EE)
-                || (code >= 0x0001E7F0 && code <= 0x0001E7FE)
-                || (code >= 0x0001E800 && code <= 0x0001E8C4)
+            r 0x0001E7E0 0x0001E7E6
+                || r 0x0001E7E8 0x0001E7EB
+                || r 0x0001E7ED 0x0001E7EE
+                || r 0x0001E7F0 0x0001E7FE
+                || r 0x0001E800 0x0001E8C4
         then
             Just LetterOther
 
         else
             Nothing
 
-    else if code < 0x0001F24F then
-        if code < 0x0001EE50 then
-            if code < 0x0001ECB0 then
+    else if l 0x0001F24F then
+        if l 0x0001EE50 then
+            if l 0x0001ECB0 then
                 if
-                    (code >= 0x0001E8C7 && code <= 0x0001E8CF)
-                        || (code >= 0x0001EC71 && code <= 0x0001ECAB)
-                        || (code >= 0x0001ECAD && code <= 0x0001ECAF)
+                    r 0x0001E8C7 0x0001E8CF
+                        || r 0x0001EC71 0x0001ECAB
+                        || r 0x0001ECAD 0x0001ECAF
                 then
                     Just NumberOther
 
-                else if
-                    (code >= 0x0001E8D0 && code <= 0x0001E8D6)
-                        || (code >= 0x0001E944 && code <= 0x0001E94A)
-                then
+                else if r 0x0001E8D0 0x0001E8D6 || r 0x0001E944 0x0001E94A then
                     Just MarkNonSpacing
 
-                else if code >= 0x0001E900 && code <= 0x0001E921 then
+                else if r 0x0001E900 0x0001E921 then
                     Just LetterUppercase
 
-                else if code >= 0x0001E922 && code <= 0x0001E943 then
+                else if r 0x0001E922 0x0001E943 then
                     Just LetterLowercase
 
-                else if code == 0x0001E94B then
+                else if e 0x0001E94B then
                     Just LetterModifier
 
-                else if code >= 0x0001E950 && code <= 0x0001E959 then
+                else if r 0x0001E950 0x0001E959 then
                     Just NumberDecimalDigit
 
-                else if code >= 0x0001E95E && code <= 0x0001E95F then
+                else if r 0x0001E95E 0x0001E95F then
                     Just PunctuationOther
 
-                else if code == 0x0001ECAC then
+                else if e 0x0001ECAC then
                     Just SymbolOther
 
                 else
                     Nothing
 
-            else if code < 0x0001EE20 then
-                if code == 0x0001ECB0 then
+            else if l 0x0001EE20 then
+                if e 0x0001ECB0 then
                     Just SymbolCurrency
 
                 else if
-                    (code >= 0x0001ECB1 && code <= 0x0001ECB4)
-                        || (code >= 0x0001ED01 && code <= 0x0001ED2D)
-                        || (code >= 0x0001ED2F && code <= 0x0001ED3D)
+                    r 0x0001ECB1 0x0001ECB4
+                        || r 0x0001ED01 0x0001ED2D
+                        || r 0x0001ED2F 0x0001ED3D
                 then
                     Just NumberOther
 
-                else if code == 0x0001ED2E then
+                else if e 0x0001ED2E then
                     Just SymbolOther
 
-                else if
-                    (code >= 0x0001EE00 && code <= 0x0001EE03)
-                        || (code >= 0x0001EE05 && code <= 0x0001EE1F)
-                then
+                else if r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F then
                     Just LetterOther
 
                 else
                     Nothing
 
             else if
-                (code >= 0x0001EE21 && code <= 0x0001EE22)
-                    || (code == 0x0001EE24)
-                    || (code == 0x0001EE27)
-                    || (code >= 0x0001EE29 && code <= 0x0001EE32)
-                    || (code >= 0x0001EE34 && code <= 0x0001EE37)
-                    || (code == 0x0001EE42)
-                    || (code >= 0x0001EE4D && code <= 0x0001EE4F)
+                r 0x0001EE21 0x0001EE22
+                    || e 0x0001EE24
+                    || e 0x0001EE27
+                    || r 0x0001EE29 0x0001EE32
+                    || r 0x0001EE34 0x0001EE37
+                    || e 0x0001EE42
+                    || r 0x0001EE4D 0x0001EE4F
                     || ((modBy 2 code == 1)
-                            && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
-                                    || (code >= 0x0001EE47 && code <= 0x0001EE4B)
+                            && (r 0x0001EE39 0x0001EE3B
+                                    || r 0x0001EE47 0x0001EE4B
                                )
                        )
             then
@@ -11093,18 +9565,16 @@ getCategory c =
             else
                 Nothing
 
-        else if code < 0x0001EEAA then
-            if code < 0x0001EE73 then
+        else if l 0x0001EEAA then
+            if l 0x0001EE73 then
                 if
-                    (code >= 0x0001EE51 && code <= 0x0001EE52)
-                        || (code == 0x0001EE54)
-                        || (code >= 0x0001EE61 && code <= 0x0001EE62)
-                        || (code == 0x0001EE64)
-                        || (code >= 0x0001EE67 && code <= 0x0001EE6A)
-                        || (code >= 0x0001EE6C && code <= 0x0001EE72)
-                        || ((modBy 2 code == 1)
-                                && (code >= 0x0001EE57 && code <= 0x0001EE5F)
-                           )
+                    r 0x0001EE51 0x0001EE52
+                        || e 0x0001EE54
+                        || r 0x0001EE61 0x0001EE62
+                        || e 0x0001EE64
+                        || r 0x0001EE67 0x0001EE6A
+                        || r 0x0001EE6C 0x0001EE72
+                        || ((modBy 2 code == 1) && r 0x0001EE57 0x0001EE5F)
                 then
                     Just LetterOther
 
@@ -11112,31 +9582,31 @@ getCategory c =
                     Nothing
 
             else if
-                (code >= 0x0001EE74 && code <= 0x0001EE77)
-                    || (code >= 0x0001EE79 && code <= 0x0001EE7C)
-                    || (code == 0x0001EE7E)
-                    || (code >= 0x0001EE80 && code <= 0x0001EE89)
-                    || (code >= 0x0001EE8B && code <= 0x0001EE9B)
-                    || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
-                    || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
+                r 0x0001EE74 0x0001EE77
+                    || r 0x0001EE79 0x0001EE7C
+                    || e 0x0001EE7E
+                    || r 0x0001EE80 0x0001EE89
+                    || r 0x0001EE8B 0x0001EE9B
+                    || r 0x0001EEA1 0x0001EEA3
+                    || r 0x0001EEA5 0x0001EEA9
             then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if code < 0x0001F0C0 then
-            if code >= 0x0001EEAB && code <= 0x0001EEBB then
+        else if l 0x0001F0C0 then
+            if r 0x0001EEAB 0x0001EEBB then
                 Just LetterOther
 
-            else if code >= 0x0001EEF0 && code <= 0x0001EEF1 then
+            else if r 0x0001EEF0 0x0001EEF1 then
                 Just SymbolMath
 
             else if
-                (code >= 0x0001F000 && code <= 0x0001F02B)
-                    || (code >= 0x0001F030 && code <= 0x0001F093)
-                    || (code >= 0x0001F0A0 && code <= 0x0001F0AE)
-                    || (code >= 0x0001F0B1 && code <= 0x0001F0BF)
+                r 0x0001F000 0x0001F02B
+                    || r 0x0001F030 0x0001F093
+                    || r 0x0001F0A0 0x0001F0AE
+                    || r 0x0001F0B1 0x0001F0BF
             then
                 Just SymbolOther
 
@@ -11144,52 +9614,52 @@ getCategory c =
                 Nothing
 
         else if
-            (code >= 0x0001F0C1 && code <= 0x0001F0CF)
-                || (code >= 0x0001F0D1 && code <= 0x0001F0F5)
-                || (code >= 0x0001F10D && code <= 0x0001F1AD)
-                || (code >= 0x0001F1E6 && code <= 0x0001F202)
-                || (code >= 0x0001F210 && code <= 0x0001F23B)
-                || (code >= 0x0001F240 && code <= 0x0001F248)
+            r 0x0001F0C1 0x0001F0CF
+                || r 0x0001F0D1 0x0001F0F5
+                || r 0x0001F10D 0x0001F1AD
+                || r 0x0001F1E6 0x0001F202
+                || r 0x0001F210 0x0001F23B
+                || r 0x0001F240 0x0001F248
         then
             Just SymbolOther
 
-        else if code >= 0x0001F100 && code <= 0x0001F10C then
+        else if r 0x0001F100 0x0001F10C then
             Just NumberOther
 
         else
             Nothing
 
-    else if code < 0x0001FACF then
-        if code < 0x0001F80F then
+    else if l 0x0001FACF then
+        if l 0x0001F80F then
             if
-                (code >= 0x0001F250 && code <= 0x0001F251)
-                    || (code >= 0x0001F260 && code <= 0x0001F265)
-                    || (code >= 0x0001F300 && code <= 0x0001F3FA)
-                    || (code >= 0x0001F400 && code <= 0x0001F6D7)
-                    || (code >= 0x0001F6DD && code <= 0x0001F6EC)
-                    || (code >= 0x0001F6F0 && code <= 0x0001F6FC)
-                    || (code >= 0x0001F700 && code <= 0x0001F773)
-                    || (code >= 0x0001F780 && code <= 0x0001F7D8)
-                    || (code >= 0x0001F7E0 && code <= 0x0001F7EB)
-                    || (code == 0x0001F7F0)
-                    || (code >= 0x0001F800 && code <= 0x0001F80B)
+                r 0x0001F250 0x0001F251
+                    || r 0x0001F260 0x0001F265
+                    || r 0x0001F300 0x0001F3FA
+                    || r 0x0001F400 0x0001F6D7
+                    || r 0x0001F6DD 0x0001F6EC
+                    || r 0x0001F6F0 0x0001F6FC
+                    || r 0x0001F700 0x0001F773
+                    || r 0x0001F780 0x0001F7D8
+                    || r 0x0001F7E0 0x0001F7EB
+                    || e 0x0001F7F0
+                    || r 0x0001F800 0x0001F80B
             then
                 Just SymbolOther
 
-            else if code >= 0x0001F3FB && code <= 0x0001F3FF then
+            else if r 0x0001F3FB 0x0001F3FF then
                 Just SymbolModifier
 
             else
                 Nothing
 
-        else if code < 0x0001FA5F then
+        else if l 0x0001FA5F then
             if
-                (code >= 0x0001F810 && code <= 0x0001F847)
-                    || (code >= 0x0001F850 && code <= 0x0001F859)
-                    || (code >= 0x0001F860 && code <= 0x0001F887)
-                    || (code >= 0x0001F890 && code <= 0x0001F8AD)
-                    || (code >= 0x0001F8B0 && code <= 0x0001F8B1)
-                    || (code >= 0x0001F900 && code <= 0x0001FA53)
+                r 0x0001F810 0x0001F847
+                    || r 0x0001F850 0x0001F859
+                    || r 0x0001F860 0x0001F887
+                    || r 0x0001F890 0x0001F8AD
+                    || r 0x0001F8B0 0x0001F8B1
+                    || r 0x0001F900 0x0001FA53
             then
                 Just SymbolOther
 
@@ -11197,76 +9667,71 @@ getCategory c =
                 Nothing
 
         else if
-            (code >= 0x0001FA60 && code <= 0x0001FA6D)
-                || (code >= 0x0001FA70 && code <= 0x0001FA74)
-                || (code >= 0x0001FA78 && code <= 0x0001FA7C)
-                || (code >= 0x0001FA80 && code <= 0x0001FA86)
-                || (code >= 0x0001FA90 && code <= 0x0001FAAC)
-                || (code >= 0x0001FAB0 && code <= 0x0001FABA)
-                || (code >= 0x0001FAC0 && code <= 0x0001FAC5)
+            r 0x0001FA60 0x0001FA6D
+                || r 0x0001FA70 0x0001FA74
+                || r 0x0001FA78 0x0001FA7C
+                || r 0x0001FA80 0x0001FA86
+                || r 0x0001FA90 0x0001FAAC
+                || r 0x0001FAB0 0x0001FABA
+                || r 0x0001FAC0 0x0001FAC5
         then
             Just SymbolOther
 
         else
             Nothing
 
-    else if code < 0x0002CEA0 then
-        if code < 0x0001FFFF then
+    else if l 0x0002CEA0 then
+        if l 0x0001FFFF then
             if
-                (code >= 0x0001FAD0 && code <= 0x0001FAD9)
-                    || (code >= 0x0001FAE0 && code <= 0x0001FAE7)
-                    || (code >= 0x0001FAF0 && code <= 0x0001FAF6)
-                    || (code >= 0x0001FB00 && code <= 0x0001FB92)
-                    || (code >= 0x0001FB94 && code <= 0x0001FBCA)
+                r 0x0001FAD0 0x0001FAD9
+                    || r 0x0001FAE0 0x0001FAE7
+                    || r 0x0001FAF0 0x0001FAF6
+                    || r 0x0001FB00 0x0001FB92
+                    || r 0x0001FB94 0x0001FBCA
             then
                 Just SymbolOther
 
-            else if code >= 0x0001FBF0 && code <= 0x0001FBF9 then
+            else if r 0x0001FBF0 0x0001FBF9 then
                 Just NumberDecimalDigit
 
             else
                 Nothing
 
         else if
-            (code == 0x00020000)
-                || (code == 0x0002A6DF)
-                || (code == 0x0002A700)
-                || (code == 0x0002B738)
-                || (code == 0x0002B740)
-                || (code == 0x0002B81D)
-                || (code == 0x0002B820)
+            e 0x00020000
+                || e 0x0002A6DF
+                || e 0x0002A700
+                || e 0x0002B738
+                || e 0x0002B740
+                || e 0x0002B81D
+                || e 0x0002B820
         then
             Just LetterOther
 
         else
             Nothing
 
-    else if code < 0x000E0000 then
+    else if l 0x000E0000 then
         if
-            (code == 0x0002CEA1)
-                || (code == 0x0002CEB0)
-                || (code == 0x0002EBE0)
-                || (code >= 0x0002F800 && code <= 0x0002FA1D)
-                || (code == 0x00030000)
-                || (code == 0x0003134A)
+            e 0x0002CEA1
+                || e 0x0002CEB0
+                || e 0x0002EBE0
+                || r 0x0002F800 0x0002FA1D
+                || e 0x00030000
+                || e 0x0003134A
         then
             Just LetterOther
 
         else
             Nothing
 
-    else if (code == 0x000E0001) || (code >= 0x000E0020 && code <= 0x000E007F) then
+    else if e 0x000E0001 || r 0x000E0020 0x000E007F then
         Just OtherFormat
 
-    else if code >= 0x000E0100 && code <= 0x000E01EF then
+    else if r 0x000E0100 0x000E01EF then
         Just MarkNonSpacing
 
-    else if
-        (code == 0x000F0000)
-            || (code == 0x000FFFFD)
-            || (code == 0x00100000)
-            || (code == 0x0010FFFD)
-    then
+    else if e 0x000F0000 || e 0x000FFFFD || e 0x00100000 || e 0x0010FFFD then
         Just OtherPrivateUse
 
     else

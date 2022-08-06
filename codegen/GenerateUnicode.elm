@@ -291,16 +291,13 @@ parseLine line =
             Nothing
 
 
-rangeToCondition : Expression -> ( Int, Int, a ) -> Expression
-rangeToCondition code ( from, to, _ ) =
-    Elm.parens <|
-        if from == to then
-            Elm.Op.equal code (Elm.hex from)
+rangeToCondition : { equals : Int -> Expression, inRange : Int -> Int -> Expression } -> ( Int, Int, a ) -> Expression
+rangeToCondition { equals, inRange } ( from, to, _ ) =
+    if from == to then
+        equals from
 
-        else
-            Elm.Op.and
-                (Elm.Op.gte code <| Elm.hex from)
-                (Elm.Op.lte code <| Elm.hex to)
+    else
+        inRange from to
 
 
 joinOr : List Expression -> Expression
@@ -329,9 +326,35 @@ modIs code n =
             (Elm.int n)
 
 
-letCode : (Expression -> Expression) -> Expression -> Expression
+letCode :
+    ({ code : Expression
+     , lessThan : Int -> Expression
+     , equals : Int -> Expression
+     , inRange : Int -> Int -> Expression
+     }
+     -> Expression
+    )
+    -> Expression
+    -> Expression
 letCode inner code =
-    Elm.Let.letIn inner
+    Elm.Let.letIn
+        (\codeVar lessThan equals inRange ->
+            inner
+                { code = codeVar
+                , lessThan =
+                    \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
+                , equals =
+                    \i ->
+                        Elm.apply equals [ Elm.hex i ]
+                , inRange =
+                    \from to ->
+                        if from == 0 then
+                            Elm.Op.lte codeVar (Elm.hex to)
+
+                        else
+                            Elm.apply inRange [ Elm.hex from, Elm.hex to ]
+                }
+        )
         |> Elm.Let.value "code"
             (Elm.apply
                 (Elm.value
@@ -342,12 +365,45 @@ letCode inner code =
                 )
                 [ code ]
             )
+        |> Elm.Let.value "l" lessThanDef
+        |> Elm.Let.value "e" equalsDef
+        |> Elm.Let.value "r" inRangeDef
         |> Elm.Let.toExpression
 
 
-letCodeWithSimpleCheck : { simpleCheckExpression : Expression -> Expression, body : { code : Expression, simple : Expression } -> Expression } -> Expression -> Expression
+letCodeWithSimpleCheck :
+    { simpleCheckExpression : Expression -> Expression
+    , body :
+        { code : Expression
+        , simple : Expression
+        , lessThan : Int -> Expression
+        , equals : Int -> Expression
+        , inRange : Int -> Int -> Expression
+        }
+        -> Expression
+    }
+    -> Expression
+    -> Expression
 letCodeWithSimpleCheck { body, simpleCheckExpression } code =
-    Elm.Let.letIn (\codeVar simpleVar -> body { code = codeVar, simple = simpleVar })
+    Elm.Let.letIn
+        (\codeVar simpleVar lessThan equals inRange ->
+            body
+                { code = codeVar
+                , simple = simpleVar
+                , lessThan =
+                    \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
+                , equals =
+                    \i ->
+                        Elm.apply equals [ Elm.hex i ]
+                , inRange =
+                    \from to ->
+                        if from == 0 then
+                            Elm.Op.lte codeVar (Elm.hex to)
+
+                        else
+                            Elm.apply inRange [ Elm.hex from, Elm.hex to ]
+                }
+        )
         |> Elm.Let.value "code"
             (Elm.apply
                 (Elm.value
@@ -367,7 +423,47 @@ letCodeWithSimpleCheck { body, simpleCheckExpression } code =
                     }
                 )
             )
+        |> Elm.Let.value "l" lessThanDef
+        |> Elm.Let.value "e" equalsDef
+        |> Elm.Let.value "r" inRangeDef
         |> Elm.Let.toExpression
+
+
+lessThanDef : Expression
+lessThanDef =
+    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.lt codeVariable hex
+
+
+equalsDef : Expression
+equalsDef =
+    Elm.apply
+        (Elm.value
+            { importFrom = []
+            , name = "(==)"
+            , annotation = Nothing
+            }
+        )
+        [ codeVariable ]
+
+
+inRangeDef : Expression
+inRangeDef =
+    Elm.fn2 ( "from", Just Type.int )
+        ( "to", Just Type.int )
+        (\from to ->
+            Elm.Op.and
+                (Elm.Op.lte from codeVariable)
+                (Elm.Op.lte codeVariable to)
+        )
+
+
+codeVariable : Expression
+codeVariable =
+    Elm.value
+        { importFrom = []
+        , name = "code"
+        , annotation = Just Type.int
+        }
 
 
 getCategoryDeclaration :
@@ -408,54 +504,75 @@ getCategoryDeclaration ranges =
                 ( _, _, ( _, _, category ) :: _ ) ->
                     go category
 
-        treeToExpression code t =
-            case t of
-                Node n ->
-                    n
-                        |> group
-                        |> List.map
-                            (\{ category, all, odd, even } ->
-                                let
-                                    modded =
-                                        if List.isEmpty even then
-                                            if List.isEmpty odd then
-                                                []
+        treeToExpression :
+            { code : Expression
+            , lessThan : Int -> Expression
+            , equals : Int -> Expression
+            , inRange : Int -> Int -> Expression
+            }
+            -> Tree Category
+            -> Expression
+        treeToExpression { equals, lessThan, inRange, code } =
+            let
+                rangesToConditions : List ( Int, Int, a ) -> List Expression
+                rangesToConditions =
+                    List.map
+                        (rangeToCondition
+                            { equals = equals
+                            , inRange = inRange
+                            }
+                        )
 
-                                            else
-                                                [ Elm.parens <|
-                                                    Elm.Op.and
-                                                        (modIs code 1)
-                                                        (Elm.parens <| joinOr (List.map (rangeToCondition code) odd))
-                                                ]
+                go t =
+                    case t of
+                        Node n ->
+                            n
+                                |> group
+                                |> List.map
+                                    (\{ category, all, odd, even } ->
+                                        let
+                                            modded =
+                                                if List.isEmpty even then
+                                                    if List.isEmpty odd then
+                                                        []
 
-                                        else if List.isEmpty odd then
-                                            [ Elm.parens <|
-                                                Elm.Op.and
-                                                    (modIs code 0)
-                                                    (Elm.parens <| joinOr (List.map (rangeToCondition code) even))
-                                            ]
+                                                    else
+                                                        [ Elm.parens <|
+                                                            Elm.Op.and
+                                                                (modIs code 1)
+                                                                (Elm.parens <| joinOr <| rangesToConditions odd)
+                                                        ]
 
-                                        else
-                                            [ Elm.ifThen (modIs code 0)
-                                                (joinOr (List.map (rangeToCondition code) even))
-                                                (joinOr (List.map (rangeToCondition code) odd))
-                                            ]
-                                in
-                                ( Elm.apply (Elm.value { importFrom = [], name = "Just", annotation = Nothing }) [ categoryToConstructor category ]
-                                , joinOr
-                                    (List.map (rangeToCondition code) all ++ modded)
-                                )
-                            )
-                        |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) (Elm.value { importFrom = [], name = "Nothing", annotation = Nothing })
+                                                else if List.isEmpty odd then
+                                                    [ Elm.parens <|
+                                                        Elm.Op.and
+                                                            (modIs code 0)
+                                                            (Elm.parens <| joinOr <| rangesToConditions even)
+                                                    ]
 
-                Split at l r ->
-                    Elm.ifThen (Elm.Op.lt code (Elm.hex at))
-                        (treeToExpression code l)
-                        (treeToExpression code r)
+                                                else
+                                                    [ Elm.ifThen (modIs code 0)
+                                                        (joinOr <| rangesToConditions even)
+                                                        (joinOr <| rangesToConditions odd)
+                                                    ]
+                                        in
+                                        ( Elm.apply (Elm.value { importFrom = [], name = "Just", annotation = Nothing }) [ categoryToConstructor category ]
+                                        , joinOr
+                                            (rangesToConditions all ++ modded)
+                                        )
+                                    )
+                                |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) (Elm.value { importFrom = [], name = "Nothing", annotation = Nothing })
+
+                        Split at l r ->
+                            Elm.ifThen (lessThan at)
+                                (go l)
+                                (go r)
+            in
+            go
 
         checks code =
             ranges
-                |> rangesToTree .category
+                |> rangesToTree True .category
                 |> split
                 |> treeToExpression code
     in
@@ -485,50 +602,70 @@ categoriesToDeclaration :
     -> Declaration
 categoriesToDeclaration { name, categories, comment, group } ranges =
     let
-        treeToExpression : Expression -> Tree a -> Expression
-        treeToExpression code t =
-            case t of
-                Node { all, even, odd } ->
-                    let
-                        modded =
-                            if List.isEmpty even then
-                                if List.isEmpty odd then
-                                    []
+        treeToExpression :
+            { code : Expression
+            , lessThan : Int -> Expression
+            , equals : Int -> Expression
+            , inRange : Int -> Int -> Expression
+            }
+            -> Tree a
+            -> Expression
+        treeToExpression { code, lessThan, equals, inRange } =
+            let
+                rangesToCondition : List ( Int, Int, a ) -> List Expression
+                rangesToCondition =
+                    List.map
+                        (rangeToCondition
+                            { equals = equals
+                            , inRange = inRange
+                            }
+                        )
 
-                                else
-                                    [ Elm.parens <|
-                                        Elm.Op.and
-                                            (modIs code 1)
-                                            (Elm.parens <| joinOr (List.map (rangeToCondition code) odd))
-                                    ]
+                go t =
+                    case t of
+                        Node { all, even, odd } ->
+                            let
+                                modded =
+                                    if List.isEmpty even then
+                                        if List.isEmpty odd then
+                                            []
 
-                            else if List.isEmpty odd then
-                                [ Elm.parens <|
-                                    Elm.Op.and
-                                        (modIs code 0)
-                                        (Elm.parens <| joinOr (List.map (rangeToCondition code) even))
-                                ]
+                                        else
+                                            [ Elm.parens <|
+                                                Elm.Op.and
+                                                    (modIs code 1)
+                                                    (Elm.parens <| joinOr (rangesToCondition odd))
+                                            ]
 
-                            else
-                                [ Elm.parens <|
-                                    Elm.ifThen (modIs code 0)
-                                        (joinOr (List.map (rangeToCondition code) even))
-                                        (joinOr (List.map (rangeToCondition code) odd))
-                                ]
-                    in
-                    joinOr
-                        (List.map (rangeToCondition code) all ++ modded)
+                                    else if List.isEmpty odd then
+                                        [ Elm.parens <|
+                                            Elm.Op.and
+                                                (modIs code 0)
+                                                (Elm.parens <| joinOr (rangesToCondition even))
+                                        ]
 
-                Split at l r ->
-                    Elm.ifThen (Elm.Op.lt code (Elm.hex at))
-                        (treeToExpression code l)
-                        (treeToExpression code r)
+                                    else
+                                        [ Elm.parens <|
+                                            Elm.ifThen (modIs code 0)
+                                                (joinOr (rangesToCondition even))
+                                                (joinOr (rangesToCondition odd))
+                                        ]
+                            in
+                            joinOr
+                                (rangesToCondition all ++ modded)
 
-        checks code =
+                        Split at l r ->
+                            Elm.ifThen (lessThan at)
+                                (go l)
+                                (go r)
+            in
+            go
+
+        checks inputs =
             ranges
                 |> List.filter (\{ category } -> List.member category categories)
-                |> rangesToTree (\_ -> ())
-                |> treeToExpression code
+                |> rangesToTree True (\_ -> ())
+                |> treeToExpression inputs
     in
     Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
         |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
@@ -549,12 +686,25 @@ categoriesToDeclarationWithSimpleCheck :
     -> Declaration
 categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } rawDict =
     let
-        toBody : { code : Expression, simple : Expression } -> Expression
-        toBody { code, simple } =
+        toBody :
+            { code : Expression
+            , simple : Expression
+            , lessThan : Int -> Expression
+            , equals : Int -> Expression
+            , inRange : Int -> Int -> Expression
+            }
+            -> Expression
+        toBody { code, simple, lessThan, equals, inRange } =
             let
                 rangesToCondition : List ( Int, Int, a ) -> List Expression
                 rangesToCondition ranges =
-                    List.map (rangeToCondition code) ranges
+                    List.map
+                        (rangeToCondition
+                            { equals = equals
+                            , inRange = inRange
+                            }
+                        )
+                        ranges
 
                 go : Tree a -> Expression
                 go t =
@@ -591,7 +741,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 (rangesToCondition all ++ modded)
 
                         Split at l r ->
-                            Elm.ifThen (Elm.Op.lt code (Elm.hex at))
+                            Elm.ifThen (lessThan at)
                                 (go l)
                                 (go r)
             in
@@ -679,11 +829,11 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
 
         simpleTree : Tree ()
         simpleTree =
-            rangesToTree (\_ -> ()) simpleRanges
+            rangesToTree False (\_ -> ()) simpleRanges
 
         categoryTree : Tree ()
         categoryTree =
-            rangesToTree (\_ -> ()) categoryRanges
+            rangesToTree True (\_ -> ()) categoryRanges
     in
     Elm.fn ( "c", Just <| Type.named [] "Char" )
         (letCodeWithSimpleCheck
@@ -697,14 +847,8 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         |> Elm.exposeWith { exposeConstructor = False, group = Just group }
 
 
-type CorrectChecks
-    = Either
-    | SimpleOnly
-    | CategoryOnly
-
-
-rangesToTree : ({ a | from : Int, to : Int } -> payload) -> List { a | from : Int, to : Int } -> Tree payload
-rangesToTree getPayload ranges =
+rangesToTree : Bool -> ({ a | from : Int, to : Int } -> payload) -> List { a | from : Int, to : Int } -> Tree payload
+rangesToTree splitAt100 getPayload ranges =
     ranges
         |> List.map (toEvenOddRange getPayload)
         |> foldWithLast
@@ -775,7 +919,12 @@ rangesToTree getPayload ranges =
             )
         |> categorize
         |> Node
-        |> splitAt 0x0100
+        |> (if splitAt100 then
+                splitAt 0x0100
+
+            else
+                identity
+           )
         |> split
 
 
