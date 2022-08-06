@@ -220,1676 +220,829 @@ isLower c =
 isAlpha : Char -> Bool
 isAlpha c =
     let
-        simple =
-            Char.toLower c /= c || Char.toUpper c /= c
-
         code =
             Char.toCode c
     in
-    (simple
-        && (if code < 0x0100 then
-                code >= 0x00 && code <= 0xFF
+    if code < 0x0100 then
+        (code >= 0x41 && code <= 0x5A)
+            || (code >= 0x61 && code <= 0x7A)
+            || (code == 0xAA)
+            || (code == 0xB5)
+            || (code == 0xBA)
+            || (code >= 0xC0 && code <= 0xD6)
+            || (code >= 0xD8 && code <= 0xF6)
+            || (code >= 0xF8 && code <= 0xFF)
+
+    else if code < 0xA9CE then
+        if code < 0x106D then
+            if code < 0x0ADF then
+                if code < 0x085F then
+                    if code < 0x061F then
+                        if code < 0x038B then
+                            (code >= 0x0100 && code <= 0x02C1)
+                                || (code >= 0x02C6 && code <= 0x02D1)
+                                || (code >= 0x02E0 && code <= 0x02E4)
+                                || (code >= 0x0370 && code <= 0x0374)
+                                || (code >= 0x0376 && code <= 0x0377)
+                                || (code >= 0x037A && code <= 0x037D)
+                                || (code == 0x037F)
+                                || (code == 0x0386)
+                                || (code >= 0x0388 && code <= 0x038A)
+                                || ((modBy 2 code == 0)
+                                        && (code >= 0x02EC && code <= 0x02EE)
+                                   )
+
+                        else
+                            (code == 0x038C)
+                                || (code >= 0x038E && code <= 0x03A1)
+                                || (code >= 0x03A3 && code <= 0x03F5)
+                                || (code >= 0x03F7 && code <= 0x0481)
+                                || (code >= 0x048A && code <= 0x052F)
+                                || (code >= 0x0531 && code <= 0x0556)
+                                || (code == 0x0559)
+                                || (code >= 0x0560 && code <= 0x0588)
+                                || (code >= 0x05D0 && code <= 0x05EA)
+                                || (code >= 0x05EF && code <= 0x05F2)
+
+                    else if code < 0x074C then
+                        (code >= 0x0620 && code <= 0x064A)
+                            || (code >= 0x066E && code <= 0x066F)
+                            || (code >= 0x0671 && code <= 0x06D3)
+                            || (code == 0x06D5)
+                            || (code >= 0x06E5 && code <= 0x06E6)
+                            || (code >= 0x06EE && code <= 0x06EF)
+                            || (code >= 0x06FA && code <= 0x06FC)
+                            || (code == 0x06FF)
+                            || (code == 0x0710)
+                            || (code >= 0x0712 && code <= 0x072F)
+
+                    else
+                        (code >= 0x074D && code <= 0x07A5)
+                            || (code == 0x07B1)
+                            || (code >= 0x07CA && code <= 0x07EA)
+                            || (code >= 0x07F4 && code <= 0x07F5)
+                            || (code == 0x07FA)
+                            || (code >= 0x0800 && code <= 0x0815)
+                            || (code == 0x081A)
+                            || (code == 0x0824)
+                            || (code == 0x0828)
+                            || (code >= 0x0840 && code <= 0x0858)
+
+                else if code < 0x09EF then
+                    if code < 0x0984 then
+                        (code >= 0x0860 && code <= 0x086A)
+                            || (code >= 0x0870 && code <= 0x0887)
+                            || (code >= 0x0889 && code <= 0x088E)
+                            || (code >= 0x08A0 && code <= 0x08C9)
+                            || (code >= 0x0904 && code <= 0x0939)
+                            || (code == 0x093D)
+                            || (code == 0x0950)
+                            || (code >= 0x0958 && code <= 0x0961)
+                            || (code >= 0x0971 && code <= 0x0980)
+
+                    else
+                        (code >= 0x0985 && code <= 0x098C)
+                            || (code >= 0x098F && code <= 0x0990)
+                            || (code >= 0x0993 && code <= 0x09A8)
+                            || (code >= 0x09AA && code <= 0x09B0)
+                            || (code == 0x09B2)
+                            || (code >= 0x09B6 && code <= 0x09B9)
+                            || (code == 0x09BD)
+                            || (code == 0x09CE)
+                            || (code >= 0x09DC && code <= 0x09DD)
+                            || (code >= 0x09DF && code <= 0x09E1)
+
+                else if code < 0x0A5D then
+                    (code >= 0x09F0 && code <= 0x09F1)
+                        || (code == 0x09FC)
+                        || (code >= 0x0A05 && code <= 0x0A0A)
+                        || (code >= 0x0A0F && code <= 0x0A10)
+                        || (code >= 0x0A13 && code <= 0x0A28)
+                        || (code >= 0x0A2A && code <= 0x0A30)
+                        || (code >= 0x0A32 && code <= 0x0A33)
+                        || (code >= 0x0A35 && code <= 0x0A36)
+                        || (code >= 0x0A38 && code <= 0x0A39)
+                        || (code >= 0x0A59 && code <= 0x0A5C)
+
+                else
+                    (code == 0x0A5E)
+                        || (code >= 0x0A72 && code <= 0x0A74)
+                        || (code >= 0x0A85 && code <= 0x0A8D)
+                        || (code >= 0x0A8F && code <= 0x0A91)
+                        || (code >= 0x0A93 && code <= 0x0AA8)
+                        || (code >= 0x0AAA && code <= 0x0AB0)
+                        || (code >= 0x0AB2 && code <= 0x0AB3)
+                        || (code >= 0x0AB5 && code <= 0x0AB9)
+                        || (code == 0x0ABD)
+                        || (code == 0x0AD0)
+
+            else if code < 0x0CDF then
+                if code < 0x0BA2 then
+                    if code < 0x0B5B then
+                        (code >= 0x0AE0 && code <= 0x0AE1)
+                            || (code == 0x0AF9)
+                            || (code >= 0x0B05 && code <= 0x0B0C)
+                            || (code >= 0x0B0F && code <= 0x0B10)
+                            || (code >= 0x0B13 && code <= 0x0B28)
+                            || (code >= 0x0B2A && code <= 0x0B30)
+                            || (code >= 0x0B32 && code <= 0x0B33)
+                            || (code >= 0x0B35 && code <= 0x0B39)
+                            || (code == 0x0B3D)
+
+                    else
+                        (code >= 0x0B5C && code <= 0x0B5D)
+                            || (code >= 0x0B5F && code <= 0x0B61)
+                            || (code == 0x0B71)
+                            || (code == 0x0B83)
+                            || (code >= 0x0B85 && code <= 0x0B8A)
+                            || (code >= 0x0B8E && code <= 0x0B90)
+                            || (code >= 0x0B92 && code <= 0x0B95)
+                            || (code >= 0x0B99 && code <= 0x0B9A)
+                            || (code == 0x0B9C)
+                            || (code >= 0x0B9E && code <= 0x0B9F)
+
+                else if code < 0x0C5C then
+                    (code >= 0x0BA3 && code <= 0x0BA4)
+                        || (code >= 0x0BA8 && code <= 0x0BAA)
+                        || (code >= 0x0BAE && code <= 0x0BB9)
+                        || (code == 0x0BD0)
+                        || (code >= 0x0C05 && code <= 0x0C0C)
+                        || (code >= 0x0C0E && code <= 0x0C10)
+                        || (code >= 0x0C12 && code <= 0x0C28)
+                        || (code >= 0x0C2A && code <= 0x0C39)
+                        || (code == 0x0C3D)
+                        || (code >= 0x0C58 && code <= 0x0C5A)
+
+                else
+                    (code == 0x0C5D)
+                        || (code >= 0x0C60 && code <= 0x0C61)
+                        || (code == 0x0C80)
+                        || (code >= 0x0C85 && code <= 0x0C8C)
+                        || (code >= 0x0C8E && code <= 0x0C90)
+                        || (code >= 0x0C92 && code <= 0x0CA8)
+                        || (code >= 0x0CAA && code <= 0x0CB3)
+                        || (code >= 0x0CB5 && code <= 0x0CB9)
+                        || (code == 0x0CBD)
+                        || (code >= 0x0CDD && code <= 0x0CDE)
+
+            else if code < 0x0E83 then
+                if code < 0x0D79 then
+                    (code >= 0x0CE0 && code <= 0x0CE1)
+                        || (code >= 0x0CF1 && code <= 0x0CF2)
+                        || (code >= 0x0D04 && code <= 0x0D0C)
+                        || (code >= 0x0D0E && code <= 0x0D10)
+                        || (code >= 0x0D12 && code <= 0x0D3A)
+                        || (code == 0x0D3D)
+                        || (code == 0x0D4E)
+                        || (code >= 0x0D54 && code <= 0x0D56)
+                        || (code >= 0x0D5F && code <= 0x0D61)
+
+                else
+                    (code >= 0x0D7A && code <= 0x0D7F)
+                        || (code >= 0x0D85 && code <= 0x0D96)
+                        || (code >= 0x0D9A && code <= 0x0DB1)
+                        || (code >= 0x0DB3 && code <= 0x0DBB)
+                        || (code == 0x0DBD)
+                        || (code >= 0x0DC0 && code <= 0x0DC6)
+                        || (code >= 0x0E01 && code <= 0x0E30)
+                        || (code >= 0x0E32 && code <= 0x0E33)
+                        || (code >= 0x0E40 && code <= 0x0E46)
+                        || (code >= 0x0E81 && code <= 0x0E82)
+
+            else if code < 0x0EFF then
+                (code == 0x0E84)
+                    || (code >= 0x0E86 && code <= 0x0E8A)
+                    || (code >= 0x0E8C && code <= 0x0EA3)
+                    || (code == 0x0EA5)
+                    || (code >= 0x0EA7 && code <= 0x0EB0)
+                    || (code >= 0x0EB2 && code <= 0x0EB3)
+                    || (code == 0x0EBD)
+                    || (code >= 0x0EC0 && code <= 0x0EC4)
+                    || (code == 0x0EC6)
+                    || (code >= 0x0EDC && code <= 0x0EDF)
 
             else
-                (code >= 0x0100 && code <= 0x0344)
-                    || (code >= 0x0346 && code <= 0x215F)
-                    || (code >= 0x2180 && code <= 0x24B5)
-                    || (code >= 0x24EA && code <= 0x000F0000)
-           )
-    )
-        || (if code < 0x0100 then
-                (code == 0xAA)
-                    || (code == 0xBA)
-                    || (code >= 0xF8 && code <= 0xFF)
+                (code == 0x0F00)
+                    || (code >= 0x0F40 && code <= 0x0F47)
+                    || (code >= 0x0F49 && code <= 0x0F6C)
+                    || (code >= 0x0F88 && code <= 0x0F8C)
+                    || (code >= 0x1000 && code <= 0x102A)
+                    || (code == 0x103F)
+                    || (code >= 0x1050 && code <= 0x1055)
+                    || (code >= 0x105A && code <= 0x105D)
+                    || (code == 0x1061)
+                    || (code >= 0x1065 && code <= 0x1066)
 
-            else if code < 0xAA7D then
-                if code < 0x0FFF then
-                    if code < 0x0AF8 then
-                        if code < 0x0903 then
-                            if code < 0x06F9 then
-                                if code < 0x055F then
-                                    (code >= 0x0100 && code <= 0x02C1)
-                                        || (code >= 0x02C6 && code <= 0x02D1)
-                                        || (code >= 0x02E0 && code <= 0x02E4)
-                                        || (code >= 0x0370 && code <= 0x0374)
-                                        || (code >= 0x037A && code <= 0x037D)
-                                        || (code >= 0x03A3 && code <= 0x03F5)
-                                        || (code >= 0x03F7 && code <= 0x0481)
-                                        || (code == 0x0559)
-                                        || ((modBy 2 code == 0)
-                                                && (code
-                                                        >= 0x02EC
-                                                        && code
-                                                        <= 0x02EE
-                                                   )
-                                           )
-
-                                else
-                                    (code >= 0x0560 && code <= 0x0588)
-                                        || (code >= 0x05D0 && code <= 0x05EA)
-                                        || (code >= 0x05EF && code <= 0x05F2)
-                                        || (code >= 0x0620 && code <= 0x064A)
-                                        || (code >= 0x066E && code <= 0x066F)
-                                        || (code >= 0x0671 && code <= 0x06D3)
-                                        || (code == 0x06D5)
-                                        || (code >= 0x06E5 && code <= 0x06E6)
-                                        || (code >= 0x06EE && code <= 0x06EF)
-
-                            else if code < 0x07FF then
-                                (code >= 0x06FA && code <= 0x06FC)
-                                    || (code == 0x06FF)
-                                    || (code == 0x0710)
-                                    || (code >= 0x0712 && code <= 0x072F)
-                                    || (code >= 0x074D && code <= 0x07A5)
-                                    || (code == 0x07B1)
-                                    || (code >= 0x07CA && code <= 0x07EA)
-                                    || (code >= 0x07F4 && code <= 0x07F5)
-                                    || (code == 0x07FA)
-
-                            else
-                                (code >= 0x0800 && code <= 0x0815)
-                                    || (code == 0x081A)
-                                    || (code == 0x0824)
-                                    || (code == 0x0828)
-                                    || (code >= 0x0840 && code <= 0x0858)
-                                    || (code >= 0x0860 && code <= 0x086A)
-                                    || (code >= 0x0870 && code <= 0x0887)
-                                    || (code >= 0x0889 && code <= 0x088E)
-                                    || (code >= 0x08A0 && code <= 0x08C9)
-
-                        else if code < 0x0A0E then
-                            if code < 0x09B1 then
-                                (code >= 0x0904 && code <= 0x0939)
-                                    || (code == 0x093D)
-                                    || (code == 0x0950)
-                                    || (code >= 0x0958 && code <= 0x0961)
-                                    || (code >= 0x0971 && code <= 0x0980)
-                                    || (code >= 0x0985 && code <= 0x098C)
-                                    || (code >= 0x098F && code <= 0x0990)
-                                    || (code >= 0x0993 && code <= 0x09A8)
-                                    || (code >= 0x09AA && code <= 0x09B0)
-
-                            else
-                                (code == 0x09B2)
-                                    || (code >= 0x09B6 && code <= 0x09B9)
-                                    || (code == 0x09BD)
-                                    || (code == 0x09CE)
-                                    || (code >= 0x09DC && code <= 0x09DD)
-                                    || (code >= 0x09DF && code <= 0x09E1)
-                                    || (code >= 0x09F0 && code <= 0x09F1)
-                                    || (code == 0x09FC)
-                                    || (code >= 0x0A05 && code <= 0x0A0A)
-
-                        else if code < 0x0A84 then
-                            (code >= 0x0A0F && code <= 0x0A10)
-                                || (code >= 0x0A13 && code <= 0x0A28)
-                                || (code >= 0x0A2A && code <= 0x0A30)
-                                || (code >= 0x0A32 && code <= 0x0A33)
-                                || (code >= 0x0A35 && code <= 0x0A36)
-                                || (code >= 0x0A38 && code <= 0x0A39)
-                                || (code >= 0x0A59 && code <= 0x0A5C)
-                                || (code == 0x0A5E)
-                                || (code >= 0x0A72 && code <= 0x0A74)
-
-                        else
-                            (code >= 0x0A85 && code <= 0x0A8D)
-                                || (code >= 0x0A8F && code <= 0x0A91)
-                                || (code >= 0x0A93 && code <= 0x0AA8)
-                                || (code >= 0x0AAA && code <= 0x0AB0)
-                                || (code >= 0x0AB2 && code <= 0x0AB3)
-                                || (code >= 0x0AB5 && code <= 0x0AB9)
-                                || (code == 0x0ABD)
-                                || (code == 0x0AD0)
-                                || (code >= 0x0AE0 && code <= 0x0AE1)
-
-                    else if code < 0x0CB4 then
-                        if code < 0x0B9D then
-                            if code < 0x0B5B then
-                                (code == 0x0AF9)
-                                    || (code >= 0x0B05 && code <= 0x0B0C)
-                                    || (code >= 0x0B0F && code <= 0x0B10)
-                                    || (code >= 0x0B13 && code <= 0x0B28)
-                                    || (code >= 0x0B2A && code <= 0x0B30)
-                                    || (code >= 0x0B32 && code <= 0x0B33)
-                                    || (code >= 0x0B35 && code <= 0x0B39)
-                                    || (code == 0x0B3D)
-
-                            else
-                                (code >= 0x0B5C && code <= 0x0B5D)
-                                    || (code >= 0x0B5F && code <= 0x0B61)
-                                    || (code == 0x0B71)
-                                    || (code == 0x0B83)
-                                    || (code >= 0x0B85 && code <= 0x0B8A)
-                                    || (code >= 0x0B8E && code <= 0x0B90)
-                                    || (code >= 0x0B92 && code <= 0x0B95)
-                                    || (code >= 0x0B99 && code <= 0x0B9A)
-                                    || (code == 0x0B9C)
-
-                        else if code < 0x0C3C then
-                            (code >= 0x0B9E && code <= 0x0B9F)
-                                || (code >= 0x0BA3 && code <= 0x0BA4)
-                                || (code >= 0x0BA8 && code <= 0x0BAA)
-                                || (code >= 0x0BAE && code <= 0x0BB9)
-                                || (code == 0x0BD0)
-                                || (code >= 0x0C05 && code <= 0x0C0C)
-                                || (code >= 0x0C0E && code <= 0x0C10)
-                                || (code >= 0x0C12 && code <= 0x0C28)
-                                || (code >= 0x0C2A && code <= 0x0C39)
-
-                        else
-                            (code == 0x0C3D)
-                                || (code >= 0x0C58 && code <= 0x0C5A)
-                                || (code == 0x0C5D)
-                                || (code >= 0x0C60 && code <= 0x0C61)
-                                || (code == 0x0C80)
-                                || (code >= 0x0C85 && code <= 0x0C8C)
-                                || (code >= 0x0C8E && code <= 0x0C90)
-                                || (code >= 0x0C92 && code <= 0x0CA8)
-                                || (code >= 0x0CAA && code <= 0x0CB3)
-
-                    else if code < 0x0E00 then
-                        if code < 0x0D4D then
-                            (code >= 0x0CB5 && code <= 0x0CB9)
-                                || (code == 0x0CBD)
-                                || (code >= 0x0CDD && code <= 0x0CDE)
-                                || (code >= 0x0CE0 && code <= 0x0CE1)
-                                || (code >= 0x0CF1 && code <= 0x0CF2)
-                                || (code >= 0x0D04 && code <= 0x0D0C)
-                                || (code >= 0x0D0E && code <= 0x0D10)
-                                || (code >= 0x0D12 && code <= 0x0D3A)
-                                || (code == 0x0D3D)
-
-                        else
-                            (code == 0x0D4E)
-                                || (code >= 0x0D54 && code <= 0x0D56)
-                                || (code >= 0x0D5F && code <= 0x0D61)
-                                || (code >= 0x0D7A && code <= 0x0D7F)
-                                || (code >= 0x0D85 && code <= 0x0D96)
-                                || (code >= 0x0D9A && code <= 0x0DB1)
-                                || (code >= 0x0DB3 && code <= 0x0DBB)
-                                || (code == 0x0DBD)
-                                || (code >= 0x0DC0 && code <= 0x0DC6)
-
-                    else if code < 0x0EB1 then
-                        (code >= 0x0E01 && code <= 0x0E30)
-                            || (code >= 0x0E32 && code <= 0x0E33)
-                            || (code >= 0x0E40 && code <= 0x0E46)
-                            || (code >= 0x0E81 && code <= 0x0E82)
-                            || (code == 0x0E84)
-                            || (code >= 0x0E86 && code <= 0x0E8A)
-                            || (code >= 0x0E8C && code <= 0x0EA3)
-                            || (code == 0x0EA5)
-                            || (code >= 0x0EA7 && code <= 0x0EB0)
+        else if code < 0x1FC5 then
+            if code < 0x181F then
+                if code < 0x12C7 then
+                    if code < 0x124F then
+                        (code >= 0x106E && code <= 0x1070)
+                            || (code >= 0x1075 && code <= 0x1081)
+                            || (code == 0x108E)
+                            || (code >= 0x10A0 && code <= 0x10C5)
+                            || (code == 0x10C7)
+                            || (code == 0x10CD)
+                            || (code >= 0x10D0 && code <= 0x10FA)
+                            || (code >= 0x10FC && code <= 0x1248)
+                            || (code >= 0x124A && code <= 0x124D)
 
                     else
-                        (code >= 0x0EB2 && code <= 0x0EB3)
-                            || (code == 0x0EBD)
-                            || (code >= 0x0EC0 && code <= 0x0EC4)
-                            || (code == 0x0EC6)
-                            || (code >= 0x0EDC && code <= 0x0EDF)
-                            || (code == 0x0F00)
-                            || (code >= 0x0F40 && code <= 0x0F47)
-                            || (code >= 0x0F49 && code <= 0x0F6C)
-                            || (code >= 0x0F88 && code <= 0x0F8C)
+                        (code >= 0x1250 && code <= 0x1256)
+                            || (code == 0x1258)
+                            || (code >= 0x125A && code <= 0x125D)
+                            || (code >= 0x1260 && code <= 0x1288)
+                            || (code >= 0x128A && code <= 0x128D)
+                            || (code >= 0x1290 && code <= 0x12B0)
+                            || (code >= 0x12B2 && code <= 0x12B5)
+                            || (code >= 0x12B8 && code <= 0x12BE)
+                            || (code == 0x12C0)
+                            || (code >= 0x12C2 && code <= 0x12C5)
 
-                else if code < 0x2109 then
-                    if code < 0x176D then
-                        if code < 0x12B1 then
-                            if code < 0x108D then
-                                (code >= 0x1000 && code <= 0x102A)
-                                    || (code == 0x103F)
-                                    || (code >= 0x1050 && code <= 0x1055)
-                                    || (code >= 0x105A && code <= 0x105D)
-                                    || (code == 0x1061)
-                                    || (code >= 0x1065 && code <= 0x1066)
-                                    || (code >= 0x106E && code <= 0x1070)
-                                    || (code >= 0x1075 && code <= 0x1081)
-
-                            else
-                                (code == 0x108E)
-                                    || (code >= 0x10FC && code <= 0x1248)
-                                    || (code >= 0x124A && code <= 0x124D)
-                                    || (code >= 0x1250 && code <= 0x1256)
-                                    || (code == 0x1258)
-                                    || (code >= 0x125A && code <= 0x125D)
-                                    || (code >= 0x1260 && code <= 0x1288)
-                                    || (code >= 0x128A && code <= 0x128D)
-                                    || (code >= 0x1290 && code <= 0x12B0)
-
-                        else if code < 0x1400 then
-                            (code >= 0x12B2 && code <= 0x12B5)
-                                || (code >= 0x12B8 && code <= 0x12BE)
-                                || (code == 0x12C0)
-                                || (code >= 0x12C2 && code <= 0x12C5)
-                                || (code >= 0x12C8 && code <= 0x12D6)
-                                || (code >= 0x12D8 && code <= 0x1310)
-                                || (code >= 0x1312 && code <= 0x1315)
-                                || (code >= 0x1318 && code <= 0x135A)
-                                || (code >= 0x1380 && code <= 0x138F)
-
-                        else
-                            (code >= 0x1401 && code <= 0x166C)
-                                || (code >= 0x166F && code <= 0x167F)
-                                || (code >= 0x1681 && code <= 0x169A)
-                                || (code >= 0x16A0 && code <= 0x16EA)
-                                || (code >= 0x16F1 && code <= 0x16F8)
-                                || (code >= 0x1700 && code <= 0x1711)
-                                || (code >= 0x171F && code <= 0x1731)
-                                || (code >= 0x1740 && code <= 0x1751)
-                                || (code >= 0x1760 && code <= 0x176C)
-
-                    else if code < 0x1B44 then
-                        if code < 0x18FF then
-                            (code >= 0x176E && code <= 0x1770)
-                                || (code >= 0x1780 && code <= 0x17B3)
-                                || (code == 0x17D7)
-                                || (code == 0x17DC)
-                                || (code >= 0x1820 && code <= 0x1878)
-                                || (code >= 0x1880 && code <= 0x1884)
-                                || (code >= 0x1887 && code <= 0x18A8)
-                                || (code == 0x18AA)
-                                || (code >= 0x18B0 && code <= 0x18F5)
-
-                        else
-                            (code >= 0x1900 && code <= 0x191E)
-                                || (code >= 0x1950 && code <= 0x196D)
-                                || (code >= 0x1970 && code <= 0x1974)
-                                || (code >= 0x1980 && code <= 0x19AB)
-                                || (code >= 0x19B0 && code <= 0x19C9)
-                                || (code >= 0x1A00 && code <= 0x1A16)
-                                || (code >= 0x1A20 && code <= 0x1A54)
-                                || (code == 0x1AA7)
-                                || (code >= 0x1B05 && code <= 0x1B33)
-
-                    else if code < 0x1CF4 then
-                        (code >= 0x1B45 && code <= 0x1B4C)
-                            || (code >= 0x1B83 && code <= 0x1BA0)
-                            || (code >= 0x1BAE && code <= 0x1BAF)
-                            || (code >= 0x1BBA && code <= 0x1BE5)
-                            || (code >= 0x1C00 && code <= 0x1C23)
-                            || (code >= 0x1C4D && code <= 0x1C4F)
-                            || (code >= 0x1C5A && code <= 0x1C7D)
-                            || (code >= 0x1CE9 && code <= 0x1CEC)
-                            || (code >= 0x1CEE && code <= 0x1CF3)
-
-                    else
-                        (code >= 0x1CF5 && code <= 0x1CF6)
-                            || (code == 0x1CFA)
-                            || (code >= 0x1D00 && code <= 0x1DBF)
-                            || (code >= 0x1E00 && code <= 0x1F15)
-                            || (code == 0x2071)
-                            || (code == 0x207F)
-                            || (code >= 0x2090 && code <= 0x209C)
-                            || (code == 0x2102)
-                            || (code == 0x2107)
-
-                else if code < 0x4DFF then
-                    if code < 0x2DBF then
-                        if code < 0x2144 then
-                            (code >= 0x210A && code <= 0x2113)
-                                || (code == 0x2115)
-                                || (code >= 0x2119 && code <= 0x211D)
-                                || (code == 0x2124)
-                                || (code == 0x2128)
-                                || (code >= 0x212A && code <= 0x212D)
-                                || (code >= 0x212F && code <= 0x2139)
-                                || (code >= 0x213C && code <= 0x213F)
-
-                        else
-                            (code >= 0x2145 && code <= 0x2149)
-                                || (code >= 0x2C00 && code <= 0x2CE4)
-                                || (code >= 0x2D30 && code <= 0x2D67)
-                                || (code == 0x2D6F)
-                                || (code >= 0x2D80 && code <= 0x2D96)
-                                || (code >= 0x2DA0 && code <= 0x2DA6)
-                                || (code >= 0x2DA8 && code <= 0x2DAE)
-                                || (code >= 0x2DB0 && code <= 0x2DB6)
-                                || (code >= 0x2DB8 && code <= 0x2DBE)
-
-                    else if code < 0x309C then
-                        (code >= 0x2DC0 && code <= 0x2DC6)
-                            || (code >= 0x2DC8 && code <= 0x2DCE)
-                            || (code >= 0x2DD0 && code <= 0x2DD6)
-                            || (code >= 0x2DD8 && code <= 0x2DDE)
-                            || (code == 0x2E2F)
-                            || (code >= 0x3005 && code <= 0x3006)
-                            || (code >= 0x3031 && code <= 0x3035)
-                            || (code >= 0x303B && code <= 0x303C)
-                            || (code >= 0x3041 && code <= 0x3096)
-
-                    else
-                        (code >= 0x309D && code <= 0x309F)
-                            || (code >= 0x30A1 && code <= 0x30FA)
-                            || (code >= 0x30FC && code <= 0x30FF)
-                            || (code >= 0x3105 && code <= 0x312F)
-                            || (code >= 0x3131 && code <= 0x318E)
-                            || (code >= 0x31A0 && code <= 0x31BF)
-                            || (code >= 0x31F0 && code <= 0x31FF)
-                            || (code == 0x3400)
-                            || (code == 0x4DBF)
-
-                else if code < 0xA83F then
-                    if code < 0xA716 then
-                        (code == 0x4E00)
-                            || (code >= 0x9FFF && code <= 0xA48C)
-                            || (code >= 0xA4D0 && code <= 0xA4FD)
-                            || (code >= 0xA500 && code <= 0xA60C)
-                            || (code >= 0xA610 && code <= 0xA61F)
-                            || (code >= 0xA62A && code <= 0xA62B)
-                            || (code >= 0xA640 && code <= 0xA66E)
-                            || (code >= 0xA67F && code <= 0xA69D)
-                            || (code >= 0xA6A0 && code <= 0xA6E5)
-
-                    else
-                        (code >= 0xA717 && code <= 0xA71F)
-                            || (code >= 0xA722 && code <= 0xA788)
-                            || (code >= 0xA78B && code <= 0xA7CA)
-                            || (code == 0xA7D3)
-                            || (code >= 0xA7D5 && code <= 0xA7D9)
-                            || (code >= 0xA7F2 && code <= 0xA801)
-                            || (code >= 0xA803 && code <= 0xA805)
-                            || (code >= 0xA807 && code <= 0xA80A)
-                            || (code >= 0xA80C && code <= 0xA822)
-
-                else if code < 0xA9CE then
-                    (code >= 0xA840 && code <= 0xA873)
-                        || (code >= 0xA882 && code <= 0xA8B3)
-                        || (code >= 0xA8F2 && code <= 0xA8F7)
-                        || (code == 0xA8FB)
-                        || (code >= 0xA8FD && code <= 0xA8FE)
-                        || (code >= 0xA90A && code <= 0xA925)
-                        || (code >= 0xA930 && code <= 0xA946)
-                        || (code >= 0xA960 && code <= 0xA97C)
-                        || (code >= 0xA984 && code <= 0xA9B2)
+                else if code < 0x169F then
+                    (code >= 0x12C8 && code <= 0x12D6)
+                        || (code >= 0x12D8 && code <= 0x1310)
+                        || (code >= 0x1312 && code <= 0x1315)
+                        || (code >= 0x1318 && code <= 0x135A)
+                        || (code >= 0x1380 && code <= 0x138F)
+                        || (code >= 0x13A0 && code <= 0x13F5)
+                        || (code >= 0x13F8 && code <= 0x13FD)
+                        || (code >= 0x1401 && code <= 0x166C)
+                        || (code >= 0x166F && code <= 0x167F)
+                        || (code >= 0x1681 && code <= 0x169A)
 
                 else
-                    (code == 0xA9CF)
-                        || (code >= 0xA9E0 && code <= 0xA9E4)
-                        || (code >= 0xA9E6 && code <= 0xA9EF)
-                        || (code >= 0xA9FA && code <= 0xA9FE)
-                        || (code >= 0xAA00 && code <= 0xAA28)
-                        || (code >= 0xAA40 && code <= 0xAA42)
-                        || (code >= 0xAA44 && code <= 0xAA4B)
-                        || (code >= 0xAA60 && code <= 0xAA76)
-                        || (code == 0xAA7A)
+                    (code >= 0x16A0 && code <= 0x16EA)
+                        || (code >= 0x16F1 && code <= 0x16F8)
+                        || (code >= 0x1700 && code <= 0x1711)
+                        || (code >= 0x171F && code <= 0x1731)
+                        || (code >= 0x1740 && code <= 0x1751)
+                        || (code >= 0x1760 && code <= 0x176C)
+                        || (code >= 0x176E && code <= 0x1770)
+                        || (code >= 0x1780 && code <= 0x17B3)
+                        || (code == 0x17D7)
+                        || (code == 0x17DC)
 
-            else if code < 0x000116FF then
-                if code < 0x0001085F then
-                    if code < 0xFF65 then
-                        if code < 0xD7AF then
-                            if code < 0xAB08 then
-                                (code >= 0xAA7E && code <= 0xAAAF)
-                                    || (code == 0xAAB1)
-                                    || (code >= 0xAAB5 && code <= 0xAAB6)
-                                    || (code >= 0xAAB9 && code <= 0xAABD)
-                                    || (code >= 0xAADB && code <= 0xAADD)
-                                    || (code >= 0xAAE0 && code <= 0xAAEA)
-                                    || (code >= 0xAAF2 && code <= 0xAAF4)
-                                    || (code >= 0xAB01 && code <= 0xAB06)
-                                    || ((modBy 2 code == 0)
-                                            && (code >= 0xAAC0 && code <= 0xAAC2)
-                                       )
+            else if code < 0x1C4C then
+                if code < 0x19AF then
+                    (code >= 0x1820 && code <= 0x1878)
+                        || (code >= 0x1880 && code <= 0x1884)
+                        || (code >= 0x1887 && code <= 0x18A8)
+                        || (code == 0x18AA)
+                        || (code >= 0x18B0 && code <= 0x18F5)
+                        || (code >= 0x1900 && code <= 0x191E)
+                        || (code >= 0x1950 && code <= 0x196D)
+                        || (code >= 0x1970 && code <= 0x1974)
+                        || (code >= 0x1980 && code <= 0x19AB)
 
-                            else
-                                (code >= 0xAB09 && code <= 0xAB0E)
-                                    || (code >= 0xAB11 && code <= 0xAB16)
-                                    || (code >= 0xAB20 && code <= 0xAB26)
-                                    || (code >= 0xAB28 && code <= 0xAB2E)
-                                    || (code >= 0xAB30 && code <= 0xAB5A)
-                                    || (code >= 0xAB5C && code <= 0xAB69)
-                                    || (code >= 0xAB70 && code <= 0xABE2)
-                                    || (code == 0xAC00)
-                                    || (code == 0xD7A3)
+                else
+                    (code >= 0x19B0 && code <= 0x19C9)
+                        || (code >= 0x1A00 && code <= 0x1A16)
+                        || (code >= 0x1A20 && code <= 0x1A54)
+                        || (code == 0x1AA7)
+                        || (code >= 0x1B05 && code <= 0x1B33)
+                        || (code >= 0x1B45 && code <= 0x1B4C)
+                        || (code >= 0x1B83 && code <= 0x1BA0)
+                        || (code >= 0x1BAE && code <= 0x1BAF)
+                        || (code >= 0x1BBA && code <= 0x1BE5)
+                        || (code >= 0x1C00 && code <= 0x1C23)
 
-                        else if code < 0xFB3F then
-                            (code >= 0xD7B0 && code <= 0xD7C6)
-                                || (code >= 0xD7CB && code <= 0xD7FB)
-                                || (code >= 0xF900 && code <= 0xFA6D)
-                                || (code >= 0xFA70 && code <= 0xFAD9)
-                                || (code == 0xFB1D)
-                                || (code >= 0xFB1F && code <= 0xFB28)
-                                || (code >= 0xFB2A && code <= 0xFB36)
-                                || (code >= 0xFB38 && code <= 0xFB3C)
-                                || (code == 0xFB3E)
+            else if code < 0x1DFF then
+                (code >= 0x1C4D && code <= 0x1C4F)
+                    || (code >= 0x1C5A && code <= 0x1C7D)
+                    || (code >= 0x1C80 && code <= 0x1C88)
+                    || (code >= 0x1C90 && code <= 0x1CBA)
+                    || (code >= 0x1CBD && code <= 0x1CBF)
+                    || (code >= 0x1CE9 && code <= 0x1CEC)
+                    || (code >= 0x1CEE && code <= 0x1CF3)
+                    || (code >= 0x1CF5 && code <= 0x1CF6)
+                    || (code == 0x1CFA)
+                    || (code >= 0x1D00 && code <= 0x1DBF)
 
-                        else
-                            (code >= 0xFB40 && code <= 0xFB41)
-                                || (code >= 0xFB43 && code <= 0xFB44)
-                                || (code >= 0xFB46 && code <= 0xFBB1)
-                                || (code >= 0xFBD3 && code <= 0xFD3D)
-                                || (code >= 0xFD50 && code <= 0xFD8F)
-                                || (code >= 0xFD92 && code <= 0xFDC7)
-                                || (code >= 0xFDF0 && code <= 0xFDFB)
-                                || (code >= 0xFE70 && code <= 0xFE74)
-                                || (code >= 0xFE76 && code <= 0xFEFC)
+            else
+                (code >= 0x1E00 && code <= 0x1F15)
+                    || (code >= 0x1F18 && code <= 0x1F1D)
+                    || (code >= 0x1F20 && code <= 0x1F45)
+                    || (code >= 0x1F48 && code <= 0x1F4D)
+                    || (code >= 0x1F50 && code <= 0x1F57)
+                    || (code >= 0x1F60 && code <= 0x1F7D)
+                    || (code >= 0x1F80 && code <= 0x1FB4)
+                    || (code >= 0x1FB6 && code <= 0x1FBC)
+                    || (code == 0x1FBE)
+                    || (code >= 0x1FC2 && code <= 0x1FC4)
+                    || ((modBy 2 code == 1)
+                            && (code >= 0x1F59 && code <= 0x1F5F)
+                       )
 
-                    else if code < 0x0001037F then
-                        if code < 0x0001003E then
-                            (code >= 0xFF66 && code <= 0xFFBE)
-                                || (code >= 0xFFC2 && code <= 0xFFC7)
-                                || (code >= 0xFFCA && code <= 0xFFCF)
-                                || (code >= 0xFFD2 && code <= 0xFFD7)
-                                || (code >= 0xFFDA && code <= 0xFFDC)
-                                || (code >= 0x00010000 && code <= 0x0001000B)
-                                || (code >= 0x0001000D && code <= 0x00010026)
-                                || (code >= 0x00010028 && code <= 0x0001003A)
-                                || (code >= 0x0001003C && code <= 0x0001003D)
+        else if code < 0x3030 then
+            if code < 0x2182 then
+                if code < 0x2101 then
+                    (code >= 0x1FC6 && code <= 0x1FCC)
+                        || (code >= 0x1FD0 && code <= 0x1FD3)
+                        || (code >= 0x1FD6 && code <= 0x1FDB)
+                        || (code >= 0x1FE0 && code <= 0x1FEC)
+                        || (code >= 0x1FF2 && code <= 0x1FF4)
+                        || (code >= 0x1FF6 && code <= 0x1FFC)
+                        || (code == 0x2071)
+                        || (code == 0x207F)
+                        || (code >= 0x2090 && code <= 0x209C)
 
-                        else
-                            (code >= 0x0001003F && code <= 0x0001004D)
-                                || (code >= 0x00010050 && code <= 0x0001005D)
-                                || (code >= 0x00010080 && code <= 0x000100FA)
-                                || (code >= 0x00010280 && code <= 0x0001029C)
-                                || (code >= 0x000102A0 && code <= 0x000102D0)
-                                || (code >= 0x00010300 && code <= 0x0001031F)
-                                || (code >= 0x0001032D && code <= 0x00010340)
-                                || (code >= 0x00010342 && code <= 0x00010349)
-                                || (code >= 0x00010350 && code <= 0x00010375)
+                else
+                    (code == 0x2102)
+                        || (code == 0x2107)
+                        || (code >= 0x210A && code <= 0x2113)
+                        || (code == 0x2115)
+                        || (code >= 0x2119 && code <= 0x211D)
+                        || (code >= 0x212A && code <= 0x212D)
+                        || (code >= 0x212F && code <= 0x2139)
+                        || (code >= 0x213C && code <= 0x213F)
+                        || (code >= 0x2145 && code <= 0x2149)
+                        || (code == 0x214E)
+                        || ((modBy 2 code == 0)
+                                && (code >= 0x2124 && code <= 0x2128)
+                           )
 
-                    else if code < 0x0001077F then
-                        (code >= 0x00010380 && code <= 0x0001039D)
-                            || (code >= 0x000103A0 && code <= 0x000103C3)
-                            || (code >= 0x000103C8 && code <= 0x000103CF)
-                            || (code >= 0x00010400 && code <= 0x0001049D)
-                            || (code >= 0x00010500 && code <= 0x00010527)
-                            || (code >= 0x00010530 && code <= 0x00010563)
-                            || (code >= 0x00010600 && code <= 0x00010736)
-                            || (code >= 0x00010740 && code <= 0x00010755)
-                            || (code >= 0x00010760 && code <= 0x00010767)
+            else if code < 0x2D9F then
+                (code >= 0x2183 && code <= 0x2184)
+                    || (code >= 0x2C00 && code <= 0x2CE4)
+                    || (code >= 0x2CEB && code <= 0x2CEE)
+                    || (code >= 0x2CF2 && code <= 0x2CF3)
+                    || (code >= 0x2D00 && code <= 0x2D25)
+                    || (code == 0x2D27)
+                    || (code == 0x2D2D)
+                    || (code >= 0x2D30 && code <= 0x2D67)
+                    || (code == 0x2D6F)
+                    || (code >= 0x2D80 && code <= 0x2D96)
+
+            else
+                (code >= 0x2DA0 && code <= 0x2DA6)
+                    || (code >= 0x2DA8 && code <= 0x2DAE)
+                    || (code >= 0x2DB0 && code <= 0x2DB6)
+                    || (code >= 0x2DB8 && code <= 0x2DBE)
+                    || (code >= 0x2DC0 && code <= 0x2DC6)
+                    || (code >= 0x2DC8 && code <= 0x2DCE)
+                    || (code >= 0x2DD0 && code <= 0x2DD6)
+                    || (code >= 0x2DD8 && code <= 0x2DDE)
+                    || (code == 0x2E2F)
+                    || (code >= 0x3005 && code <= 0x3006)
+
+        else if code < 0xA67E then
+            if code < 0x31EF then
+                (code >= 0x3031 && code <= 0x3035)
+                    || (code >= 0x303B && code <= 0x303C)
+                    || (code >= 0x3041 && code <= 0x3096)
+                    || (code >= 0x309D && code <= 0x309F)
+                    || (code >= 0x30A1 && code <= 0x30FA)
+                    || (code >= 0x30FC && code <= 0x30FF)
+                    || (code >= 0x3105 && code <= 0x312F)
+                    || (code >= 0x3131 && code <= 0x318E)
+                    || (code >= 0x31A0 && code <= 0x31BF)
+
+            else
+                (code >= 0x31F0 && code <= 0x31FF)
+                    || (code == 0x3400)
+                    || (code == 0x4DBF)
+                    || (code == 0x4E00)
+                    || (code >= 0x9FFF && code <= 0xA48C)
+                    || (code >= 0xA4D0 && code <= 0xA4FD)
+                    || (code >= 0xA500 && code <= 0xA60C)
+                    || (code >= 0xA610 && code <= 0xA61F)
+                    || (code >= 0xA62A && code <= 0xA62B)
+                    || (code >= 0xA640 && code <= 0xA66E)
+
+        else if code < 0xA80B then
+            (code >= 0xA67F && code <= 0xA69D)
+                || (code >= 0xA6A0 && code <= 0xA6E5)
+                || (code >= 0xA717 && code <= 0xA71F)
+                || (code >= 0xA722 && code <= 0xA788)
+                || (code >= 0xA78B && code <= 0xA7CA)
+                || (code >= 0xA7D0 && code <= 0xA7D1)
+                || (code >= 0xA7D6 && code <= 0xA7D9)
+                || (code >= 0xA7F2 && code <= 0xA801)
+                || (code >= 0xA803 && code <= 0xA805)
+                || (code >= 0xA807 && code <= 0xA80A)
+                || ((modBy 2 code == 1) && (code >= 0xA7D3 && code <= 0xA7D5))
+
+        else
+            (code >= 0xA80C && code <= 0xA822)
+                || (code >= 0xA840 && code <= 0xA873)
+                || (code >= 0xA882 && code <= 0xA8B3)
+                || (code >= 0xA8F2 && code <= 0xA8F7)
+                || (code == 0xA8FB)
+                || (code >= 0xA8FD && code <= 0xA8FE)
+                || (code >= 0xA90A && code <= 0xA925)
+                || (code >= 0xA930 && code <= 0xA946)
+                || (code >= 0xA960 && code <= 0xA97C)
+                || (code >= 0xA984 && code <= 0xA9B2)
+
+    else if code < 0x00011446 then
+        if code < 0x00010596 then
+            if code < 0xFB45 then
+                if code < 0xAB1F then
+                    if code < 0xAA7D then
+                        (code == 0xA9CF)
+                            || (code >= 0xA9E0 && code <= 0xA9E4)
+                            || (code >= 0xA9E6 && code <= 0xA9EF)
+                            || (code >= 0xA9FA && code <= 0xA9FE)
+                            || (code >= 0xAA00 && code <= 0xAA28)
+                            || (code >= 0xAA40 && code <= 0xAA42)
+                            || (code >= 0xAA44 && code <= 0xAA4B)
+                            || (code >= 0xAA60 && code <= 0xAA76)
+                            || (code == 0xAA7A)
 
                     else
-                        (code >= 0x00010780 && code <= 0x00010785)
-                            || (code >= 0x00010787 && code <= 0x000107B0)
-                            || (code >= 0x000107B2 && code <= 0x000107BA)
-                            || (code >= 0x00010800 && code <= 0x00010805)
-                            || (code == 0x00010808)
-                            || (code >= 0x0001080A && code <= 0x00010835)
-                            || (code >= 0x00010837 && code <= 0x00010838)
-                            || (code == 0x0001083C)
-                            || (code >= 0x0001083F && code <= 0x00010855)
-
-                else if code < 0x00011102 then
-                    if code < 0x00010B3F then
-                        if code < 0x000109FF then
-                            (code >= 0x00010860 && code <= 0x00010876)
-                                || (code >= 0x00010880 && code <= 0x0001089E)
-                                || (code >= 0x000108E0 && code <= 0x000108F2)
-                                || (code >= 0x000108F4 && code <= 0x000108F5)
-                                || (code >= 0x00010900 && code <= 0x00010915)
-                                || (code >= 0x00010920 && code <= 0x00010939)
-                                || (code >= 0x00010980 && code <= 0x000109B7)
-                                || (code >= 0x000109BE && code <= 0x000109BF)
-
-                        else
-                            (code == 0x00010A00)
-                                || (code >= 0x00010A10 && code <= 0x00010A13)
-                                || (code >= 0x00010A15 && code <= 0x00010A17)
-                                || (code >= 0x00010A19 && code <= 0x00010A35)
-                                || (code >= 0x00010A60 && code <= 0x00010A7C)
-                                || (code >= 0x00010A80 && code <= 0x00010A9C)
-                                || (code >= 0x00010AC0 && code <= 0x00010AC7)
-                                || (code >= 0x00010AC9 && code <= 0x00010AE4)
-                                || (code >= 0x00010B00 && code <= 0x00010B35)
-
-                    else if code < 0x00010F2F then
-                        (code >= 0x00010B40 && code <= 0x00010B55)
-                            || (code >= 0x00010B60 && code <= 0x00010B72)
-                            || (code >= 0x00010B80 && code <= 0x00010B91)
-                            || (code >= 0x00010C00 && code <= 0x00010C48)
-                            || (code >= 0x00010D00 && code <= 0x00010D23)
-                            || (code >= 0x00010E80 && code <= 0x00010EA9)
-                            || (code >= 0x00010EB0 && code <= 0x00010EB1)
-                            || (code >= 0x00010F00 && code <= 0x00010F1C)
-                            || (code == 0x00010F27)
-
-                    else
-                        (code >= 0x00010F30 && code <= 0x00010F45)
-                            || (code >= 0x00010F70 && code <= 0x00010F81)
-                            || (code >= 0x00010FB0 && code <= 0x00010FC4)
-                            || (code >= 0x00010FE0 && code <= 0x00010FF6)
-                            || (code >= 0x00011003 && code <= 0x00011037)
-                            || (code >= 0x00011071 && code <= 0x00011072)
-                            || (code == 0x00011075)
-                            || (code >= 0x00011083 && code <= 0x000110AF)
-                            || (code >= 0x000110D0 && code <= 0x000110E8)
-
-                else if code < 0x00011329 then
-                    if code < 0x0001127F then
-                        (code >= 0x00011103 && code <= 0x00011126)
-                            || (code == 0x00011144)
-                            || (code == 0x00011147)
-                            || (code >= 0x00011150 && code <= 0x00011172)
-                            || (code == 0x00011176)
-                            || (code >= 0x00011183 && code <= 0x000111B2)
-                            || (code >= 0x000111C1 && code <= 0x000111C4)
-                            || (code >= 0x00011200 && code <= 0x00011211)
-                            || (code >= 0x00011213 && code <= 0x0001122B)
+                        (code >= 0xAA7E && code <= 0xAAAF)
+                            || (code == 0xAAB1)
+                            || (code >= 0xAAB5 && code <= 0xAAB6)
+                            || (code >= 0xAAB9 && code <= 0xAABD)
+                            || (code >= 0xAADB && code <= 0xAADD)
+                            || (code >= 0xAAE0 && code <= 0xAAEA)
+                            || (code >= 0xAAF2 && code <= 0xAAF4)
+                            || (code >= 0xAB01 && code <= 0xAB06)
+                            || (code >= 0xAB09 && code <= 0xAB0E)
+                            || (code >= 0xAB11 && code <= 0xAB16)
                             || ((modBy 2 code == 0)
-                                    && (code >= 0x000111DA && code <= 0x000111DC)
+                                    && (code >= 0xAAC0 && code <= 0xAAC2)
                                )
 
-                    else
-                        (code >= 0x00011280 && code <= 0x00011286)
-                            || (code == 0x00011288)
-                            || (code >= 0x0001128A && code <= 0x0001128D)
-                            || (code >= 0x0001128F && code <= 0x0001129D)
-                            || (code >= 0x0001129F && code <= 0x000112A8)
-                            || (code >= 0x000112B0 && code <= 0x000112DE)
-                            || (code >= 0x00011305 && code <= 0x0001130C)
-                            || (code >= 0x0001130F && code <= 0x00011310)
-                            || (code >= 0x00011313 && code <= 0x00011328)
-
-                else if code < 0x0001147F then
-                    (code >= 0x0001132A && code <= 0x00011330)
-                        || (code >= 0x00011332 && code <= 0x00011333)
-                        || (code >= 0x00011335 && code <= 0x00011339)
-                        || (code == 0x0001133D)
-                        || (code == 0x00011350)
-                        || (code >= 0x0001135D && code <= 0x00011361)
-                        || (code >= 0x00011400 && code <= 0x00011434)
-                        || (code >= 0x00011447 && code <= 0x0001144A)
-                        || (code >= 0x0001145F && code <= 0x00011461)
+                else if code < 0xFA6F then
+                    (code >= 0xAB20 && code <= 0xAB26)
+                        || (code >= 0xAB28 && code <= 0xAB2E)
+                        || (code >= 0xAB30 && code <= 0xAB5A)
+                        || (code >= 0xAB5C && code <= 0xAB69)
+                        || (code >= 0xAB70 && code <= 0xABE2)
+                        || (code == 0xAC00)
+                        || (code == 0xD7A3)
+                        || (code >= 0xD7B0 && code <= 0xD7C6)
+                        || (code >= 0xD7CB && code <= 0xD7FB)
+                        || (code >= 0xF900 && code <= 0xFA6D)
 
                 else
-                    (code >= 0x00011480 && code <= 0x000114AF)
+                    (code >= 0xFA70 && code <= 0xFAD9)
+                        || (code >= 0xFB00 && code <= 0xFB06)
+                        || (code >= 0xFB13 && code <= 0xFB17)
+                        || (code == 0xFB1D)
+                        || (code >= 0xFB1F && code <= 0xFB28)
+                        || (code >= 0xFB2A && code <= 0xFB36)
+                        || (code >= 0xFB38 && code <= 0xFB3C)
+                        || (code == 0xFB3E)
+                        || (code >= 0xFB40 && code <= 0xFB41)
+                        || (code >= 0xFB43 && code <= 0xFB44)
+
+            else if code < 0x0001004F then
+                if code < 0xFF65 then
+                    (code >= 0xFB46 && code <= 0xFBB1)
+                        || (code >= 0xFBD3 && code <= 0xFD3D)
+                        || (code >= 0xFD50 && code <= 0xFD8F)
+                        || (code >= 0xFD92 && code <= 0xFDC7)
+                        || (code >= 0xFDF0 && code <= 0xFDFB)
+                        || (code >= 0xFE70 && code <= 0xFE74)
+                        || (code >= 0xFE76 && code <= 0xFEFC)
+                        || (code >= 0xFF21 && code <= 0xFF3A)
+                        || (code >= 0xFF41 && code <= 0xFF5A)
+
+                else
+                    (code >= 0xFF66 && code <= 0xFFBE)
+                        || (code >= 0xFFC2 && code <= 0xFFC7)
+                        || (code >= 0xFFCA && code <= 0xFFCF)
+                        || (code >= 0xFFD2 && code <= 0xFFD7)
+                        || (code >= 0xFFDA && code <= 0xFFDC)
+                        || (code >= 0x00010000 && code <= 0x0001000B)
+                        || (code >= 0x0001000D && code <= 0x00010026)
+                        || (code >= 0x00010028 && code <= 0x0001003A)
+                        || (code >= 0x0001003C && code <= 0x0001003D)
+                        || (code >= 0x0001003F && code <= 0x0001004D)
+
+            else if code < 0x000103C7 then
+                (code >= 0x00010050 && code <= 0x0001005D)
+                    || (code >= 0x00010080 && code <= 0x000100FA)
+                    || (code >= 0x00010280 && code <= 0x0001029C)
+                    || (code >= 0x000102A0 && code <= 0x000102D0)
+                    || (code >= 0x00010300 && code <= 0x0001031F)
+                    || (code >= 0x0001032D && code <= 0x00010340)
+                    || (code >= 0x00010342 && code <= 0x00010349)
+                    || (code >= 0x00010350 && code <= 0x00010375)
+                    || (code >= 0x00010380 && code <= 0x0001039D)
+                    || (code >= 0x000103A0 && code <= 0x000103C3)
+
+            else
+                (code >= 0x000103C8 && code <= 0x000103CF)
+                    || (code >= 0x00010400 && code <= 0x0001049D)
+                    || (code >= 0x000104B0 && code <= 0x000104D3)
+                    || (code >= 0x000104D8 && code <= 0x000104FB)
+                    || (code >= 0x00010500 && code <= 0x00010527)
+                    || (code >= 0x00010530 && code <= 0x00010563)
+                    || (code >= 0x00010570 && code <= 0x0001057A)
+                    || (code >= 0x0001057C && code <= 0x0001058A)
+                    || (code >= 0x0001058C && code <= 0x00010592)
+                    || (code >= 0x00010594 && code <= 0x00010595)
+
+        else if code < 0x00010CFF then
+            if code < 0x000108F3 then
+                if code < 0x000107B1 then
+                    (code >= 0x00010597 && code <= 0x000105A1)
+                        || (code >= 0x000105A3 && code <= 0x000105B1)
+                        || (code >= 0x000105B3 && code <= 0x000105B9)
+                        || (code >= 0x000105BB && code <= 0x000105BC)
+                        || (code >= 0x00010600 && code <= 0x00010736)
+                        || (code >= 0x00010740 && code <= 0x00010755)
+                        || (code >= 0x00010760 && code <= 0x00010767)
+                        || (code >= 0x00010780 && code <= 0x00010785)
+                        || (code >= 0x00010787 && code <= 0x000107B0)
+
+                else
+                    (code >= 0x000107B2 && code <= 0x000107BA)
+                        || (code >= 0x00010800 && code <= 0x00010805)
+                        || (code == 0x00010808)
+                        || (code >= 0x0001080A && code <= 0x00010835)
+                        || (code >= 0x00010837 && code <= 0x00010838)
+                        || (code == 0x0001083C)
+                        || (code >= 0x0001083F && code <= 0x00010855)
+                        || (code >= 0x00010860 && code <= 0x00010876)
+                        || (code >= 0x00010880 && code <= 0x0001089E)
+                        || (code >= 0x000108E0 && code <= 0x000108F2)
+
+            else if code < 0x00010A7F then
+                (code >= 0x000108F4 && code <= 0x000108F5)
+                    || (code >= 0x00010900 && code <= 0x00010915)
+                    || (code >= 0x00010920 && code <= 0x00010939)
+                    || (code >= 0x00010980 && code <= 0x000109B7)
+                    || (code >= 0x000109BE && code <= 0x000109BF)
+                    || (code == 0x00010A00)
+                    || (code >= 0x00010A10 && code <= 0x00010A13)
+                    || (code >= 0x00010A15 && code <= 0x00010A17)
+                    || (code >= 0x00010A19 && code <= 0x00010A35)
+                    || (code >= 0x00010A60 && code <= 0x00010A7C)
+
+            else
+                (code >= 0x00010A80 && code <= 0x00010A9C)
+                    || (code >= 0x00010AC0 && code <= 0x00010AC7)
+                    || (code >= 0x00010AC9 && code <= 0x00010AE4)
+                    || (code >= 0x00010B00 && code <= 0x00010B35)
+                    || (code >= 0x00010B40 && code <= 0x00010B55)
+                    || (code >= 0x00010B60 && code <= 0x00010B72)
+                    || (code >= 0x00010B80 && code <= 0x00010B91)
+                    || (code >= 0x00010C00 && code <= 0x00010C48)
+                    || (code >= 0x00010C80 && code <= 0x00010CB2)
+                    || (code >= 0x00010CC0 && code <= 0x00010CF2)
+
+        else if code < 0x00011182 then
+            if code < 0x00011002 then
+                (code >= 0x00010D00 && code <= 0x00010D23)
+                    || (code >= 0x00010E80 && code <= 0x00010EA9)
+                    || (code >= 0x00010EB0 && code <= 0x00010EB1)
+                    || (code >= 0x00010F00 && code <= 0x00010F1C)
+                    || (code == 0x00010F27)
+                    || (code >= 0x00010F30 && code <= 0x00010F45)
+                    || (code >= 0x00010F70 && code <= 0x00010F81)
+                    || (code >= 0x00010FB0 && code <= 0x00010FC4)
+                    || (code >= 0x00010FE0 && code <= 0x00010FF6)
+
+            else
+                (code >= 0x00011003 && code <= 0x00011037)
+                    || (code >= 0x00011071 && code <= 0x00011072)
+                    || (code == 0x00011075)
+                    || (code >= 0x00011083 && code <= 0x000110AF)
+                    || (code >= 0x000110D0 && code <= 0x000110E8)
+                    || (code >= 0x00011103 && code <= 0x00011126)
+                    || (code == 0x00011144)
+                    || (code == 0x00011147)
+                    || (code >= 0x00011150 && code <= 0x00011172)
+                    || (code == 0x00011176)
+
+        else if code < 0x00011304 then
+            (code >= 0x00011183 && code <= 0x000111B2)
+                || (code >= 0x000111C1 && code <= 0x000111C4)
+                || (code >= 0x00011200 && code <= 0x00011211)
+                || (code >= 0x00011213 && code <= 0x0001122B)
+                || (code >= 0x00011280 && code <= 0x00011286)
+                || (code == 0x00011288)
+                || (code >= 0x0001128A && code <= 0x0001128D)
+                || (code >= 0x0001128F && code <= 0x0001129D)
+                || (code >= 0x0001129F && code <= 0x000112A8)
+                || (code >= 0x000112B0 && code <= 0x000112DE)
+                || ((modBy 2 code == 0)
+                        && (code >= 0x000111DA && code <= 0x000111DC)
+                   )
+
+        else
+            (code >= 0x00011305 && code <= 0x0001130C)
+                || (code >= 0x0001130F && code <= 0x00011310)
+                || (code >= 0x00011313 && code <= 0x00011328)
+                || (code >= 0x0001132A && code <= 0x00011330)
+                || (code >= 0x00011332 && code <= 0x00011333)
+                || (code >= 0x00011335 && code <= 0x00011339)
+                || (code == 0x0001133D)
+                || (code == 0x00011350)
+                || (code >= 0x0001135D && code <= 0x00011361)
+                || (code >= 0x00011400 && code <= 0x00011434)
+
+    else if code < 0x0001D3FF then
+        if code < 0x00011D69 then
+            if code < 0x00011917 then
+                if code < 0x0001167F then
+                    (code >= 0x00011447 && code <= 0x0001144A)
+                        || (code >= 0x0001145F && code <= 0x00011461)
+                        || (code >= 0x00011480 && code <= 0x000114AF)
                         || (code >= 0x000114C4 && code <= 0x000114C5)
                         || (code == 0x000114C7)
                         || (code >= 0x00011580 && code <= 0x000115AE)
                         || (code >= 0x000115D8 && code <= 0x000115DB)
                         || (code >= 0x00011600 && code <= 0x0001162F)
                         || (code == 0x00011644)
-                        || (code >= 0x00011680 && code <= 0x000116AA)
+
+                else
+                    (code >= 0x00011680 && code <= 0x000116AA)
                         || (code == 0x000116B8)
-
-            else if code < 0x0001D4AD then
-                if code < 0x000143FF then
-                    if code < 0x00011BFF then
-                        if code < 0x0001199F then
-                            (code >= 0x00011700 && code <= 0x0001171A)
-                                || (code >= 0x00011740 && code <= 0x00011746)
-                                || (code >= 0x00011800 && code <= 0x0001182B)
-                                || (code >= 0x000118FF && code <= 0x00011906)
-                                || (code == 0x00011909)
-                                || (code >= 0x0001190C && code <= 0x00011913)
-                                || (code >= 0x00011915 && code <= 0x00011916)
-                                || (code >= 0x00011918 && code <= 0x0001192F)
-                                || ((modBy 2 code == 1)
-                                        && (code
-                                                >= 0x0001193F
-                                                && code
-                                                <= 0x00011941
-                                           )
-                                   )
-
-                        else
-                            (code >= 0x000119A0 && code <= 0x000119A7)
-                                || (code >= 0x000119AA && code <= 0x000119D0)
-                                || (code == 0x00011A00)
-                                || (code >= 0x00011A0B && code <= 0x00011A32)
-                                || (code == 0x00011A3A)
-                                || (code == 0x00011A50)
-                                || (code >= 0x00011A5C && code <= 0x00011A89)
-                                || (code == 0x00011A9D)
-                                || (code >= 0x00011AB0 && code <= 0x00011AF8)
-                                || ((modBy 2 code == 1)
-                                        && (code
-                                                >= 0x000119E1
-                                                && code
-                                                <= 0x000119E3
-                                           )
-                                   )
-
-                    else if code < 0x00011D66 then
-                        (code >= 0x00011C00 && code <= 0x00011C08)
-                            || (code >= 0x00011C0A && code <= 0x00011C2E)
-                            || (code == 0x00011C40)
-                            || (code >= 0x00011C72 && code <= 0x00011C8F)
-                            || (code >= 0x00011D00 && code <= 0x00011D06)
-                            || (code >= 0x00011D08 && code <= 0x00011D09)
-                            || (code >= 0x00011D0B && code <= 0x00011D30)
-                            || (code == 0x00011D46)
-                            || (code >= 0x00011D60 && code <= 0x00011D65)
-
-                    else
-                        (code >= 0x00011D67 && code <= 0x00011D68)
-                            || (code >= 0x00011D6A && code <= 0x00011D89)
-                            || (code == 0x00011D98)
-                            || (code >= 0x00011EE0 && code <= 0x00011EF2)
-                            || (code == 0x00011FB0)
-                            || (code >= 0x00012000 && code <= 0x00012399)
-                            || (code >= 0x00012480 && code <= 0x00012543)
-                            || (code >= 0x00012F90 && code <= 0x00012FF0)
-                            || (code >= 0x00013000 && code <= 0x0001342E)
-
-                else if code < 0x00018D07 then
-                    if code < 0x00016EFF then
-                        (code >= 0x00014400 && code <= 0x00014646)
-                            || (code >= 0x00016800 && code <= 0x00016A38)
-                            || (code >= 0x00016A40 && code <= 0x00016A5E)
-                            || (code >= 0x00016A70 && code <= 0x00016ABE)
-                            || (code >= 0x00016AD0 && code <= 0x00016AED)
-                            || (code >= 0x00016B00 && code <= 0x00016B2F)
-                            || (code >= 0x00016B40 && code <= 0x00016B43)
-                            || (code >= 0x00016B63 && code <= 0x00016B77)
-                            || (code >= 0x00016B7D && code <= 0x00016B8F)
-
-                    else
-                        (code >= 0x00016F00 && code <= 0x00016F4A)
-                            || (code == 0x00016F50)
-                            || (code >= 0x00016F93 && code <= 0x00016F9F)
-                            || (code >= 0x00016FE0 && code <= 0x00016FE1)
-                            || (code == 0x00016FE3)
-                            || (code == 0x00017000)
-                            || (code == 0x000187F7)
-                            || (code >= 0x00018800 && code <= 0x00018CD5)
-                            || (code == 0x00018D00)
-
-                else if code < 0x0001BC6F then
-                    (code == 0x00018D08)
-                        || (code >= 0x0001AFF0 && code <= 0x0001AFF3)
-                        || (code >= 0x0001AFF5 && code <= 0x0001AFFB)
-                        || (code >= 0x0001AFFD && code <= 0x0001AFFE)
-                        || (code >= 0x0001B000 && code <= 0x0001B122)
-                        || (code >= 0x0001B150 && code <= 0x0001B152)
-                        || (code >= 0x0001B164 && code <= 0x0001B167)
-                        || (code >= 0x0001B170 && code <= 0x0001B2FB)
-                        || (code >= 0x0001BC00 && code <= 0x0001BC6A)
-
-                else
-                    (code >= 0x0001BC70 && code <= 0x0001BC7C)
-                        || (code >= 0x0001BC80 && code <= 0x0001BC88)
-                        || (code >= 0x0001BC90 && code <= 0x0001BC99)
-                        || (code >= 0x0001D400 && code <= 0x0001D454)
-                        || (code >= 0x0001D456 && code <= 0x0001D49C)
-                        || (code >= 0x0001D49E && code <= 0x0001D49F)
-                        || (code == 0x0001D4A2)
-                        || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                        || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-
-            else if code < 0x0001EDFF then
-                if code < 0x0001D735 then
-                    if code < 0x0001D53F then
-                        (code >= 0x0001D4AE && code <= 0x0001D4B9)
-                            || (code == 0x0001D4BB)
-                            || (code >= 0x0001D4BD && code <= 0x0001D4C3)
-                            || (code >= 0x0001D4C5 && code <= 0x0001D505)
-                            || (code >= 0x0001D507 && code <= 0x0001D50A)
-                            || (code >= 0x0001D50D && code <= 0x0001D514)
-                            || (code >= 0x0001D516 && code <= 0x0001D51C)
-                            || (code >= 0x0001D51E && code <= 0x0001D539)
-                            || (code >= 0x0001D53B && code <= 0x0001D53E)
-
-                    else
-                        (code >= 0x0001D540 && code <= 0x0001D544)
-                            || (code == 0x0001D546)
-                            || (code >= 0x0001D54A && code <= 0x0001D550)
-                            || (code >= 0x0001D552 && code <= 0x0001D6A5)
-                            || (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                            || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                            || (code >= 0x0001D6DC && code <= 0x0001D6FA)
-                            || (code >= 0x0001D6FC && code <= 0x0001D714)
-                            || (code >= 0x0001D716 && code <= 0x0001D734)
-
-                else if code < 0x0001E14D then
-                    (code >= 0x0001D736 && code <= 0x0001D74E)
-                        || (code >= 0x0001D750 && code <= 0x0001D76E)
-                        || (code >= 0x0001D770 && code <= 0x0001D788)
-                        || (code >= 0x0001D78A && code <= 0x0001D7A8)
-                        || (code >= 0x0001D7AA && code <= 0x0001D7C2)
-                        || (code >= 0x0001D7C4 && code <= 0x0001D7CB)
-                        || (code >= 0x0001DF00 && code <= 0x0001DF1E)
-                        || (code >= 0x0001E100 && code <= 0x0001E12C)
-                        || (code >= 0x0001E137 && code <= 0x0001E13D)
-
-                else
-                    (code == 0x0001E14E)
-                        || (code >= 0x0001E290 && code <= 0x0001E2AD)
-                        || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
-                        || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
-                        || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
-                        || (code >= 0x0001E7ED && code <= 0x0001E7EE)
-                        || (code >= 0x0001E7F0 && code <= 0x0001E7FE)
-                        || (code >= 0x0001E800 && code <= 0x0001E8C4)
-                        || (code == 0x0001E94B)
-
-            else if code < 0x0001EE7F then
-                if code < 0x0001EE50 then
-                    (code >= 0x0001EE00 && code <= 0x0001EE03)
-                        || (code >= 0x0001EE05 && code <= 0x0001EE1F)
-                        || (code >= 0x0001EE21 && code <= 0x0001EE22)
-                        || (code == 0x0001EE24)
-                        || (code == 0x0001EE27)
-                        || (code >= 0x0001EE29 && code <= 0x0001EE32)
-                        || (code >= 0x0001EE34 && code <= 0x0001EE37)
-                        || (code == 0x0001EE42)
-                        || (code >= 0x0001EE4D && code <= 0x0001EE4F)
-                        || ((modBy 2 code == 1)
-                                && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
-                                        || (code
-                                                >= 0x0001EE47
-                                                && code
-                                                <= 0x0001EE4B
-                                           )
-                                   )
-                           )
-
-                else
-                    (code >= 0x0001EE51 && code <= 0x0001EE52)
-                        || (code == 0x0001EE54)
-                        || (code >= 0x0001EE61 && code <= 0x0001EE62)
-                        || (code == 0x0001EE64)
-                        || (code >= 0x0001EE67 && code <= 0x0001EE6A)
-                        || (code >= 0x0001EE6C && code <= 0x0001EE72)
-                        || (code >= 0x0001EE74 && code <= 0x0001EE77)
-                        || (code >= 0x0001EE79 && code <= 0x0001EE7C)
-                        || (code == 0x0001EE7E)
-                        || ((modBy 2 code == 1)
-                                && (code >= 0x0001EE57 && code <= 0x0001EE5F)
-                           )
-
-            else if code < 0x0002B73F then
-                (code >= 0x0001EE80 && code <= 0x0001EE89)
-                    || (code >= 0x0001EE8B && code <= 0x0001EE9B)
-                    || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
-                    || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
-                    || (code >= 0x0001EEAB && code <= 0x0001EEBB)
-                    || (code == 0x00020000)
-                    || (code == 0x0002A6DF)
-                    || (code == 0x0002A700)
-                    || (code == 0x0002B738)
-
-            else
-                (code == 0x0002B740)
-                    || (code == 0x0002B81D)
-                    || (code == 0x0002B820)
-                    || (code == 0x0002CEA1)
-                    || (code == 0x0002CEB0)
-                    || (code == 0x0002EBE0)
-                    || (code >= 0x0002F800 && code <= 0x0002FA1D)
-                    || (code == 0x00030000)
-                    || (code == 0x0003134A)
-           )
-
-
-{-| Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)
--}
-isAlphaNum : Char -> Bool
-isAlphaNum c =
-    let
-        simple =
-            Char.toLower c /= c || Char.toUpper c /= c
-
-        code =
-            Char.toCode c
-    in
-    (simple
-        && (if code < 0x0100 then
-                code >= 0x00 && code <= 0xFF
-
-            else
-                (code >= 0x0100 && code <= 0x0344)
-                    || (code >= 0x0346 && code <= 0x24B5)
-                    || (code >= 0x24EA && code <= 0x000F0000)
-           )
-    )
-        || (if code < 0x0100 then
-                (code >= 0x30 && code <= 0x39)
-                    || (code == 0xAA)
-                    || (code >= 0xB2 && code <= 0xB3)
-                    || (code >= 0xB9 && code <= 0xBA)
-                    || (code >= 0xBC && code <= 0xBE)
-                    || (code >= 0xF8 && code <= 0xFF)
-
-            else if code < 0xAB08 then
-                if code < 0x108D then
-                    if code < 0x0B3C then
-                        if code < 0x0984 then
-                            if code < 0x0711 then
-                                if code < 0x05EE then
-                                    (code >= 0x0100 && code <= 0x02C1)
-                                        || (code >= 0x02C6 && code <= 0x02D1)
-                                        || (code >= 0x02E0 && code <= 0x02E4)
-                                        || (code >= 0x0370 && code <= 0x0374)
-                                        || (code >= 0x037A && code <= 0x037D)
-                                        || (code >= 0x03A3 && code <= 0x03F5)
-                                        || (code >= 0x03F7 && code <= 0x0481)
-                                        || (code == 0x0559)
-                                        || (code >= 0x0560 && code <= 0x0588)
-                                        || (code >= 0x05D0 && code <= 0x05EA)
-                                        || ((modBy 2 code == 0)
-                                                && (code
-                                                        >= 0x02EC
-                                                        && code
-                                                        <= 0x02EE
-                                                   )
-                                           )
-
-                                else
-                                    (code >= 0x05EF && code <= 0x05F2)
-                                        || (code >= 0x0620 && code <= 0x064A)
-                                        || (code >= 0x0660 && code <= 0x0669)
-                                        || (code >= 0x066E && code <= 0x066F)
-                                        || (code >= 0x0671 && code <= 0x06D3)
-                                        || (code == 0x06D5)
-                                        || (code >= 0x06E5 && code <= 0x06E6)
-                                        || (code >= 0x06EE && code <= 0x06FC)
-                                        || (code == 0x06FF)
-                                        || (code == 0x0710)
-
-                            else if code < 0x083F then
-                                (code >= 0x0712 && code <= 0x072F)
-                                    || (code >= 0x074D && code <= 0x07A5)
-                                    || (code == 0x07B1)
-                                    || (code >= 0x07C0 && code <= 0x07EA)
-                                    || (code >= 0x07F4 && code <= 0x07F5)
-                                    || (code == 0x07FA)
-                                    || (code >= 0x0800 && code <= 0x0815)
-                                    || (code == 0x081A)
-                                    || (code == 0x0824)
-                                    || (code == 0x0828)
-
-                            else
-                                (code >= 0x0840 && code <= 0x0858)
-                                    || (code >= 0x0860 && code <= 0x086A)
-                                    || (code >= 0x0870 && code <= 0x0887)
-                                    || (code >= 0x0889 && code <= 0x088E)
-                                    || (code >= 0x08A0 && code <= 0x08C9)
-                                    || (code >= 0x0904 && code <= 0x0939)
-                                    || (code == 0x093D)
-                                    || (code == 0x0950)
-                                    || (code >= 0x0958 && code <= 0x0961)
-                                    || (code >= 0x0966 && code <= 0x096F)
-                                    || (code >= 0x0971 && code <= 0x0980)
-
-                        else if code < 0x0A58 then
-                            if code < 0x09E5 then
-                                (code >= 0x0985 && code <= 0x098C)
-                                    || (code >= 0x098F && code <= 0x0990)
-                                    || (code >= 0x0993 && code <= 0x09A8)
-                                    || (code >= 0x09AA && code <= 0x09B0)
-                                    || (code == 0x09B2)
-                                    || (code >= 0x09B6 && code <= 0x09B9)
-                                    || (code == 0x09BD)
-                                    || (code == 0x09CE)
-                                    || (code >= 0x09DC && code <= 0x09DD)
-                                    || (code >= 0x09DF && code <= 0x09E1)
-
-                            else
-                                (code >= 0x09E6 && code <= 0x09F1)
-                                    || (code >= 0x09F4 && code <= 0x09F9)
-                                    || (code == 0x09FC)
-                                    || (code >= 0x0A05 && code <= 0x0A0A)
-                                    || (code >= 0x0A0F && code <= 0x0A10)
-                                    || (code >= 0x0A13 && code <= 0x0A28)
-                                    || (code >= 0x0A2A && code <= 0x0A30)
-                                    || (code >= 0x0A32 && code <= 0x0A33)
-                                    || (code >= 0x0A35 && code <= 0x0A36)
-                                    || (code >= 0x0A38 && code <= 0x0A39)
-
-                        else if code < 0x0ABC then
-                            (code >= 0x0A59 && code <= 0x0A5C)
-                                || (code == 0x0A5E)
-                                || (code >= 0x0A66 && code <= 0x0A6F)
-                                || (code >= 0x0A72 && code <= 0x0A74)
-                                || (code >= 0x0A85 && code <= 0x0A8D)
-                                || (code >= 0x0A8F && code <= 0x0A91)
-                                || (code >= 0x0A93 && code <= 0x0AA8)
-                                || (code >= 0x0AAA && code <= 0x0AB0)
-                                || (code >= 0x0AB2 && code <= 0x0AB3)
-                                || (code >= 0x0AB5 && code <= 0x0AB9)
-
-                        else
-                            (code == 0x0ABD)
-                                || (code == 0x0AD0)
-                                || (code >= 0x0AE0 && code <= 0x0AE1)
-                                || (code >= 0x0AE6 && code <= 0x0AEF)
-                                || (code == 0x0AF9)
-                                || (code >= 0x0B05 && code <= 0x0B0C)
-                                || (code >= 0x0B0F && code <= 0x0B10)
-                                || (code >= 0x0B13 && code <= 0x0B28)
-                                || (code >= 0x0B2A && code <= 0x0B30)
-                                || (code >= 0x0B32 && code <= 0x0B33)
-                                || (code >= 0x0B35 && code <= 0x0B39)
-
-                    else if code < 0x0D3C then
-                        if code < 0x0C29 then
-                            if code < 0x0B9B then
-                                (code == 0x0B3D)
-                                    || (code >= 0x0B5C && code <= 0x0B5D)
-                                    || (code >= 0x0B5F && code <= 0x0B61)
-                                    || (code >= 0x0B66 && code <= 0x0B6F)
-                                    || (code >= 0x0B71 && code <= 0x0B77)
-                                    || (code == 0x0B83)
-                                    || (code >= 0x0B85 && code <= 0x0B8A)
-                                    || (code >= 0x0B8E && code <= 0x0B90)
-                                    || (code >= 0x0B92 && code <= 0x0B95)
-                                    || (code >= 0x0B99 && code <= 0x0B9A)
-
-                            else
-                                (code == 0x0B9C)
-                                    || (code >= 0x0B9E && code <= 0x0B9F)
-                                    || (code >= 0x0BA3 && code <= 0x0BA4)
-                                    || (code >= 0x0BA8 && code <= 0x0BAA)
-                                    || (code >= 0x0BAE && code <= 0x0BB9)
-                                    || (code == 0x0BD0)
-                                    || (code >= 0x0BE6 && code <= 0x0BF2)
-                                    || (code >= 0x0C05 && code <= 0x0C0C)
-                                    || (code >= 0x0C0E && code <= 0x0C10)
-                                    || (code >= 0x0C12 && code <= 0x0C28)
-
-                        else if code < 0x0C91 then
-                            (code >= 0x0C2A && code <= 0x0C39)
-                                || (code == 0x0C3D)
-                                || (code >= 0x0C58 && code <= 0x0C5A)
-                                || (code == 0x0C5D)
-                                || (code >= 0x0C60 && code <= 0x0C61)
-                                || (code >= 0x0C66 && code <= 0x0C6F)
-                                || (code >= 0x0C78 && code <= 0x0C7E)
-                                || (code == 0x0C80)
-                                || (code >= 0x0C85 && code <= 0x0C8C)
-                                || (code >= 0x0C8E && code <= 0x0C90)
-
-                        else
-                            (code >= 0x0C92 && code <= 0x0CA8)
-                                || (code >= 0x0CAA && code <= 0x0CB3)
-                                || (code >= 0x0CB5 && code <= 0x0CB9)
-                                || (code == 0x0CBD)
-                                || (code >= 0x0CDD && code <= 0x0CDE)
-                                || (code >= 0x0CE0 && code <= 0x0CE1)
-                                || (code >= 0x0CE6 && code <= 0x0CEF)
-                                || (code >= 0x0CF1 && code <= 0x0CF2)
-                                || (code >= 0x0D04 && code <= 0x0D0C)
-                                || (code >= 0x0D0E && code <= 0x0D10)
-                                || (code >= 0x0D12 && code <= 0x0D3A)
-
-                    else if code < 0x0EA4 then
-                        if code < 0x0DBF then
-                            (code == 0x0D3D)
-                                || (code == 0x0D4E)
-                                || (code >= 0x0D54 && code <= 0x0D56)
-                                || (code >= 0x0D58 && code <= 0x0D61)
-                                || (code >= 0x0D66 && code <= 0x0D78)
-                                || (code >= 0x0D7A && code <= 0x0D7F)
-                                || (code >= 0x0D85 && code <= 0x0D96)
-                                || (code >= 0x0D9A && code <= 0x0DB1)
-                                || (code >= 0x0DB3 && code <= 0x0DBB)
-                                || (code == 0x0DBD)
-
-                        else
-                            (code >= 0x0DC0 && code <= 0x0DC6)
-                                || (code >= 0x0DE6 && code <= 0x0DEF)
-                                || (code >= 0x0E01 && code <= 0x0E30)
-                                || (code >= 0x0E32 && code <= 0x0E33)
-                                || (code >= 0x0E40 && code <= 0x0E46)
-                                || (code >= 0x0E50 && code <= 0x0E59)
-                                || (code >= 0x0E81 && code <= 0x0E82)
-                                || (code == 0x0E84)
-                                || (code >= 0x0E86 && code <= 0x0E8A)
-                                || (code >= 0x0E8C && code <= 0x0EA3)
-
-                    else if code < 0x0F3F then
-                        (code == 0x0EA5)
-                            || (code >= 0x0EA7 && code <= 0x0EB0)
-                            || (code >= 0x0EB2 && code <= 0x0EB3)
-                            || (code == 0x0EBD)
-                            || (code >= 0x0EC0 && code <= 0x0EC4)
-                            || (code == 0x0EC6)
-                            || (code >= 0x0ED0 && code <= 0x0ED9)
-                            || (code >= 0x0EDC && code <= 0x0EDF)
-                            || (code == 0x0F00)
-                            || (code >= 0x0F20 && code <= 0x0F33)
-
-                    else
-                        (code >= 0x0F40 && code <= 0x0F47)
-                            || (code >= 0x0F49 && code <= 0x0F6C)
-                            || (code >= 0x0F88 && code <= 0x0F8C)
-                            || (code >= 0x1000 && code <= 0x102A)
-                            || (code >= 0x103F && code <= 0x1049)
-                            || (code >= 0x1050 && code <= 0x1055)
-                            || (code >= 0x105A && code <= 0x105D)
-                            || (code == 0x1061)
-                            || (code >= 0x1065 && code <= 0x1066)
-                            || (code >= 0x106E && code <= 0x1070)
-                            || (code >= 0x1075 && code <= 0x1081)
-
-                else if code < 0x245F then
-                    if code < 0x18FF then
-                        if code < 0x1400 then
-                            if code < 0x12B1 then
-                                (code == 0x108E)
-                                    || (code >= 0x1090 && code <= 0x1099)
-                                    || (code >= 0x10FC && code <= 0x1248)
-                                    || (code >= 0x124A && code <= 0x124D)
-                                    || (code >= 0x1250 && code <= 0x1256)
-                                    || (code == 0x1258)
-                                    || (code >= 0x125A && code <= 0x125D)
-                                    || (code >= 0x1260 && code <= 0x1288)
-                                    || (code >= 0x128A && code <= 0x128D)
-                                    || (code >= 0x1290 && code <= 0x12B0)
-
-                            else
-                                (code >= 0x12B2 && code <= 0x12B5)
-                                    || (code >= 0x12B8 && code <= 0x12BE)
-                                    || (code == 0x12C0)
-                                    || (code >= 0x12C2 && code <= 0x12C5)
-                                    || (code >= 0x12C8 && code <= 0x12D6)
-                                    || (code >= 0x12D8 && code <= 0x1310)
-                                    || (code >= 0x1312 && code <= 0x1315)
-                                    || (code >= 0x1318 && code <= 0x135A)
-                                    || (code >= 0x1369 && code <= 0x137C)
-                                    || (code >= 0x1380 && code <= 0x138F)
-
-                        else if code < 0x177F then
-                            (code >= 0x1401 && code <= 0x166C)
-                                || (code >= 0x166F && code <= 0x167F)
-                                || (code >= 0x1681 && code <= 0x169A)
-                                || (code >= 0x16A0 && code <= 0x16EA)
-                                || (code >= 0x16EE && code <= 0x16F8)
-                                || (code >= 0x1700 && code <= 0x1711)
-                                || (code >= 0x171F && code <= 0x1731)
-                                || (code >= 0x1740 && code <= 0x1751)
-                                || (code >= 0x1760 && code <= 0x176C)
-                                || (code >= 0x176E && code <= 0x1770)
-
-                        else
-                            (code >= 0x1780 && code <= 0x17B3)
-                                || (code == 0x17D7)
-                                || (code == 0x17DC)
-                                || (code >= 0x17E0 && code <= 0x17E9)
-                                || (code >= 0x17F0 && code <= 0x17F9)
-                                || (code >= 0x1810 && code <= 0x1819)
-                                || (code >= 0x1820 && code <= 0x1878)
-                                || (code >= 0x1880 && code <= 0x1884)
-                                || (code >= 0x1887 && code <= 0x18A8)
-                                || (code == 0x18AA)
-                                || (code >= 0x18B0 && code <= 0x18F5)
-
-                    else if code < 0x1CED then
-                        if code < 0x1AA6 then
-                            (code >= 0x1900 && code <= 0x191E)
-                                || (code >= 0x1946 && code <= 0x196D)
-                                || (code >= 0x1970 && code <= 0x1974)
-                                || (code >= 0x1980 && code <= 0x19AB)
-                                || (code >= 0x19B0 && code <= 0x19C9)
-                                || (code >= 0x19D0 && code <= 0x19DA)
-                                || (code >= 0x1A00 && code <= 0x1A16)
-                                || (code >= 0x1A20 && code <= 0x1A54)
-                                || (code >= 0x1A80 && code <= 0x1A89)
-                                || (code >= 0x1A90 && code <= 0x1A99)
-
-                        else
-                            (code == 0x1AA7)
-                                || (code >= 0x1B05 && code <= 0x1B33)
-                                || (code >= 0x1B45 && code <= 0x1B4C)
-                                || (code >= 0x1B50 && code <= 0x1B59)
-                                || (code >= 0x1B83 && code <= 0x1BA0)
-                                || (code >= 0x1BAE && code <= 0x1BE5)
-                                || (code >= 0x1C00 && code <= 0x1C23)
-                                || (code >= 0x1C40 && code <= 0x1C49)
-                                || (code >= 0x1C4D && code <= 0x1C7D)
-                                || (code >= 0x1CE9 && code <= 0x1CEC)
-
-                    else if code < 0x2106 then
-                        (code >= 0x1CEE && code <= 0x1CF3)
-                            || (code >= 0x1CF5 && code <= 0x1CF6)
-                            || (code == 0x1CFA)
-                            || (code >= 0x1D00 && code <= 0x1DBF)
-                            || (code >= 0x1E00 && code <= 0x1F15)
-                            || (code >= 0x2070 && code <= 0x2071)
-                            || (code >= 0x2074 && code <= 0x2079)
-                            || (code >= 0x207F && code <= 0x2089)
-                            || (code >= 0x2090 && code <= 0x209C)
-                            || (code == 0x2102)
-
-                    else
-                        (code == 0x2107)
-                            || (code >= 0x210A && code <= 0x2113)
-                            || (code == 0x2115)
-                            || (code >= 0x2119 && code <= 0x211D)
-                            || (code == 0x2124)
-                            || (code == 0x2128)
-                            || (code >= 0x212A && code <= 0x212D)
-                            || (code >= 0x212F && code <= 0x2139)
-                            || (code >= 0x213C && code <= 0x213F)
-                            || (code >= 0x2145 && code <= 0x2149)
-                            || (code >= 0x2150 && code <= 0x2189)
-
-                else if code < 0xA60F then
-                    if code < 0x3037 then
-                        if code < 0x2DAF then
-                            (code >= 0x2460 && code <= 0x249B)
-                                || (code >= 0x24EA && code <= 0x24FF)
-                                || (code >= 0x2776 && code <= 0x2793)
-                                || (code >= 0x2C00 && code <= 0x2CE4)
-                                || (code == 0x2CFD)
-                                || (code >= 0x2D30 && code <= 0x2D67)
-                                || (code == 0x2D6F)
-                                || (code >= 0x2D80 && code <= 0x2D96)
-                                || (code >= 0x2DA0 && code <= 0x2DA6)
-                                || (code >= 0x2DA8 && code <= 0x2DAE)
-
-                        else
-                            (code >= 0x2DB0 && code <= 0x2DB6)
-                                || (code >= 0x2DB8 && code <= 0x2DBE)
-                                || (code >= 0x2DC0 && code <= 0x2DC6)
-                                || (code >= 0x2DC8 && code <= 0x2DCE)
-                                || (code >= 0x2DD0 && code <= 0x2DD6)
-                                || (code >= 0x2DD8 && code <= 0x2DDE)
-                                || (code == 0x2E2F)
-                                || (code >= 0x3005 && code <= 0x3007)
-                                || (code >= 0x3021 && code <= 0x3029)
-                                || (code >= 0x3031 && code <= 0x3035)
-
-                    else if code < 0x321F then
-                        (code >= 0x3038 && code <= 0x303C)
-                            || (code >= 0x3041 && code <= 0x3096)
-                            || (code >= 0x309D && code <= 0x309F)
-                            || (code >= 0x30A1 && code <= 0x30FA)
-                            || (code >= 0x30FC && code <= 0x30FF)
-                            || (code >= 0x3105 && code <= 0x312F)
-                            || (code >= 0x3131 && code <= 0x318E)
-                            || (code >= 0x3192 && code <= 0x3195)
-                            || (code >= 0x31A0 && code <= 0x31BF)
-                            || (code >= 0x31F0 && code <= 0x31FF)
-
-                    else
-                        (code >= 0x3220 && code <= 0x3229)
-                            || (code >= 0x3248 && code <= 0x324F)
-                            || (code >= 0x3251 && code <= 0x325F)
-                            || (code >= 0x3280 && code <= 0x3289)
-                            || (code >= 0x32B1 && code <= 0x32BF)
-                            || (code == 0x3400)
-                            || (code == 0x4DBF)
-                            || (code == 0x4E00)
-                            || (code >= 0x9FFF && code <= 0xA48C)
-                            || (code >= 0xA4D0 && code <= 0xA4FD)
-                            || (code >= 0xA500 && code <= 0xA60C)
-
-                else if code < 0xA8FF then
-                    if code < 0xA802 then
-                        (code >= 0xA610 && code <= 0xA62B)
-                            || (code >= 0xA640 && code <= 0xA66E)
-                            || (code >= 0xA67F && code <= 0xA69D)
-                            || (code >= 0xA6A0 && code <= 0xA6EF)
-                            || (code >= 0xA717 && code <= 0xA71F)
-                            || (code >= 0xA722 && code <= 0xA788)
-                            || (code >= 0xA78B && code <= 0xA7CA)
-                            || (code == 0xA7D3)
-                            || (code >= 0xA7D5 && code <= 0xA7D9)
-                            || (code >= 0xA7F2 && code <= 0xA801)
-
-                    else
-                        (code >= 0xA803 && code <= 0xA805)
-                            || (code >= 0xA807 && code <= 0xA80A)
-                            || (code >= 0xA80C && code <= 0xA822)
-                            || (code >= 0xA830 && code <= 0xA835)
-                            || (code >= 0xA840 && code <= 0xA873)
-                            || (code >= 0xA882 && code <= 0xA8B3)
-                            || (code >= 0xA8D0 && code <= 0xA8D9)
-                            || (code >= 0xA8F2 && code <= 0xA8F7)
-                            || (code == 0xA8FB)
-                            || (code >= 0xA8FD && code <= 0xA8FE)
-
-                else if code < 0xAA4F then
-                    (code >= 0xA900 && code <= 0xA925)
-                        || (code >= 0xA930 && code <= 0xA946)
-                        || (code >= 0xA960 && code <= 0xA97C)
-                        || (code >= 0xA984 && code <= 0xA9B2)
-                        || (code >= 0xA9CF && code <= 0xA9D9)
-                        || (code >= 0xA9E0 && code <= 0xA9E4)
-                        || (code >= 0xA9E6 && code <= 0xA9FE)
-                        || (code >= 0xAA00 && code <= 0xAA28)
-                        || (code >= 0xAA40 && code <= 0xAA42)
-                        || (code >= 0xAA44 && code <= 0xAA4B)
-
-                else
-                    (code >= 0xAA50 && code <= 0xAA59)
-                        || (code >= 0xAA60 && code <= 0xAA76)
-                        || (code == 0xAA7A)
-                        || (code >= 0xAA7E && code <= 0xAAAF)
-                        || (code == 0xAAB1)
-                        || (code >= 0xAAB5 && code <= 0xAAB6)
-                        || (code >= 0xAAB9 && code <= 0xAABD)
-                        || (code >= 0xAADB && code <= 0xAADD)
-                        || (code >= 0xAAE0 && code <= 0xAAEA)
-                        || (code >= 0xAAF2 && code <= 0xAAF4)
-                        || (code >= 0xAB01 && code <= 0xAB06)
-                        || ((modBy 2 code == 0)
-                                && (code >= 0xAAC0 && code <= 0xAAC2)
-                           )
-
-            else if code < 0x00011908 then
-                if code < 0x00010A18 then
-                    if code < 0x00010106 then
-                        if code < 0xFB42 then
-                            if code < 0xD7AF then
-                                (code >= 0xAB09 && code <= 0xAB0E)
-                                    || (code >= 0xAB11 && code <= 0xAB16)
-                                    || (code >= 0xAB20 && code <= 0xAB26)
-                                    || (code >= 0xAB28 && code <= 0xAB2E)
-                                    || (code >= 0xAB30 && code <= 0xAB5A)
-                                    || (code >= 0xAB5C && code <= 0xAB69)
-                                    || (code >= 0xAB70 && code <= 0xABE2)
-                                    || (code >= 0xABF0 && code <= 0xABF9)
-                                    || (code == 0xAC00)
-                                    || (code == 0xD7A3)
-
-                            else
-                                (code >= 0xD7B0 && code <= 0xD7C6)
-                                    || (code >= 0xD7CB && code <= 0xD7FB)
-                                    || (code >= 0xF900 && code <= 0xFA6D)
-                                    || (code >= 0xFA70 && code <= 0xFAD9)
-                                    || (code == 0xFB1D)
-                                    || (code >= 0xFB1F && code <= 0xFB28)
-                                    || (code >= 0xFB2A && code <= 0xFB36)
-                                    || (code >= 0xFB38 && code <= 0xFB3C)
-                                    || (code == 0xFB3E)
-                                    || (code >= 0xFB40 && code <= 0xFB41)
-
-                        else if code < 0xFFC1 then
-                            (code >= 0xFB43 && code <= 0xFB44)
-                                || (code >= 0xFB46 && code <= 0xFBB1)
-                                || (code >= 0xFBD3 && code <= 0xFD3D)
-                                || (code >= 0xFD50 && code <= 0xFD8F)
-                                || (code >= 0xFD92 && code <= 0xFDC7)
-                                || (code >= 0xFDF0 && code <= 0xFDFB)
-                                || (code >= 0xFE70 && code <= 0xFE74)
-                                || (code >= 0xFE76 && code <= 0xFEFC)
-                                || (code >= 0xFF10 && code <= 0xFF19)
-                                || (code >= 0xFF66 && code <= 0xFFBE)
-
-                        else
-                            (code >= 0xFFC2 && code <= 0xFFC7)
-                                || (code >= 0xFFCA && code <= 0xFFCF)
-                                || (code >= 0xFFD2 && code <= 0xFFD7)
-                                || (code >= 0xFFDA && code <= 0xFFDC)
-                                || (code >= 0x00010000 && code <= 0x0001000B)
-                                || (code >= 0x0001000D && code <= 0x00010026)
-                                || (code >= 0x00010028 && code <= 0x0001003A)
-                                || (code >= 0x0001003C && code <= 0x0001003D)
-                                || (code >= 0x0001003F && code <= 0x0001004D)
-                                || (code >= 0x00010050 && code <= 0x0001005D)
-                                || (code >= 0x00010080 && code <= 0x000100FA)
-
-                    else if code < 0x0001077F then
-                        if code < 0x0001039F then
-                            (code >= 0x00010107 && code <= 0x00010133)
-                                || (code >= 0x00010140 && code <= 0x00010178)
-                                || (code >= 0x0001018A && code <= 0x0001018B)
-                                || (code >= 0x00010280 && code <= 0x0001029C)
-                                || (code >= 0x000102A0 && code <= 0x000102D0)
-                                || (code >= 0x000102E1 && code <= 0x000102FB)
-                                || (code >= 0x00010300 && code <= 0x00010323)
-                                || (code >= 0x0001032D && code <= 0x0001034A)
-                                || (code >= 0x00010350 && code <= 0x00010375)
-                                || (code >= 0x00010380 && code <= 0x0001039D)
-
-                        else
-                            (code >= 0x000103A0 && code <= 0x000103C3)
-                                || (code >= 0x000103C8 && code <= 0x000103CF)
-                                || (code >= 0x000103D1 && code <= 0x000103D5)
-                                || (code >= 0x00010400 && code <= 0x0001049D)
-                                || (code >= 0x000104A0 && code <= 0x000104A9)
-                                || (code >= 0x00010500 && code <= 0x00010527)
-                                || (code >= 0x00010530 && code <= 0x00010563)
-                                || (code >= 0x00010600 && code <= 0x00010736)
-                                || (code >= 0x00010740 && code <= 0x00010755)
-                                || (code >= 0x00010760 && code <= 0x00010767)
-
-                    else if code < 0x00010878 then
-                        (code >= 0x00010780 && code <= 0x00010785)
-                            || (code >= 0x00010787 && code <= 0x000107B0)
-                            || (code >= 0x000107B2 && code <= 0x000107BA)
-                            || (code >= 0x00010800 && code <= 0x00010805)
-                            || (code == 0x00010808)
-                            || (code >= 0x0001080A && code <= 0x00010835)
-                            || (code >= 0x00010837 && code <= 0x00010838)
-                            || (code == 0x0001083C)
-                            || (code >= 0x0001083F && code <= 0x00010855)
-                            || (code >= 0x00010858 && code <= 0x00010876)
-
-                    else
-                        (code >= 0x00010879 && code <= 0x0001089E)
-                            || (code >= 0x000108A7 && code <= 0x000108AF)
-                            || (code >= 0x000108E0 && code <= 0x000108F2)
-                            || (code >= 0x000108F4 && code <= 0x000108F5)
-                            || (code >= 0x000108FB && code <= 0x0001091B)
-                            || (code >= 0x00010920 && code <= 0x00010939)
-                            || (code >= 0x00010980 && code <= 0x000109B7)
-                            || (code >= 0x000109BC && code <= 0x000109CF)
-                            || (code >= 0x000109D2 && code <= 0x00010A00)
-                            || (code >= 0x00010A10 && code <= 0x00010A13)
-                            || (code >= 0x00010A15 && code <= 0x00010A17)
-
-                else if code < 0x000111E0 then
-                    if code < 0x00010F50 then
-                        if code < 0x00010B77 then
-                            (code >= 0x00010A19 && code <= 0x00010A35)
-                                || (code >= 0x00010A40 && code <= 0x00010A48)
-                                || (code >= 0x00010A60 && code <= 0x00010A7E)
-                                || (code >= 0x00010A80 && code <= 0x00010A9F)
-                                || (code >= 0x00010AC0 && code <= 0x00010AC7)
-                                || (code >= 0x00010AC9 && code <= 0x00010AE4)
-                                || (code >= 0x00010AEB && code <= 0x00010AEF)
-                                || (code >= 0x00010B00 && code <= 0x00010B35)
-                                || (code >= 0x00010B40 && code <= 0x00010B55)
-                                || (code >= 0x00010B58 && code <= 0x00010B72)
-
-                        else
-                            (code >= 0x00010B78 && code <= 0x00010B91)
-                                || (code >= 0x00010BA9 && code <= 0x00010BAF)
-                                || (code >= 0x00010C00 && code <= 0x00010C48)
-                                || (code >= 0x00010CFA && code <= 0x00010D23)
-                                || (code >= 0x00010D30 && code <= 0x00010D39)
-                                || (code >= 0x00010E60 && code <= 0x00010E7E)
-                                || (code >= 0x00010E80 && code <= 0x00010EA9)
-                                || (code >= 0x00010EB0 && code <= 0x00010EB1)
-                                || (code >= 0x00010F00 && code <= 0x00010F27)
-                                || (code >= 0x00010F30 && code <= 0x00010F45)
-
-                    else if code < 0x000110EF then
-                        (code >= 0x00010F51 && code <= 0x00010F54)
-                            || (code >= 0x00010F70 && code <= 0x00010F81)
-                            || (code >= 0x00010FB0 && code <= 0x00010FCB)
-                            || (code >= 0x00010FE0 && code <= 0x00010FF6)
-                            || (code >= 0x00011003 && code <= 0x00011037)
-                            || (code >= 0x00011052 && code <= 0x0001106F)
-                            || (code >= 0x00011071 && code <= 0x00011072)
-                            || (code == 0x00011075)
-                            || (code >= 0x00011083 && code <= 0x000110AF)
-                            || (code >= 0x000110D0 && code <= 0x000110E8)
-
-                    else
-                        (code >= 0x000110F0 && code <= 0x000110F9)
-                            || (code >= 0x00011103 && code <= 0x00011126)
-                            || (code >= 0x00011136 && code <= 0x0001113F)
-                            || (code == 0x00011144)
-                            || (code == 0x00011147)
-                            || (code >= 0x00011150 && code <= 0x00011172)
-                            || (code == 0x00011176)
-                            || (code >= 0x00011183 && code <= 0x000111B2)
-                            || (code >= 0x000111C1 && code <= 0x000111C4)
-                            || (code >= 0x000111D0 && code <= 0x000111DA)
-                            || (code == 0x000111DC)
-
-                else if code < 0x00011446 then
-                    if code < 0x00011304 then
-                        (code >= 0x000111E1 && code <= 0x000111F4)
-                            || (code >= 0x00011200 && code <= 0x00011211)
-                            || (code >= 0x00011213 && code <= 0x0001122B)
-                            || (code >= 0x00011280 && code <= 0x00011286)
-                            || (code == 0x00011288)
-                            || (code >= 0x0001128A && code <= 0x0001128D)
-                            || (code >= 0x0001128F && code <= 0x0001129D)
-                            || (code >= 0x0001129F && code <= 0x000112A8)
-                            || (code >= 0x000112B0 && code <= 0x000112DE)
-                            || (code >= 0x000112F0 && code <= 0x000112F9)
-
-                    else
-                        (code >= 0x00011305 && code <= 0x0001130C)
-                            || (code >= 0x0001130F && code <= 0x00011310)
-                            || (code >= 0x00011313 && code <= 0x00011328)
-                            || (code >= 0x0001132A && code <= 0x00011330)
-                            || (code >= 0x00011332 && code <= 0x00011333)
-                            || (code >= 0x00011335 && code <= 0x00011339)
-                            || (code == 0x0001133D)
-                            || (code == 0x00011350)
-                            || (code >= 0x0001135D && code <= 0x00011361)
-                            || (code >= 0x00011400 && code <= 0x00011434)
-
-                else if code < 0x00011643 then
-                    (code >= 0x00011447 && code <= 0x0001144A)
-                        || (code >= 0x00011450 && code <= 0x00011459)
-                        || (code >= 0x0001145F && code <= 0x00011461)
-                        || (code >= 0x00011480 && code <= 0x000114AF)
-                        || (code >= 0x000114C4 && code <= 0x000114C5)
-                        || (code == 0x000114C7)
-                        || (code >= 0x000114D0 && code <= 0x000114D9)
-                        || (code >= 0x00011580 && code <= 0x000115AE)
-                        || (code >= 0x000115D8 && code <= 0x000115DB)
-                        || (code >= 0x00011600 && code <= 0x0001162F)
-
-                else
-                    (code == 0x00011644)
-                        || (code >= 0x00011650 && code <= 0x00011659)
-                        || (code >= 0x00011680 && code <= 0x000116AA)
-                        || (code == 0x000116B8)
-                        || (code >= 0x000116C0 && code <= 0x000116C9)
                         || (code >= 0x00011700 && code <= 0x0001171A)
-                        || (code >= 0x00011730 && code <= 0x0001173B)
                         || (code >= 0x00011740 && code <= 0x00011746)
                         || (code >= 0x00011800 && code <= 0x0001182B)
-                        || (code >= 0x000118A0 && code <= 0x000118F2)
+                        || (code >= 0x000118A0 && code <= 0x000118DF)
                         || (code >= 0x000118FF && code <= 0x00011906)
+                        || (code == 0x00011909)
+                        || (code >= 0x0001190C && code <= 0x00011913)
+                        || (code >= 0x00011915 && code <= 0x00011916)
 
-            else if code < 0x0001D4BC then
-                if code < 0x00016A6F then
-                    if code < 0x00011D07 then
-                        if code < 0x00011A4F then
-                            (code == 0x00011909)
-                                || (code >= 0x0001190C && code <= 0x00011913)
-                                || (code >= 0x00011915 && code <= 0x00011916)
-                                || (code >= 0x00011918 && code <= 0x0001192F)
-                                || (code >= 0x00011950 && code <= 0x00011959)
-                                || (code >= 0x000119A0 && code <= 0x000119A7)
-                                || (code >= 0x000119AA && code <= 0x000119D0)
-                                || (code == 0x00011A00)
-                                || (code >= 0x00011A0B && code <= 0x00011A32)
-                                || (code == 0x00011A3A)
-                                || ((modBy 2 code == 1)
-                                        && ((code
-                                                >= 0x0001193F
-                                                && code
-                                                <= 0x00011941
-                                            )
-                                                || (code
-                                                        >= 0x000119E1
-                                                        && code
-                                                        <= 0x000119E3
-                                                   )
-                                           )
-                                   )
-
-                        else
-                            (code == 0x00011A50)
-                                || (code >= 0x00011A5C && code <= 0x00011A89)
-                                || (code == 0x00011A9D)
-                                || (code >= 0x00011AB0 && code <= 0x00011AF8)
-                                || (code >= 0x00011C00 && code <= 0x00011C08)
-                                || (code >= 0x00011C0A && code <= 0x00011C2E)
-                                || (code == 0x00011C40)
-                                || (code >= 0x00011C50 && code <= 0x00011C6C)
-                                || (code >= 0x00011C72 && code <= 0x00011C8F)
-                                || (code >= 0x00011D00 && code <= 0x00011D06)
-
-                    else if code < 0x00011FAF then
-                        (code >= 0x00011D08 && code <= 0x00011D09)
-                            || (code >= 0x00011D0B && code <= 0x00011D30)
-                            || (code == 0x00011D46)
-                            || (code >= 0x00011D50 && code <= 0x00011D59)
-                            || (code >= 0x00011D60 && code <= 0x00011D65)
-                            || (code >= 0x00011D67 && code <= 0x00011D68)
-                            || (code >= 0x00011D6A && code <= 0x00011D89)
-                            || (code == 0x00011D98)
-                            || (code >= 0x00011DA0 && code <= 0x00011DA9)
-                            || (code >= 0x00011EE0 && code <= 0x00011EF2)
-
-                    else
-                        (code == 0x00011FB0)
-                            || (code >= 0x00011FC0 && code <= 0x00011FD4)
-                            || (code >= 0x00012000 && code <= 0x00012399)
-                            || (code >= 0x00012400 && code <= 0x0001246E)
-                            || (code >= 0x00012480 && code <= 0x00012543)
-                            || (code >= 0x00012F90 && code <= 0x00012FF0)
-                            || (code >= 0x00013000 && code <= 0x0001342E)
-                            || (code >= 0x00014400 && code <= 0x00014646)
-                            || (code >= 0x00016800 && code <= 0x00016A38)
-                            || (code >= 0x00016A40 && code <= 0x00016A5E)
-                            || (code >= 0x00016A60 && code <= 0x00016A69)
-
-                else if code < 0x0001AFEF then
-                    if code < 0x00016EFF then
-                        (code >= 0x00016A70 && code <= 0x00016ABE)
-                            || (code >= 0x00016AC0 && code <= 0x00016AC9)
-                            || (code >= 0x00016AD0 && code <= 0x00016AED)
-                            || (code >= 0x00016B00 && code <= 0x00016B2F)
-                            || (code >= 0x00016B40 && code <= 0x00016B43)
-                            || (code >= 0x00016B50 && code <= 0x00016B59)
-                            || (code >= 0x00016B5B && code <= 0x00016B61)
-                            || (code >= 0x00016B63 && code <= 0x00016B77)
-                            || (code >= 0x00016B7D && code <= 0x00016B8F)
-                            || (code >= 0x00016E40 && code <= 0x00016E96)
-
-                    else
-                        (code >= 0x00016F00 && code <= 0x00016F4A)
-                            || (code == 0x00016F50)
-                            || (code >= 0x00016F93 && code <= 0x00016F9F)
-                            || (code >= 0x00016FE0 && code <= 0x00016FE1)
-                            || (code == 0x00016FE3)
-                            || (code == 0x00017000)
-                            || (code == 0x000187F7)
-                            || (code >= 0x00018800 && code <= 0x00018CD5)
-                            || (code == 0x00018D00)
-                            || (code == 0x00018D08)
-
-                else if code < 0x0001BC8F then
-                    (code >= 0x0001AFF0 && code <= 0x0001AFF3)
-                        || (code >= 0x0001AFF5 && code <= 0x0001AFFB)
-                        || (code >= 0x0001AFFD && code <= 0x0001AFFE)
-                        || (code >= 0x0001B000 && code <= 0x0001B122)
-                        || (code >= 0x0001B150 && code <= 0x0001B152)
-                        || (code >= 0x0001B164 && code <= 0x0001B167)
-                        || (code >= 0x0001B170 && code <= 0x0001B2FB)
-                        || (code >= 0x0001BC00 && code <= 0x0001BC6A)
-                        || (code >= 0x0001BC70 && code <= 0x0001BC7C)
-                        || (code >= 0x0001BC80 && code <= 0x0001BC88)
-
-                else
-                    (code >= 0x0001BC90 && code <= 0x0001BC99)
-                        || (code >= 0x0001D2E0 && code <= 0x0001D2F3)
-                        || (code >= 0x0001D360 && code <= 0x0001D378)
-                        || (code >= 0x0001D400 && code <= 0x0001D454)
-                        || (code >= 0x0001D456 && code <= 0x0001D49C)
-                        || (code >= 0x0001D49E && code <= 0x0001D49F)
-                        || (code == 0x0001D4A2)
-                        || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
-                        || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
-                        || (code >= 0x0001D4AE && code <= 0x0001D4B9)
-                        || (code == 0x0001D4BB)
-
-            else if code < 0x0001ECB0 then
-                if code < 0x0001D7A9 then
-                    if code < 0x0001D551 then
-                        (code >= 0x0001D4BD && code <= 0x0001D4C3)
-                            || (code >= 0x0001D4C5 && code <= 0x0001D505)
-                            || (code >= 0x0001D507 && code <= 0x0001D50A)
-                            || (code >= 0x0001D50D && code <= 0x0001D514)
-                            || (code >= 0x0001D516 && code <= 0x0001D51C)
-                            || (code >= 0x0001D51E && code <= 0x0001D539)
-                            || (code >= 0x0001D53B && code <= 0x0001D53E)
-                            || (code >= 0x0001D540 && code <= 0x0001D544)
-                            || (code == 0x0001D546)
-                            || (code >= 0x0001D54A && code <= 0x0001D550)
-
-                    else
-                        (code >= 0x0001D552 && code <= 0x0001D6A5)
-                            || (code >= 0x0001D6A8 && code <= 0x0001D6C0)
-                            || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
-                            || (code >= 0x0001D6DC && code <= 0x0001D6FA)
-                            || (code >= 0x0001D6FC && code <= 0x0001D714)
-                            || (code >= 0x0001D716 && code <= 0x0001D734)
-                            || (code >= 0x0001D736 && code <= 0x0001D74E)
-                            || (code >= 0x0001D750 && code <= 0x0001D76E)
-                            || (code >= 0x0001D770 && code <= 0x0001D788)
-                            || (code >= 0x0001D78A && code <= 0x0001D7A8)
-
-                else if code < 0x0001E2EF then
-                    (code >= 0x0001D7AA && code <= 0x0001D7C2)
-                        || (code >= 0x0001D7C4 && code <= 0x0001D7CB)
-                        || (code >= 0x0001D7CE && code <= 0x0001D7FF)
-                        || (code >= 0x0001DF00 && code <= 0x0001DF1E)
-                        || (code >= 0x0001E100 && code <= 0x0001E12C)
-                        || (code >= 0x0001E137 && code <= 0x0001E13D)
-                        || (code >= 0x0001E140 && code <= 0x0001E149)
-                        || (code == 0x0001E14E)
-                        || (code >= 0x0001E290 && code <= 0x0001E2AD)
-                        || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
-
-                else
-                    (code >= 0x0001E2F0 && code <= 0x0001E2F9)
-                        || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
-                        || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
-                        || (code >= 0x0001E7ED && code <= 0x0001E7EE)
-                        || (code >= 0x0001E7F0 && code <= 0x0001E7FE)
-                        || (code >= 0x0001E800 && code <= 0x0001E8C4)
-                        || (code >= 0x0001E8C7 && code <= 0x0001E8CF)
-                        || (code == 0x0001E94B)
-                        || (code >= 0x0001E950 && code <= 0x0001E959)
-                        || (code >= 0x0001EC71 && code <= 0x0001ECAB)
-                        || (code >= 0x0001ECAD && code <= 0x0001ECAF)
-
-            else if code < 0x0001EE7D then
-                if code < 0x0001EE41 then
-                    (code >= 0x0001ECB1 && code <= 0x0001ECB4)
-                        || (code >= 0x0001ED01 && code <= 0x0001ED2D)
-                        || (code >= 0x0001ED2F && code <= 0x0001ED3D)
-                        || (code >= 0x0001EE00 && code <= 0x0001EE03)
-                        || (code >= 0x0001EE05 && code <= 0x0001EE1F)
-                        || (code >= 0x0001EE21 && code <= 0x0001EE22)
-                        || (code == 0x0001EE24)
-                        || (code == 0x0001EE27)
-                        || (code >= 0x0001EE29 && code <= 0x0001EE32)
-                        || (code >= 0x0001EE34 && code <= 0x0001EE37)
-                        || ((modBy 2 code == 1)
-                                && (code >= 0x0001EE39 && code <= 0x0001EE3B)
-                           )
-
-                else
-                    (code == 0x0001EE42)
-                        || (code >= 0x0001EE4D && code <= 0x0001EE4F)
-                        || (code >= 0x0001EE51 && code <= 0x0001EE52)
-                        || (code == 0x0001EE54)
-                        || (code >= 0x0001EE61 && code <= 0x0001EE62)
-                        || (code == 0x0001EE64)
-                        || (code >= 0x0001EE67 && code <= 0x0001EE6A)
-                        || (code >= 0x0001EE6C && code <= 0x0001EE72)
-                        || (code >= 0x0001EE74 && code <= 0x0001EE77)
-                        || (code >= 0x0001EE79 && code <= 0x0001EE7C)
-                        || ((modBy 2 code == 1)
-                                && ((code >= 0x0001EE47 && code <= 0x0001EE4B)
-                                        || (code
-                                                >= 0x0001EE57
-                                                && code
-                                                <= 0x0001EE5F
-                                           )
-                                   )
-                           )
-
-            else if code < 0x0002A6FF then
-                (code == 0x0001EE7E)
-                    || (code >= 0x0001EE80 && code <= 0x0001EE89)
-                    || (code >= 0x0001EE8B && code <= 0x0001EE9B)
-                    || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
-                    || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
-                    || (code >= 0x0001EEAB && code <= 0x0001EEBB)
-                    || (code >= 0x0001F100 && code <= 0x0001F10C)
-                    || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
-                    || (code == 0x00020000)
-                    || (code == 0x0002A6DF)
+            else if code < 0x00011BFF then
+                (code >= 0x00011918 && code <= 0x0001192F)
+                    || (code >= 0x000119A0 && code <= 0x000119A7)
+                    || (code >= 0x000119AA && code <= 0x000119D0)
+                    || (code == 0x00011A00)
+                    || (code >= 0x00011A0B && code <= 0x00011A32)
+                    || (code == 0x00011A3A)
+                    || (code == 0x00011A50)
+                    || (code >= 0x00011A5C && code <= 0x00011A89)
+                    || (code == 0x00011A9D)
+                    || (code >= 0x00011AB0 && code <= 0x00011AF8)
+                    || ((modBy 2 code == 1)
+                            && ((code >= 0x0001193F && code <= 0x00011941)
+                                    || (code >= 0x000119E1 && code <= 0x000119E3)
+                               )
+                       )
 
             else
-                (code == 0x0002A700)
-                    || (code == 0x0002B738)
-                    || (code == 0x0002B740)
-                    || (code == 0x0002B81D)
-                    || (code == 0x0002B820)
-                    || (code == 0x0002CEA1)
-                    || (code == 0x0002CEB0)
-                    || (code == 0x0002EBE0)
-                    || (code >= 0x0002F800 && code <= 0x0002FA1D)
-                    || (code == 0x00030000)
-                    || (code == 0x0003134A)
-           )
+                (code >= 0x00011C00 && code <= 0x00011C08)
+                    || (code >= 0x00011C0A && code <= 0x00011C2E)
+                    || (code == 0x00011C40)
+                    || (code >= 0x00011C72 && code <= 0x00011C8F)
+                    || (code >= 0x00011D00 && code <= 0x00011D06)
+                    || (code >= 0x00011D08 && code <= 0x00011D09)
+                    || (code >= 0x00011D0B && code <= 0x00011D30)
+                    || (code == 0x00011D46)
+                    || (code >= 0x00011D60 && code <= 0x00011D65)
+                    || (code >= 0x00011D67 && code <= 0x00011D68)
+
+        else if code < 0x00016F4F then
+            if code < 0x000167FF then
+                (code >= 0x00011D6A && code <= 0x00011D89)
+                    || (code == 0x00011D98)
+                    || (code >= 0x00011EE0 && code <= 0x00011EF2)
+                    || (code == 0x00011FB0)
+                    || (code >= 0x00012000 && code <= 0x00012399)
+                    || (code >= 0x00012480 && code <= 0x00012543)
+                    || (code >= 0x00012F90 && code <= 0x00012FF0)
+                    || (code >= 0x00013000 && code <= 0x0001342E)
+                    || (code >= 0x00014400 && code <= 0x00014646)
+
+            else
+                (code >= 0x00016800 && code <= 0x00016A38)
+                    || (code >= 0x00016A40 && code <= 0x00016A5E)
+                    || (code >= 0x00016A70 && code <= 0x00016ABE)
+                    || (code >= 0x00016AD0 && code <= 0x00016AED)
+                    || (code >= 0x00016B00 && code <= 0x00016B2F)
+                    || (code >= 0x00016B40 && code <= 0x00016B43)
+                    || (code >= 0x00016B63 && code <= 0x00016B77)
+                    || (code >= 0x00016B7D && code <= 0x00016B8F)
+                    || (code >= 0x00016E40 && code <= 0x00016E7F)
+                    || (code >= 0x00016F00 && code <= 0x00016F4A)
+
+        else if code < 0x0001AFF4 then
+            (code == 0x00016F50)
+                || (code >= 0x00016F93 && code <= 0x00016F9F)
+                || (code >= 0x00016FE0 && code <= 0x00016FE1)
+                || (code == 0x00016FE3)
+                || (code == 0x00017000)
+                || (code == 0x000187F7)
+                || (code >= 0x00018800 && code <= 0x00018CD5)
+                || (code == 0x00018D00)
+                || (code == 0x00018D08)
+                || (code >= 0x0001AFF0 && code <= 0x0001AFF3)
+
+        else
+            (code >= 0x0001AFF5 && code <= 0x0001AFFB)
+                || (code >= 0x0001AFFD && code <= 0x0001AFFE)
+                || (code >= 0x0001B000 && code <= 0x0001B122)
+                || (code >= 0x0001B150 && code <= 0x0001B152)
+                || (code >= 0x0001B164 && code <= 0x0001B167)
+                || (code >= 0x0001B170 && code <= 0x0001B2FB)
+                || (code >= 0x0001BC00 && code <= 0x0001BC6A)
+                || (code >= 0x0001BC70 && code <= 0x0001BC7C)
+                || (code >= 0x0001BC80 && code <= 0x0001BC88)
+                || (code >= 0x0001BC90 && code <= 0x0001BC99)
+
+    else if code < 0x0001E7EF then
+        if code < 0x0001D6A7 then
+            if code < 0x0001D4C4 then
+                (code >= 0x0001D400 && code <= 0x0001D454)
+                    || (code >= 0x0001D456 && code <= 0x0001D49C)
+                    || (code >= 0x0001D49E && code <= 0x0001D49F)
+                    || (code == 0x0001D4A2)
+                    || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
+                    || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
+                    || (code >= 0x0001D4AE && code <= 0x0001D4B9)
+                    || (code == 0x0001D4BB)
+                    || (code >= 0x0001D4BD && code <= 0x0001D4C3)
+
+            else
+                (code >= 0x0001D4C5 && code <= 0x0001D505)
+                    || (code >= 0x0001D507 && code <= 0x0001D50A)
+                    || (code >= 0x0001D50D && code <= 0x0001D514)
+                    || (code >= 0x0001D516 && code <= 0x0001D51C)
+                    || (code >= 0x0001D51E && code <= 0x0001D539)
+                    || (code >= 0x0001D53B && code <= 0x0001D53E)
+                    || (code >= 0x0001D540 && code <= 0x0001D544)
+                    || (code == 0x0001D546)
+                    || (code >= 0x0001D54A && code <= 0x0001D550)
+                    || (code >= 0x0001D552 && code <= 0x0001D6A5)
+
+        else if code < 0x0001D7C3 then
+            (code >= 0x0001D6A8 && code <= 0x0001D6C0)
+                || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
+                || (code >= 0x0001D6DC && code <= 0x0001D6FA)
+                || (code >= 0x0001D6FC && code <= 0x0001D714)
+                || (code >= 0x0001D716 && code <= 0x0001D734)
+                || (code >= 0x0001D736 && code <= 0x0001D74E)
+                || (code >= 0x0001D750 && code <= 0x0001D76E)
+                || (code >= 0x0001D770 && code <= 0x0001D788)
+                || (code >= 0x0001D78A && code <= 0x0001D7A8)
+                || (code >= 0x0001D7AA && code <= 0x0001D7C2)
+
+        else
+            (code >= 0x0001D7C4 && code <= 0x0001D7CB)
+                || (code >= 0x0001DF00 && code <= 0x0001DF1E)
+                || (code >= 0x0001E100 && code <= 0x0001E12C)
+                || (code >= 0x0001E137 && code <= 0x0001E13D)
+                || (code == 0x0001E14E)
+                || (code >= 0x0001E290 && code <= 0x0001E2AD)
+                || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
+                || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
+                || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
+                || (code >= 0x0001E7ED && code <= 0x0001E7EE)
+
+    else if code < 0x0001EE78 then
+        if code < 0x0001EE33 then
+            (code >= 0x0001E7F0 && code <= 0x0001E7FE)
+                || (code >= 0x0001E800 && code <= 0x0001E8C4)
+                || (code >= 0x0001E900 && code <= 0x0001E943)
+                || (code == 0x0001E94B)
+                || (code >= 0x0001EE00 && code <= 0x0001EE03)
+                || (code >= 0x0001EE05 && code <= 0x0001EE1F)
+                || (code >= 0x0001EE21 && code <= 0x0001EE22)
+                || (code == 0x0001EE24)
+                || (code == 0x0001EE27)
+                || (code >= 0x0001EE29 && code <= 0x0001EE32)
+
+        else
+            (code >= 0x0001EE34 && code <= 0x0001EE37)
+                || (code == 0x0001EE42)
+                || (code >= 0x0001EE4D && code <= 0x0001EE4F)
+                || (code >= 0x0001EE51 && code <= 0x0001EE52)
+                || (code == 0x0001EE54)
+                || (code >= 0x0001EE61 && code <= 0x0001EE62)
+                || (code == 0x0001EE64)
+                || (code >= 0x0001EE67 && code <= 0x0001EE6A)
+                || (code >= 0x0001EE6C && code <= 0x0001EE72)
+                || (code >= 0x0001EE74 && code <= 0x0001EE77)
+                || ((modBy 2 code == 1)
+                        && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
+                                || (code >= 0x0001EE47 && code <= 0x0001EE4B)
+                                || (code >= 0x0001EE57 && code <= 0x0001EE5F)
+                           )
+                   )
+
+    else if code < 0x0002B737 then
+        (code >= 0x0001EE79 && code <= 0x0001EE7C)
+            || (code == 0x0001EE7E)
+            || (code >= 0x0001EE80 && code <= 0x0001EE89)
+            || (code >= 0x0001EE8B && code <= 0x0001EE9B)
+            || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
+            || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
+            || (code >= 0x0001EEAB && code <= 0x0001EEBB)
+            || (code == 0x00020000)
+            || (code == 0x0002A6DF)
+            || (code == 0x0002A700)
+
+    else
+        (code == 0x0002B738)
+            || (code == 0x0002B740)
+            || (code == 0x0002B81D)
+            || (code == 0x0002B820)
+            || (code == 0x0002CEA1)
+            || (code == 0x0002CEB0)
+            || (code == 0x0002EBE0)
+            || (code >= 0x0002F800 && code <= 0x0002FA1D)
+            || (code == 0x00030000)
+            || (code == 0x0003134A)
 
 
 {-| Detect digits (Unicode categories Nd, Nl, No)
@@ -2074,6 +1227,927 @@ isDigit c =
             || (code >= 0x0001ED2F && code <= 0x0001ED3D)
             || (code >= 0x0001F100 && code <= 0x0001F10C)
             || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
+
+
+{-| Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)
+-}
+isAlphaNum : Char -> Bool
+isAlphaNum c =
+    let
+        code =
+            Char.toCode c
+    in
+    if code < 0x0100 then
+        (code >= 0x30 && code <= 0x39)
+            || (code >= 0x41 && code <= 0x5A)
+            || (code >= 0x61 && code <= 0x7A)
+            || (code == 0xAA)
+            || (code >= 0xB2 && code <= 0xB3)
+            || (code == 0xB5)
+            || (code >= 0xB9 && code <= 0xBA)
+            || (code >= 0xBC && code <= 0xBE)
+            || (code >= 0xC0 && code <= 0xD6)
+            || (code >= 0xD8 && code <= 0xF6)
+            || (code >= 0xF8 && code <= 0xFF)
+
+    else if code < 0xAA5F then
+        if code < 0x10CF then
+            if code < 0x0B31 then
+                if code < 0x093C then
+                    if code < 0x0670 then
+                        if code < 0x03A2 then
+                            (code >= 0x0100 && code <= 0x02C1)
+                                || (code >= 0x02C6 && code <= 0x02D1)
+                                || (code >= 0x02E0 && code <= 0x02E4)
+                                || (code >= 0x0370 && code <= 0x0374)
+                                || (code >= 0x0376 && code <= 0x0377)
+                                || (code >= 0x037A && code <= 0x037D)
+                                || (code == 0x037F)
+                                || (code == 0x0386)
+                                || (code >= 0x0388 && code <= 0x038A)
+                                || (code == 0x038C)
+                                || (code >= 0x038E && code <= 0x03A1)
+                                || ((modBy 2 code == 0)
+                                        && (code >= 0x02EC && code <= 0x02EE)
+                                   )
+
+                        else
+                            (code >= 0x03A3 && code <= 0x03F5)
+                                || (code >= 0x03F7 && code <= 0x0481)
+                                || (code >= 0x048A && code <= 0x052F)
+                                || (code >= 0x0531 && code <= 0x0556)
+                                || (code == 0x0559)
+                                || (code >= 0x0560 && code <= 0x0588)
+                                || (code >= 0x05D0 && code <= 0x05EA)
+                                || (code >= 0x05EF && code <= 0x05F2)
+                                || (code >= 0x0620 && code <= 0x064A)
+                                || (code >= 0x0660 && code <= 0x0669)
+                                || (code >= 0x066E && code <= 0x066F)
+
+                    else if code < 0x07F9 then
+                        (code >= 0x0671 && code <= 0x06D3)
+                            || (code == 0x06D5)
+                            || (code >= 0x06E5 && code <= 0x06E6)
+                            || (code >= 0x06EE && code <= 0x06FC)
+                            || (code == 0x06FF)
+                            || (code == 0x0710)
+                            || (code >= 0x0712 && code <= 0x072F)
+                            || (code >= 0x074D && code <= 0x07A5)
+                            || (code == 0x07B1)
+                            || (code >= 0x07C0 && code <= 0x07EA)
+                            || (code >= 0x07F4 && code <= 0x07F5)
+
+                    else
+                        (code == 0x07FA)
+                            || (code >= 0x0800 && code <= 0x0815)
+                            || (code == 0x081A)
+                            || (code == 0x0824)
+                            || (code == 0x0828)
+                            || (code >= 0x0840 && code <= 0x0858)
+                            || (code >= 0x0860 && code <= 0x086A)
+                            || (code >= 0x0870 && code <= 0x0887)
+                            || (code >= 0x0889 && code <= 0x088E)
+                            || (code >= 0x08A0 && code <= 0x08C9)
+                            || (code >= 0x0904 && code <= 0x0939)
+
+                else if code < 0x0A31 then
+                    if code < 0x09BC then
+                        (code == 0x093D)
+                            || (code == 0x0950)
+                            || (code >= 0x0958 && code <= 0x0961)
+                            || (code >= 0x0966 && code <= 0x096F)
+                            || (code >= 0x0971 && code <= 0x0980)
+                            || (code >= 0x0985 && code <= 0x098C)
+                            || (code >= 0x098F && code <= 0x0990)
+                            || (code >= 0x0993 && code <= 0x09A8)
+                            || (code >= 0x09AA && code <= 0x09B0)
+                            || (code == 0x09B2)
+                            || (code >= 0x09B6 && code <= 0x09B9)
+
+                    else
+                        (code == 0x09BD)
+                            || (code == 0x09CE)
+                            || (code >= 0x09DC && code <= 0x09DD)
+                            || (code >= 0x09DF && code <= 0x09E1)
+                            || (code >= 0x09E6 && code <= 0x09F1)
+                            || (code >= 0x09F4 && code <= 0x09F9)
+                            || (code == 0x09FC)
+                            || (code >= 0x0A05 && code <= 0x0A0A)
+                            || (code >= 0x0A0F && code <= 0x0A10)
+                            || (code >= 0x0A13 && code <= 0x0A28)
+                            || (code >= 0x0A2A && code <= 0x0A30)
+
+                else if code < 0x0AB1 then
+                    (code >= 0x0A32 && code <= 0x0A33)
+                        || (code >= 0x0A35 && code <= 0x0A36)
+                        || (code >= 0x0A38 && code <= 0x0A39)
+                        || (code >= 0x0A59 && code <= 0x0A5C)
+                        || (code == 0x0A5E)
+                        || (code >= 0x0A66 && code <= 0x0A6F)
+                        || (code >= 0x0A72 && code <= 0x0A74)
+                        || (code >= 0x0A85 && code <= 0x0A8D)
+                        || (code >= 0x0A8F && code <= 0x0A91)
+                        || (code >= 0x0A93 && code <= 0x0AA8)
+                        || (code >= 0x0AAA && code <= 0x0AB0)
+
+                else
+                    (code >= 0x0AB2 && code <= 0x0AB3)
+                        || (code >= 0x0AB5 && code <= 0x0AB9)
+                        || (code == 0x0ABD)
+                        || (code == 0x0AD0)
+                        || (code >= 0x0AE0 && code <= 0x0AE1)
+                        || (code >= 0x0AE6 && code <= 0x0AEF)
+                        || (code == 0x0AF9)
+                        || (code >= 0x0B05 && code <= 0x0B0C)
+                        || (code >= 0x0B0F && code <= 0x0B10)
+                        || (code >= 0x0B13 && code <= 0x0B28)
+                        || (code >= 0x0B2A && code <= 0x0B30)
+
+            else if code < 0x0D4D then
+                if code < 0x0C29 then
+                    if code < 0x0B98 then
+                        (code >= 0x0B32 && code <= 0x0B33)
+                            || (code >= 0x0B35 && code <= 0x0B39)
+                            || (code == 0x0B3D)
+                            || (code >= 0x0B5C && code <= 0x0B5D)
+                            || (code >= 0x0B5F && code <= 0x0B61)
+                            || (code >= 0x0B66 && code <= 0x0B6F)
+                            || (code >= 0x0B71 && code <= 0x0B77)
+                            || (code == 0x0B83)
+                            || (code >= 0x0B85 && code <= 0x0B8A)
+                            || (code >= 0x0B8E && code <= 0x0B90)
+                            || (code >= 0x0B92 && code <= 0x0B95)
+
+                    else
+                        (code >= 0x0B99 && code <= 0x0B9A)
+                            || (code == 0x0B9C)
+                            || (code >= 0x0B9E && code <= 0x0B9F)
+                            || (code >= 0x0BA3 && code <= 0x0BA4)
+                            || (code >= 0x0BA8 && code <= 0x0BAA)
+                            || (code >= 0x0BAE && code <= 0x0BB9)
+                            || (code == 0x0BD0)
+                            || (code >= 0x0BE6 && code <= 0x0BF2)
+                            || (code >= 0x0C05 && code <= 0x0C0C)
+                            || (code >= 0x0C0E && code <= 0x0C10)
+                            || (code >= 0x0C12 && code <= 0x0C28)
+
+                else if code < 0x0CA9 then
+                    (code >= 0x0C2A && code <= 0x0C39)
+                        || (code == 0x0C3D)
+                        || (code >= 0x0C58 && code <= 0x0C5A)
+                        || (code == 0x0C5D)
+                        || (code >= 0x0C60 && code <= 0x0C61)
+                        || (code >= 0x0C66 && code <= 0x0C6F)
+                        || (code >= 0x0C78 && code <= 0x0C7E)
+                        || (code == 0x0C80)
+                        || (code >= 0x0C85 && code <= 0x0C8C)
+                        || (code >= 0x0C8E && code <= 0x0C90)
+                        || (code >= 0x0C92 && code <= 0x0CA8)
+
+                else
+                    (code >= 0x0CAA && code <= 0x0CB3)
+                        || (code >= 0x0CB5 && code <= 0x0CB9)
+                        || (code == 0x0CBD)
+                        || (code >= 0x0CDD && code <= 0x0CDE)
+                        || (code >= 0x0CE0 && code <= 0x0CE1)
+                        || (code >= 0x0CE6 && code <= 0x0CEF)
+                        || (code >= 0x0CF1 && code <= 0x0CF2)
+                        || (code >= 0x0D04 && code <= 0x0D0C)
+                        || (code >= 0x0D0E && code <= 0x0D10)
+                        || (code >= 0x0D12 && code <= 0x0D3A)
+                        || (code == 0x0D3D)
+
+            else if code < 0x0EBC then
+                if code < 0x0E00 then
+                    (code == 0x0D4E)
+                        || (code >= 0x0D54 && code <= 0x0D56)
+                        || (code >= 0x0D58 && code <= 0x0D61)
+                        || (code >= 0x0D66 && code <= 0x0D78)
+                        || (code >= 0x0D7A && code <= 0x0D7F)
+                        || (code >= 0x0D85 && code <= 0x0D96)
+                        || (code >= 0x0D9A && code <= 0x0DB1)
+                        || (code >= 0x0DB3 && code <= 0x0DBB)
+                        || (code == 0x0DBD)
+                        || (code >= 0x0DC0 && code <= 0x0DC6)
+                        || (code >= 0x0DE6 && code <= 0x0DEF)
+
+                else
+                    (code >= 0x0E01 && code <= 0x0E30)
+                        || (code >= 0x0E32 && code <= 0x0E33)
+                        || (code >= 0x0E40 && code <= 0x0E46)
+                        || (code >= 0x0E50 && code <= 0x0E59)
+                        || (code >= 0x0E81 && code <= 0x0E82)
+                        || (code == 0x0E84)
+                        || (code >= 0x0E86 && code <= 0x0E8A)
+                        || (code >= 0x0E8C && code <= 0x0EA3)
+                        || (code == 0x0EA5)
+                        || (code >= 0x0EA7 && code <= 0x0EB0)
+                        || (code >= 0x0EB2 && code <= 0x0EB3)
+
+            else if code < 0x103E then
+                (code == 0x0EBD)
+                    || (code >= 0x0EC0 && code <= 0x0EC4)
+                    || (code == 0x0EC6)
+                    || (code >= 0x0ED0 && code <= 0x0ED9)
+                    || (code >= 0x0EDC && code <= 0x0EDF)
+                    || (code == 0x0F00)
+                    || (code >= 0x0F20 && code <= 0x0F33)
+                    || (code >= 0x0F40 && code <= 0x0F47)
+                    || (code >= 0x0F49 && code <= 0x0F6C)
+                    || (code >= 0x0F88 && code <= 0x0F8C)
+                    || (code >= 0x1000 && code <= 0x102A)
+
+            else
+                (code >= 0x103F && code <= 0x1049)
+                    || (code >= 0x1050 && code <= 0x1055)
+                    || (code >= 0x105A && code <= 0x105D)
+                    || (code == 0x1061)
+                    || (code >= 0x1065 && code <= 0x1066)
+                    || (code >= 0x106E && code <= 0x1070)
+                    || (code >= 0x1075 && code <= 0x1081)
+                    || (code == 0x108E)
+                    || (code >= 0x1090 && code <= 0x1099)
+                    || (code >= 0x10A0 && code <= 0x10C5)
+                    || (code == 0x10C7)
+                    || (code == 0x10CD)
+
+        else if code < 0x208F then
+            if code < 0x196F then
+                if code < 0x166E then
+                    if code < 0x12BF then
+                        (code >= 0x10D0 && code <= 0x10FA)
+                            || (code >= 0x10FC && code <= 0x1248)
+                            || (code >= 0x124A && code <= 0x124D)
+                            || (code >= 0x1250 && code <= 0x1256)
+                            || (code == 0x1258)
+                            || (code >= 0x125A && code <= 0x125D)
+                            || (code >= 0x1260 && code <= 0x1288)
+                            || (code >= 0x128A && code <= 0x128D)
+                            || (code >= 0x1290 && code <= 0x12B0)
+                            || (code >= 0x12B2 && code <= 0x12B5)
+                            || (code >= 0x12B8 && code <= 0x12BE)
+
+                    else
+                        (code == 0x12C0)
+                            || (code >= 0x12C2 && code <= 0x12C5)
+                            || (code >= 0x12C8 && code <= 0x12D6)
+                            || (code >= 0x12D8 && code <= 0x1310)
+                            || (code >= 0x1312 && code <= 0x1315)
+                            || (code >= 0x1318 && code <= 0x135A)
+                            || (code >= 0x1369 && code <= 0x137C)
+                            || (code >= 0x1380 && code <= 0x138F)
+                            || (code >= 0x13A0 && code <= 0x13F5)
+                            || (code >= 0x13F8 && code <= 0x13FD)
+                            || (code >= 0x1401 && code <= 0x166C)
+
+                else if code < 0x17DB then
+                    (code >= 0x166F && code <= 0x167F)
+                        || (code >= 0x1681 && code <= 0x169A)
+                        || (code >= 0x16A0 && code <= 0x16EA)
+                        || (code >= 0x16EE && code <= 0x16F8)
+                        || (code >= 0x1700 && code <= 0x1711)
+                        || (code >= 0x171F && code <= 0x1731)
+                        || (code >= 0x1740 && code <= 0x1751)
+                        || (code >= 0x1760 && code <= 0x176C)
+                        || (code >= 0x176E && code <= 0x1770)
+                        || (code >= 0x1780 && code <= 0x17B3)
+                        || (code == 0x17D7)
+
+                else
+                    (code == 0x17DC)
+                        || (code >= 0x17E0 && code <= 0x17E9)
+                        || (code >= 0x17F0 && code <= 0x17F9)
+                        || (code >= 0x1810 && code <= 0x1819)
+                        || (code >= 0x1820 && code <= 0x1878)
+                        || (code >= 0x1880 && code <= 0x1884)
+                        || (code >= 0x1887 && code <= 0x18A8)
+                        || (code == 0x18AA)
+                        || (code >= 0x18B0 && code <= 0x18F5)
+                        || (code >= 0x1900 && code <= 0x191E)
+                        || (code >= 0x1946 && code <= 0x196D)
+
+            else if code < 0x1CF4 then
+                if code < 0x1B4F then
+                    (code >= 0x1970 && code <= 0x1974)
+                        || (code >= 0x1980 && code <= 0x19AB)
+                        || (code >= 0x19B0 && code <= 0x19C9)
+                        || (code >= 0x19D0 && code <= 0x19DA)
+                        || (code >= 0x1A00 && code <= 0x1A16)
+                        || (code >= 0x1A20 && code <= 0x1A54)
+                        || (code >= 0x1A80 && code <= 0x1A89)
+                        || (code >= 0x1A90 && code <= 0x1A99)
+                        || (code == 0x1AA7)
+                        || (code >= 0x1B05 && code <= 0x1B33)
+                        || (code >= 0x1B45 && code <= 0x1B4C)
+
+                else
+                    (code >= 0x1B50 && code <= 0x1B59)
+                        || (code >= 0x1B83 && code <= 0x1BA0)
+                        || (code >= 0x1BAE && code <= 0x1BE5)
+                        || (code >= 0x1C00 && code <= 0x1C23)
+                        || (code >= 0x1C40 && code <= 0x1C49)
+                        || (code >= 0x1C4D && code <= 0x1C7D)
+                        || (code >= 0x1C80 && code <= 0x1C88)
+                        || (code >= 0x1C90 && code <= 0x1CBA)
+                        || (code >= 0x1CBD && code <= 0x1CBF)
+                        || (code >= 0x1CE9 && code <= 0x1CEC)
+                        || (code >= 0x1CEE && code <= 0x1CF3)
+
+            else if code < 0x1FBD then
+                (code >= 0x1CF5 && code <= 0x1CF6)
+                    || (code == 0x1CFA)
+                    || (code >= 0x1D00 && code <= 0x1DBF)
+                    || (code >= 0x1E00 && code <= 0x1F15)
+                    || (code >= 0x1F18 && code <= 0x1F1D)
+                    || (code >= 0x1F20 && code <= 0x1F45)
+                    || (code >= 0x1F48 && code <= 0x1F4D)
+                    || (code >= 0x1F50 && code <= 0x1F57)
+                    || (code >= 0x1F60 && code <= 0x1F7D)
+                    || (code >= 0x1F80 && code <= 0x1FB4)
+                    || (code >= 0x1FB6 && code <= 0x1FBC)
+                    || ((modBy 2 code == 1)
+                            && (code >= 0x1F59 && code <= 0x1F5F)
+                       )
+
+            else
+                (code == 0x1FBE)
+                    || (code >= 0x1FC2 && code <= 0x1FC4)
+                    || (code >= 0x1FC6 && code <= 0x1FCC)
+                    || (code >= 0x1FD0 && code <= 0x1FD3)
+                    || (code >= 0x1FD6 && code <= 0x1FDB)
+                    || (code >= 0x1FE0 && code <= 0x1FEC)
+                    || (code >= 0x1FF2 && code <= 0x1FF4)
+                    || (code >= 0x1FF6 && code <= 0x1FFC)
+                    || (code >= 0x2070 && code <= 0x2071)
+                    || (code >= 0x2074 && code <= 0x2079)
+                    || (code >= 0x207F && code <= 0x2089)
+
+        else if code < 0x3191 then
+            if code < 0x2D2F then
+                if code < 0x214F then
+                    (code >= 0x2090 && code <= 0x209C)
+                        || (code == 0x2102)
+                        || (code == 0x2107)
+                        || (code >= 0x210A && code <= 0x2113)
+                        || (code == 0x2115)
+                        || (code >= 0x2119 && code <= 0x211D)
+                        || (code >= 0x212A && code <= 0x212D)
+                        || (code >= 0x212F && code <= 0x2139)
+                        || (code >= 0x213C && code <= 0x213F)
+                        || (code >= 0x2145 && code <= 0x2149)
+                        || (code == 0x214E)
+                        || ((modBy 2 code == 0)
+                                && (code >= 0x2124 && code <= 0x2128)
+                           )
+
+                else
+                    (code >= 0x2150 && code <= 0x2189)
+                        || (code >= 0x2460 && code <= 0x249B)
+                        || (code >= 0x24EA && code <= 0x24FF)
+                        || (code >= 0x2776 && code <= 0x2793)
+                        || (code >= 0x2C00 && code <= 0x2CE4)
+                        || (code >= 0x2CEB && code <= 0x2CEE)
+                        || (code >= 0x2CF2 && code <= 0x2CF3)
+                        || (code == 0x2CFD)
+                        || (code >= 0x2D00 && code <= 0x2D25)
+                        || (code == 0x2D27)
+                        || (code == 0x2D2D)
+
+            else if code < 0x2E2E then
+                (code >= 0x2D30 && code <= 0x2D67)
+                    || (code == 0x2D6F)
+                    || (code >= 0x2D80 && code <= 0x2D96)
+                    || (code >= 0x2DA0 && code <= 0x2DA6)
+                    || (code >= 0x2DA8 && code <= 0x2DAE)
+                    || (code >= 0x2DB0 && code <= 0x2DB6)
+                    || (code >= 0x2DB8 && code <= 0x2DBE)
+                    || (code >= 0x2DC0 && code <= 0x2DC6)
+                    || (code >= 0x2DC8 && code <= 0x2DCE)
+                    || (code >= 0x2DD0 && code <= 0x2DD6)
+                    || (code >= 0x2DD8 && code <= 0x2DDE)
+
+            else
+                (code == 0x2E2F)
+                    || (code >= 0x3005 && code <= 0x3007)
+                    || (code >= 0x3021 && code <= 0x3029)
+                    || (code >= 0x3031 && code <= 0x3035)
+                    || (code >= 0x3038 && code <= 0x303C)
+                    || (code >= 0x3041 && code <= 0x3096)
+                    || (code >= 0x309D && code <= 0x309F)
+                    || (code >= 0x30A1 && code <= 0x30FA)
+                    || (code >= 0x30FC && code <= 0x30FF)
+                    || (code >= 0x3105 && code <= 0x312F)
+                    || (code >= 0x3131 && code <= 0x318E)
+
+        else if code < 0xA7D5 then
+            if code < 0x9FFE then
+                (code >= 0x3192 && code <= 0x3195)
+                    || (code >= 0x31A0 && code <= 0x31BF)
+                    || (code >= 0x31F0 && code <= 0x31FF)
+                    || (code >= 0x3220 && code <= 0x3229)
+                    || (code >= 0x3248 && code <= 0x324F)
+                    || (code >= 0x3251 && code <= 0x325F)
+                    || (code >= 0x3280 && code <= 0x3289)
+                    || (code >= 0x32B1 && code <= 0x32BF)
+                    || (code == 0x3400)
+                    || (code == 0x4DBF)
+                    || (code == 0x4E00)
+
+            else
+                (code >= 0x9FFF && code <= 0xA48C)
+                    || (code >= 0xA4D0 && code <= 0xA4FD)
+                    || (code >= 0xA500 && code <= 0xA60C)
+                    || (code >= 0xA610 && code <= 0xA62B)
+                    || (code >= 0xA640 && code <= 0xA66E)
+                    || (code >= 0xA67F && code <= 0xA69D)
+                    || (code >= 0xA6A0 && code <= 0xA6EF)
+                    || (code >= 0xA717 && code <= 0xA71F)
+                    || (code >= 0xA722 && code <= 0xA788)
+                    || (code >= 0xA78B && code <= 0xA7CA)
+                    || (code >= 0xA7D0 && code <= 0xA7D1)
+                    || ((modBy 2 code == 1)
+                            && (code >= 0xA7D3 && code <= 0xA7D4)
+                       )
+
+        else if code < 0xA8FC then
+            (code >= 0xA7D6 && code <= 0xA7D9)
+                || (code >= 0xA7F2 && code <= 0xA801)
+                || (code >= 0xA803 && code <= 0xA805)
+                || (code >= 0xA807 && code <= 0xA80A)
+                || (code >= 0xA80C && code <= 0xA822)
+                || (code >= 0xA830 && code <= 0xA835)
+                || (code >= 0xA840 && code <= 0xA873)
+                || (code >= 0xA882 && code <= 0xA8B3)
+                || (code >= 0xA8D0 && code <= 0xA8D9)
+                || (code >= 0xA8F2 && code <= 0xA8F7)
+                || (code == 0xA8FB)
+                || ((modBy 2 code == 1) && (code == 0xA7D5))
+
+        else
+            (code >= 0xA8FD && code <= 0xA8FE)
+                || (code >= 0xA900 && code <= 0xA925)
+                || (code >= 0xA930 && code <= 0xA946)
+                || (code >= 0xA960 && code <= 0xA97C)
+                || (code >= 0xA984 && code <= 0xA9B2)
+                || (code >= 0xA9CF && code <= 0xA9D9)
+                || (code >= 0xA9E0 && code <= 0xA9E4)
+                || (code >= 0xA9E6 && code <= 0xA9FE)
+                || (code >= 0xAA00 && code <= 0xAA28)
+                || (code >= 0xAA40 && code <= 0xAA42)
+                || (code >= 0xAA44 && code <= 0xAA4B)
+                || (code >= 0xAA50 && code <= 0xAA59)
+
+    else if code < 0x000115D7 then
+        if code < 0x000107FF then
+            if code < 0xFFC1 then
+                if code < 0xF8FF then
+                    if code < 0xAB10 then
+                        (code >= 0xAA60 && code <= 0xAA76)
+                            || (code == 0xAA7A)
+                            || (code >= 0xAA7E && code <= 0xAAAF)
+                            || (code == 0xAAB1)
+                            || (code >= 0xAAB5 && code <= 0xAAB6)
+                            || (code >= 0xAAB9 && code <= 0xAABD)
+                            || (code >= 0xAADB && code <= 0xAADD)
+                            || (code >= 0xAAE0 && code <= 0xAAEA)
+                            || (code >= 0xAAF2 && code <= 0xAAF4)
+                            || (code >= 0xAB01 && code <= 0xAB06)
+                            || (code >= 0xAB09 && code <= 0xAB0E)
+                            || ((modBy 2 code == 0)
+                                    && (code >= 0xAAC0 && code <= 0xAAC2)
+                               )
+
+                    else
+                        (code >= 0xAB11 && code <= 0xAB16)
+                            || (code >= 0xAB20 && code <= 0xAB26)
+                            || (code >= 0xAB28 && code <= 0xAB2E)
+                            || (code >= 0xAB30 && code <= 0xAB5A)
+                            || (code >= 0xAB5C && code <= 0xAB69)
+                            || (code >= 0xAB70 && code <= 0xABE2)
+                            || (code >= 0xABF0 && code <= 0xABF9)
+                            || (code == 0xAC00)
+                            || (code == 0xD7A3)
+                            || (code >= 0xD7B0 && code <= 0xD7C6)
+                            || (code >= 0xD7CB && code <= 0xD7FB)
+
+                else if code < 0xFB45 then
+                    (code >= 0xF900 && code <= 0xFA6D)
+                        || (code >= 0xFA70 && code <= 0xFAD9)
+                        || (code >= 0xFB00 && code <= 0xFB06)
+                        || (code >= 0xFB13 && code <= 0xFB17)
+                        || (code == 0xFB1D)
+                        || (code >= 0xFB1F && code <= 0xFB28)
+                        || (code >= 0xFB2A && code <= 0xFB36)
+                        || (code >= 0xFB38 && code <= 0xFB3C)
+                        || (code == 0xFB3E)
+                        || (code >= 0xFB40 && code <= 0xFB41)
+                        || (code >= 0xFB43 && code <= 0xFB44)
+
+                else
+                    (code >= 0xFB46 && code <= 0xFBB1)
+                        || (code >= 0xFBD3 && code <= 0xFD3D)
+                        || (code >= 0xFD50 && code <= 0xFD8F)
+                        || (code >= 0xFD92 && code <= 0xFDC7)
+                        || (code >= 0xFDF0 && code <= 0xFDFB)
+                        || (code >= 0xFE70 && code <= 0xFE74)
+                        || (code >= 0xFE76 && code <= 0xFEFC)
+                        || (code >= 0xFF10 && code <= 0xFF19)
+                        || (code >= 0xFF21 && code <= 0xFF3A)
+                        || (code >= 0xFF41 && code <= 0xFF5A)
+                        || (code >= 0xFF66 && code <= 0xFFBE)
+
+            else if code < 0x000103C7 then
+                if code < 0x00010106 then
+                    (code >= 0xFFC2 && code <= 0xFFC7)
+                        || (code >= 0xFFCA && code <= 0xFFCF)
+                        || (code >= 0xFFD2 && code <= 0xFFD7)
+                        || (code >= 0xFFDA && code <= 0xFFDC)
+                        || (code >= 0x00010000 && code <= 0x0001000B)
+                        || (code >= 0x0001000D && code <= 0x00010026)
+                        || (code >= 0x00010028 && code <= 0x0001003A)
+                        || (code >= 0x0001003C && code <= 0x0001003D)
+                        || (code >= 0x0001003F && code <= 0x0001004D)
+                        || (code >= 0x00010050 && code <= 0x0001005D)
+                        || (code >= 0x00010080 && code <= 0x000100FA)
+
+                else
+                    (code >= 0x00010107 && code <= 0x00010133)
+                        || (code >= 0x00010140 && code <= 0x00010178)
+                        || (code >= 0x0001018A && code <= 0x0001018B)
+                        || (code >= 0x00010280 && code <= 0x0001029C)
+                        || (code >= 0x000102A0 && code <= 0x000102D0)
+                        || (code >= 0x000102E1 && code <= 0x000102FB)
+                        || (code >= 0x00010300 && code <= 0x00010323)
+                        || (code >= 0x0001032D && code <= 0x0001034A)
+                        || (code >= 0x00010350 && code <= 0x00010375)
+                        || (code >= 0x00010380 && code <= 0x0001039D)
+                        || (code >= 0x000103A0 && code <= 0x000103C3)
+
+            else if code < 0x00010593 then
+                (code >= 0x000103C8 && code <= 0x000103CF)
+                    || (code >= 0x000103D1 && code <= 0x000103D5)
+                    || (code >= 0x00010400 && code <= 0x0001049D)
+                    || (code >= 0x000104A0 && code <= 0x000104A9)
+                    || (code >= 0x000104B0 && code <= 0x000104D3)
+                    || (code >= 0x000104D8 && code <= 0x000104FB)
+                    || (code >= 0x00010500 && code <= 0x00010527)
+                    || (code >= 0x00010530 && code <= 0x00010563)
+                    || (code >= 0x00010570 && code <= 0x0001057A)
+                    || (code >= 0x0001057C && code <= 0x0001058A)
+                    || (code >= 0x0001058C && code <= 0x00010592)
+
+            else
+                (code >= 0x00010594 && code <= 0x00010595)
+                    || (code >= 0x00010597 && code <= 0x000105A1)
+                    || (code >= 0x000105A3 && code <= 0x000105B1)
+                    || (code >= 0x000105B3 && code <= 0x000105B9)
+                    || (code >= 0x000105BB && code <= 0x000105BC)
+                    || (code >= 0x00010600 && code <= 0x00010736)
+                    || (code >= 0x00010740 && code <= 0x00010755)
+                    || (code >= 0x00010760 && code <= 0x00010767)
+                    || (code >= 0x00010780 && code <= 0x00010785)
+                    || (code >= 0x00010787 && code <= 0x000107B0)
+                    || (code >= 0x000107B2 && code <= 0x000107BA)
+
+        else if code < 0x00011002 then
+            if code < 0x00010ABF then
+                if code < 0x000108FA then
+                    (code >= 0x00010800 && code <= 0x00010805)
+                        || (code == 0x00010808)
+                        || (code >= 0x0001080A && code <= 0x00010835)
+                        || (code >= 0x00010837 && code <= 0x00010838)
+                        || (code == 0x0001083C)
+                        || (code >= 0x0001083F && code <= 0x00010855)
+                        || (code >= 0x00010858 && code <= 0x00010876)
+                        || (code >= 0x00010879 && code <= 0x0001089E)
+                        || (code >= 0x000108A7 && code <= 0x000108AF)
+                        || (code >= 0x000108E0 && code <= 0x000108F2)
+                        || (code >= 0x000108F4 && code <= 0x000108F5)
+
+                else
+                    (code >= 0x000108FB && code <= 0x0001091B)
+                        || (code >= 0x00010920 && code <= 0x00010939)
+                        || (code >= 0x00010980 && code <= 0x000109B7)
+                        || (code >= 0x000109BC && code <= 0x000109CF)
+                        || (code >= 0x000109D2 && code <= 0x00010A00)
+                        || (code >= 0x00010A10 && code <= 0x00010A13)
+                        || (code >= 0x00010A15 && code <= 0x00010A17)
+                        || (code >= 0x00010A19 && code <= 0x00010A35)
+                        || (code >= 0x00010A40 && code <= 0x00010A48)
+                        || (code >= 0x00010A60 && code <= 0x00010A7E)
+                        || (code >= 0x00010A80 && code <= 0x00010A9F)
+
+            else if code < 0x00010CF9 then
+                (code >= 0x00010AC0 && code <= 0x00010AC7)
+                    || (code >= 0x00010AC9 && code <= 0x00010AE4)
+                    || (code >= 0x00010AEB && code <= 0x00010AEF)
+                    || (code >= 0x00010B00 && code <= 0x00010B35)
+                    || (code >= 0x00010B40 && code <= 0x00010B55)
+                    || (code >= 0x00010B58 && code <= 0x00010B72)
+                    || (code >= 0x00010B78 && code <= 0x00010B91)
+                    || (code >= 0x00010BA9 && code <= 0x00010BAF)
+                    || (code >= 0x00010C00 && code <= 0x00010C48)
+                    || (code >= 0x00010C80 && code <= 0x00010CB2)
+                    || (code >= 0x00010CC0 && code <= 0x00010CF2)
+
+            else
+                (code >= 0x00010CFA && code <= 0x00010D23)
+                    || (code >= 0x00010D30 && code <= 0x00010D39)
+                    || (code >= 0x00010E60 && code <= 0x00010E7E)
+                    || (code >= 0x00010E80 && code <= 0x00010EA9)
+                    || (code >= 0x00010EB0 && code <= 0x00010EB1)
+                    || (code >= 0x00010F00 && code <= 0x00010F27)
+                    || (code >= 0x00010F30 && code <= 0x00010F45)
+                    || (code >= 0x00010F51 && code <= 0x00010F54)
+                    || (code >= 0x00010F70 && code <= 0x00010F81)
+                    || (code >= 0x00010FB0 && code <= 0x00010FCB)
+                    || (code >= 0x00010FE0 && code <= 0x00010FF6)
+
+        else if code < 0x00011289 then
+            if code < 0x0001114F then
+                (code >= 0x00011003 && code <= 0x00011037)
+                    || (code >= 0x00011052 && code <= 0x0001106F)
+                    || (code >= 0x00011071 && code <= 0x00011072)
+                    || (code == 0x00011075)
+                    || (code >= 0x00011083 && code <= 0x000110AF)
+                    || (code >= 0x000110D0 && code <= 0x000110E8)
+                    || (code >= 0x000110F0 && code <= 0x000110F9)
+                    || (code >= 0x00011103 && code <= 0x00011126)
+                    || (code >= 0x00011136 && code <= 0x0001113F)
+                    || (code == 0x00011144)
+                    || (code == 0x00011147)
+
+            else
+                (code >= 0x00011150 && code <= 0x00011172)
+                    || (code == 0x00011176)
+                    || (code >= 0x00011183 && code <= 0x000111B2)
+                    || (code >= 0x000111C1 && code <= 0x000111C4)
+                    || (code >= 0x000111D0 && code <= 0x000111DA)
+                    || (code == 0x000111DC)
+                    || (code >= 0x000111E1 && code <= 0x000111F4)
+                    || (code >= 0x00011200 && code <= 0x00011211)
+                    || (code >= 0x00011213 && code <= 0x0001122B)
+                    || (code >= 0x00011280 && code <= 0x00011286)
+                    || (code == 0x00011288)
+
+        else if code < 0x0001133C then
+            (code >= 0x0001128A && code <= 0x0001128D)
+                || (code >= 0x0001128F && code <= 0x0001129D)
+                || (code >= 0x0001129F && code <= 0x000112A8)
+                || (code >= 0x000112B0 && code <= 0x000112DE)
+                || (code >= 0x000112F0 && code <= 0x000112F9)
+                || (code >= 0x00011305 && code <= 0x0001130C)
+                || (code >= 0x0001130F && code <= 0x00011310)
+                || (code >= 0x00011313 && code <= 0x00011328)
+                || (code >= 0x0001132A && code <= 0x00011330)
+                || (code >= 0x00011332 && code <= 0x00011333)
+                || (code >= 0x00011335 && code <= 0x00011339)
+
+        else
+            (code == 0x0001133D)
+                || (code == 0x00011350)
+                || (code >= 0x0001135D && code <= 0x00011361)
+                || (code >= 0x00011400 && code <= 0x00011434)
+                || (code >= 0x00011447 && code <= 0x0001144A)
+                || (code >= 0x00011450 && code <= 0x00011459)
+                || (code >= 0x0001145F && code <= 0x00011461)
+                || (code >= 0x00011480 && code <= 0x000114AF)
+                || (code >= 0x000114C4 && code <= 0x000114C5)
+                || (code == 0x000114C7)
+                || (code >= 0x000114D0 && code <= 0x000114D9)
+                || (code >= 0x00011580 && code <= 0x000115AE)
+
+    else if code < 0x0001D49D then
+        if code < 0x00011FBF then
+            if code < 0x00011A39 then
+                if code < 0x0001189F then
+                    (code >= 0x000115D8 && code <= 0x000115DB)
+                        || (code >= 0x00011600 && code <= 0x0001162F)
+                        || (code == 0x00011644)
+                        || (code >= 0x00011650 && code <= 0x00011659)
+                        || (code >= 0x00011680 && code <= 0x000116AA)
+                        || (code == 0x000116B8)
+                        || (code >= 0x000116C0 && code <= 0x000116C9)
+                        || (code >= 0x00011700 && code <= 0x0001171A)
+                        || (code >= 0x00011730 && code <= 0x0001173B)
+                        || (code >= 0x00011740 && code <= 0x00011746)
+                        || (code >= 0x00011800 && code <= 0x0001182B)
+
+                else
+                    (code >= 0x000118A0 && code <= 0x000118F2)
+                        || (code >= 0x000118FF && code <= 0x00011906)
+                        || (code == 0x00011909)
+                        || (code >= 0x0001190C && code <= 0x00011913)
+                        || (code >= 0x00011915 && code <= 0x00011916)
+                        || (code >= 0x00011918 && code <= 0x0001192F)
+                        || (code >= 0x00011950 && code <= 0x00011959)
+                        || (code >= 0x000119A0 && code <= 0x000119A7)
+                        || (code >= 0x000119AA && code <= 0x000119D0)
+                        || (code == 0x00011A00)
+                        || (code >= 0x00011A0B && code <= 0x00011A32)
+                        || ((modBy 2 code == 1)
+                                && ((code >= 0x0001193F && code <= 0x00011941)
+                                        || (code
+                                                >= 0x000119E1
+                                                && code
+                                                <= 0x000119E3
+                                           )
+                                   )
+                           )
+
+            else if code < 0x00011D07 then
+                (code == 0x00011A3A)
+                    || (code == 0x00011A50)
+                    || (code >= 0x00011A5C && code <= 0x00011A89)
+                    || (code == 0x00011A9D)
+                    || (code >= 0x00011AB0 && code <= 0x00011AF8)
+                    || (code >= 0x00011C00 && code <= 0x00011C08)
+                    || (code >= 0x00011C0A && code <= 0x00011C2E)
+                    || (code == 0x00011C40)
+                    || (code >= 0x00011C50 && code <= 0x00011C6C)
+                    || (code >= 0x00011C72 && code <= 0x00011C8F)
+                    || (code >= 0x00011D00 && code <= 0x00011D06)
+
+            else
+                (code >= 0x00011D08 && code <= 0x00011D09)
+                    || (code >= 0x00011D0B && code <= 0x00011D30)
+                    || (code == 0x00011D46)
+                    || (code >= 0x00011D50 && code <= 0x00011D59)
+                    || (code >= 0x00011D60 && code <= 0x00011D65)
+                    || (code >= 0x00011D67 && code <= 0x00011D68)
+                    || (code >= 0x00011D6A && code <= 0x00011D89)
+                    || (code == 0x00011D98)
+                    || (code >= 0x00011DA0 && code <= 0x00011DA9)
+                    || (code >= 0x00011EE0 && code <= 0x00011EF2)
+                    || (code == 0x00011FB0)
+
+        else if code < 0x00016F92 then
+            if code < 0x00016ABF then
+                (code >= 0x00011FC0 && code <= 0x00011FD4)
+                    || (code >= 0x00012000 && code <= 0x00012399)
+                    || (code >= 0x00012400 && code <= 0x0001246E)
+                    || (code >= 0x00012480 && code <= 0x00012543)
+                    || (code >= 0x00012F90 && code <= 0x00012FF0)
+                    || (code >= 0x00013000 && code <= 0x0001342E)
+                    || (code >= 0x00014400 && code <= 0x00014646)
+                    || (code >= 0x00016800 && code <= 0x00016A38)
+                    || (code >= 0x00016A40 && code <= 0x00016A5E)
+                    || (code >= 0x00016A60 && code <= 0x00016A69)
+                    || (code >= 0x00016A70 && code <= 0x00016ABE)
+
+            else
+                (code >= 0x00016AC0 && code <= 0x00016AC9)
+                    || (code >= 0x00016AD0 && code <= 0x00016AED)
+                    || (code >= 0x00016B00 && code <= 0x00016B2F)
+                    || (code >= 0x00016B40 && code <= 0x00016B43)
+                    || (code >= 0x00016B50 && code <= 0x00016B59)
+                    || (code >= 0x00016B5B && code <= 0x00016B61)
+                    || (code >= 0x00016B63 && code <= 0x00016B77)
+                    || (code >= 0x00016B7D && code <= 0x00016B8F)
+                    || (code >= 0x00016E40 && code <= 0x00016E96)
+                    || (code >= 0x00016F00 && code <= 0x00016F4A)
+                    || (code == 0x00016F50)
+
+        else if code < 0x0001AFFF then
+            (code >= 0x00016F93 && code <= 0x00016F9F)
+                || (code >= 0x00016FE0 && code <= 0x00016FE1)
+                || (code == 0x00016FE3)
+                || (code == 0x00017000)
+                || (code == 0x000187F7)
+                || (code >= 0x00018800 && code <= 0x00018CD5)
+                || (code == 0x00018D00)
+                || (code == 0x00018D08)
+                || (code >= 0x0001AFF0 && code <= 0x0001AFF3)
+                || (code >= 0x0001AFF5 && code <= 0x0001AFFB)
+                || (code >= 0x0001AFFD && code <= 0x0001AFFE)
+
+        else
+            (code >= 0x0001B000 && code <= 0x0001B122)
+                || (code >= 0x0001B150 && code <= 0x0001B152)
+                || (code >= 0x0001B164 && code <= 0x0001B167)
+                || (code >= 0x0001B170 && code <= 0x0001B2FB)
+                || (code >= 0x0001BC00 && code <= 0x0001BC6A)
+                || (code >= 0x0001BC70 && code <= 0x0001BC7C)
+                || (code >= 0x0001BC80 && code <= 0x0001BC88)
+                || (code >= 0x0001BC90 && code <= 0x0001BC99)
+                || (code >= 0x0001D2E0 && code <= 0x0001D2F3)
+                || (code >= 0x0001D360 && code <= 0x0001D378)
+                || (code >= 0x0001D400 && code <= 0x0001D454)
+                || (code >= 0x0001D456 && code <= 0x0001D49C)
+
+    else if code < 0x0001E94A then
+        if code < 0x0001D735 then
+            if code < 0x0001D51D then
+                (code >= 0x0001D49E && code <= 0x0001D49F)
+                    || (code == 0x0001D4A2)
+                    || (code >= 0x0001D4A5 && code <= 0x0001D4A6)
+                    || (code >= 0x0001D4A9 && code <= 0x0001D4AC)
+                    || (code >= 0x0001D4AE && code <= 0x0001D4B9)
+                    || (code == 0x0001D4BB)
+                    || (code >= 0x0001D4BD && code <= 0x0001D4C3)
+                    || (code >= 0x0001D4C5 && code <= 0x0001D505)
+                    || (code >= 0x0001D507 && code <= 0x0001D50A)
+                    || (code >= 0x0001D50D && code <= 0x0001D514)
+                    || (code >= 0x0001D516 && code <= 0x0001D51C)
+
+            else
+                (code >= 0x0001D51E && code <= 0x0001D539)
+                    || (code >= 0x0001D53B && code <= 0x0001D53E)
+                    || (code >= 0x0001D540 && code <= 0x0001D544)
+                    || (code == 0x0001D546)
+                    || (code >= 0x0001D54A && code <= 0x0001D550)
+                    || (code >= 0x0001D552 && code <= 0x0001D6A5)
+                    || (code >= 0x0001D6A8 && code <= 0x0001D6C0)
+                    || (code >= 0x0001D6C2 && code <= 0x0001D6DA)
+                    || (code >= 0x0001D6DC && code <= 0x0001D6FA)
+                    || (code >= 0x0001D6FC && code <= 0x0001D714)
+                    || (code >= 0x0001D716 && code <= 0x0001D734)
+
+        else if code < 0x0001E14D then
+            (code >= 0x0001D736 && code <= 0x0001D74E)
+                || (code >= 0x0001D750 && code <= 0x0001D76E)
+                || (code >= 0x0001D770 && code <= 0x0001D788)
+                || (code >= 0x0001D78A && code <= 0x0001D7A8)
+                || (code >= 0x0001D7AA && code <= 0x0001D7C2)
+                || (code >= 0x0001D7C4 && code <= 0x0001D7CB)
+                || (code >= 0x0001D7CE && code <= 0x0001D7FF)
+                || (code >= 0x0001DF00 && code <= 0x0001DF1E)
+                || (code >= 0x0001E100 && code <= 0x0001E12C)
+                || (code >= 0x0001E137 && code <= 0x0001E13D)
+                || (code >= 0x0001E140 && code <= 0x0001E149)
+
+        else
+            (code == 0x0001E14E)
+                || (code >= 0x0001E290 && code <= 0x0001E2AD)
+                || (code >= 0x0001E2C0 && code <= 0x0001E2EB)
+                || (code >= 0x0001E2F0 && code <= 0x0001E2F9)
+                || (code >= 0x0001E7E0 && code <= 0x0001E7E6)
+                || (code >= 0x0001E7E8 && code <= 0x0001E7EB)
+                || (code >= 0x0001E7ED && code <= 0x0001E7EE)
+                || (code >= 0x0001E7F0 && code <= 0x0001E7FE)
+                || (code >= 0x0001E800 && code <= 0x0001E8C4)
+                || (code >= 0x0001E8C7 && code <= 0x0001E8CF)
+                || (code >= 0x0001E900 && code <= 0x0001E943)
+
+    else if code < 0x0001EE73 then
+        if code < 0x0001EE26 then
+            (code == 0x0001E94B)
+                || (code >= 0x0001E950 && code <= 0x0001E959)
+                || (code >= 0x0001EC71 && code <= 0x0001ECAB)
+                || (code >= 0x0001ECAD && code <= 0x0001ECAF)
+                || (code >= 0x0001ECB1 && code <= 0x0001ECB4)
+                || (code >= 0x0001ED01 && code <= 0x0001ED2D)
+                || (code >= 0x0001ED2F && code <= 0x0001ED3D)
+                || (code >= 0x0001EE00 && code <= 0x0001EE03)
+                || (code >= 0x0001EE05 && code <= 0x0001EE1F)
+                || (code >= 0x0001EE21 && code <= 0x0001EE22)
+                || (code == 0x0001EE24)
+
+        else
+            (code == 0x0001EE27)
+                || (code >= 0x0001EE29 && code <= 0x0001EE32)
+                || (code >= 0x0001EE34 && code <= 0x0001EE37)
+                || (code == 0x0001EE42)
+                || (code >= 0x0001EE4D && code <= 0x0001EE4F)
+                || (code >= 0x0001EE51 && code <= 0x0001EE52)
+                || (code == 0x0001EE54)
+                || (code >= 0x0001EE61 && code <= 0x0001EE62)
+                || (code == 0x0001EE64)
+                || (code >= 0x0001EE67 && code <= 0x0001EE6A)
+                || (code >= 0x0001EE6C && code <= 0x0001EE72)
+                || ((modBy 2 code == 1)
+                        && ((code >= 0x0001EE39 && code <= 0x0001EE3B)
+                                || (code >= 0x0001EE47 && code <= 0x0001EE4B)
+                                || (code >= 0x0001EE57 && code <= 0x0001EE5F)
+                           )
+                   )
+
+    else if code < 0x0002A6DE then
+        (code >= 0x0001EE74 && code <= 0x0001EE77)
+            || (code >= 0x0001EE79 && code <= 0x0001EE7C)
+            || (code == 0x0001EE7E)
+            || (code >= 0x0001EE80 && code <= 0x0001EE89)
+            || (code >= 0x0001EE8B && code <= 0x0001EE9B)
+            || (code >= 0x0001EEA1 && code <= 0x0001EEA3)
+            || (code >= 0x0001EEA5 && code <= 0x0001EEA9)
+            || (code >= 0x0001EEAB && code <= 0x0001EEBB)
+            || (code >= 0x0001F100 && code <= 0x0001F10C)
+            || (code >= 0x0001FBF0 && code <= 0x0001FBF9)
+            || (code == 0x00020000)
+
+    else
+        (code == 0x0002A6DF)
+            || (code == 0x0002A700)
+            || (code == 0x0002B738)
+            || (code == 0x0002B740)
+            || (code == 0x0002B81D)
+            || (code == 0x0002B820)
+            || (code == 0x0002CEA1)
+            || (code == 0x0002CEB0)
+            || (code == 0x0002EBE0)
+            || (code >= 0x0002F800 && code <= 0x0002FA1D)
+            || (code == 0x00030000)
+            || (code == 0x0003134A)
 
 
 {-| A category as defined by the Unicode standard.
