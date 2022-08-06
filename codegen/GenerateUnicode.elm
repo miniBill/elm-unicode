@@ -15,18 +15,10 @@ import Result
 
 main : Program String () ()
 main =
-    Generate.withFeedback <|
+    Generate.fromText <|
         \input ->
-            let
-                ( file, logs ) =
-                    flagsToFile input
-            in
-            Ok
-                { files =
-                    [ file
-                    ]
-                , info = List.reverse logs
-                }
+            [ flagsToFile input
+            ]
 
 
 {-| Tries to aggregate consecutive elements. When the aggregation fails they get added to the output list.
@@ -63,7 +55,7 @@ foldWithLast step list =
         |> List.reverse
 
 
-flagsToFile : String -> ( File, List String )
+flagsToFile : String -> File
 flagsToFile csv =
     let
         toRange : { a | codeValue : Int, category : Category } -> { from : Int, to : Int, category : Category }
@@ -92,7 +84,8 @@ flagsToFile csv =
                             Nothing
                     )
 
-        ( declarations, logs ) =
+        declarations : List Declaration
+        declarations =
             [ categoriesToDeclarationWithSimpleCheck
                 { name = "isUpper"
                 , categories = [ LetterUppercase ]
@@ -160,19 +153,16 @@ flagsToFile csv =
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
                 raw
-            , ( categoriesToDeclaration
-                    { name = "isDigit"
-                    , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                    , comment = "Detect digits (Unicode categories Nd, Nl, No)"
-                    , group = "Digits"
-                    }
-                    ranges
-              , []
-              )
+            , categoriesToDeclaration
+                { name = "isDigit"
+                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                , group = "Digits"
+                }
+                ranges
             ]
-                |> List.unzip
     in
-    ( Elm.fileWith [ "Unicode" ]
+    Elm.fileWith [ "Unicode" ]
         { docs =
             \groups ->
                 "Unicode aware functions for working with characters."
@@ -202,8 +192,6 @@ flagsToFile csv =
                     :: List.drop 1 GenerateCategories.declarations
                )
         )
-    , List.concat logs
-    )
 
 
 splitAt : Int -> Tree a -> Tree a
@@ -563,7 +551,7 @@ categoriesToDeclarationWithSimpleCheck :
     , simpleCheckExpression : Expression -> Expression
     }
     -> List { codeValue : Int, characterName : String, category : Category }
-    -> ( Declaration, List String )
+    -> Declaration
 categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } raw =
     let
         toBody : { code : Expression, simple : Expression } -> Expression
@@ -583,6 +571,9 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                             Elm.parens <|
                                 Elm.Op.and simple (rangeToCondition code range)
 
+                rangesToCondition =
+                    joinOr << List.map rangeToConditionWithSimple
+
                 go : Tree CorrectChecks -> Expression
                 go t =
                     case t of
@@ -597,21 +588,21 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                             [ Elm.parens <|
                                                 Elm.Op.and
                                                     (modIs code 1)
-                                                    (Elm.parens <| joinOr (List.map rangeToConditionWithSimple odd))
+                                                    (Elm.parens <| rangesToCondition odd)
                                             ]
 
                                     else if List.isEmpty odd then
                                         [ Elm.parens <|
                                             Elm.Op.and
                                                 (modIs code 0)
-                                                (Elm.parens <| joinOr (List.map rangeToConditionWithSimple even))
+                                                (Elm.parens <| rangesToCondition even)
                                         ]
 
                                     else
                                         [ Elm.parens <|
                                             Elm.ifThen (modIs code 0)
-                                                (joinOr (List.map rangeToConditionWithSimple even))
-                                                (joinOr (List.map rangeToConditionWithSimple odd))
+                                                (rangesToCondition even)
+                                                (rangesToCondition odd)
                                         ]
                             in
                             joinOr
@@ -703,7 +694,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         tree =
             rangesToTree .correctChecks rearrangedRanges
     in
-    ( Elm.fn ( "c", Just <| Type.named [] "Char" )
+    Elm.fn ( "c", Just <| Type.named [] "Char" )
         (letCodeWithSimpleCheck
             { simpleCheckExpression = simpleCheckExpression
             , body = toBody
@@ -713,32 +704,6 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         |> Elm.declaration name
         |> Elm.withDocumentation comment
         |> Elm.exposeWith { exposeConstructor = False, group = Just group }
-    , rearrangedRangesToStrings name rearrangedRanges
-    )
-
-
-rearrangedRangesToStrings : String -> List { from : Int, to : Int, hasAny : Bool, correctChecks : CorrectChecks } -> List String
-rearrangedRangesToStrings name ranges =
-    let
-        fromInt : Int -> String
-        fromInt arg =
-            String.padLeft 4 '0' (Hex.toString arg)
-    in
-    ranges
-        |> List.map (\{ from, to, correctChecks } -> name ++ " " ++ fromInt from ++ "-" ++ fromInt to ++ ": " ++ correctChecksToString correctChecks)
-
-
-correctChecksToString : CorrectChecks -> String
-correctChecksToString correctChecks =
-    case correctChecks of
-        Either ->
-            "Either"
-
-        SimpleOnly ->
-            "SimpleOnly"
-
-        CategoryOnly ->
-            "CategoryOnly"
 
 
 type CorrectChecks
