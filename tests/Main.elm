@@ -9,7 +9,7 @@ import Unicode exposing (Category(..))
 
 suite : Test
 suite =
-    List.range 0 0x10FF
+    List.range 0 0x20FF
         |> (++) (List.map Char.toCode specials)
         |> Set.fromList
         |> Set.toList
