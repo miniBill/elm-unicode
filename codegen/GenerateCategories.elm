@@ -15,7 +15,7 @@ main =
 
 file : File
 file =
-    Elm.file [ "Categories" ] declarations
+    Elm.file [ "Categories" ] (categoryToConstructor :: declarations)
 
 
 declarations : List Declaration
@@ -132,6 +132,25 @@ categoryToString =
         |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
         |> Elm.declaration "categoryToString"
         |> Elm.withDocumentation "Convert a category to its short category name (Lu, Ll, Lt, ...)."
+        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+
+
+categoryToConstructor : Declaration
+categoryToConstructor =
+    let
+        body : Elm.Expression -> Elm.Expression
+        body generalCategory =
+            categoryList
+                |> List.map
+                    (\( _, long, _ ) ->
+                        Elm.Case.branch0 long (Elm.string long)
+                    )
+                |> Elm.Case.custom generalCategory categoryAnnotation
+    in
+    Elm.fn ( "generalCategory", Nothing ) body
+        |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
+        |> Elm.declaration "categoryToConstructor"
+        |> Elm.withDocumentation "Convert a category to its constructor name."
         |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
 
 
