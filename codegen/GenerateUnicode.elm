@@ -15,12 +15,25 @@ import Result
 
 main : Program String () ()
 main =
-    Generate.fromText <|
+    Generate.withFeedback <|
         \input ->
-            [ flagsToFile input
-            ]
+            let
+                ( file, logs ) =
+                    flagsToFile input
+            in
+            Ok
+                { files =
+                    [ file
+                    ]
+                , info = List.reverse logs
+                }
 
 
+{-| Tries to aggregate consecutive elements. When the aggregation fails they get added to the output list.
+
+The function is passed, in order, the current element and the last one.
+
+-}
 foldWithLast : (a -> a -> Maybe a) -> List a -> List a
 foldWithLast step list =
     list
@@ -30,13 +43,13 @@ foldWithLast step list =
                     Nothing ->
                         ( Just e, acc )
 
-                    Just le ->
-                        case step e le of
+                    Just lastElem ->
+                        case step e lastElem of
                             Just c ->
                                 ( Just c, acc )
 
                             Nothing ->
-                                ( Just e, le :: acc )
+                                ( Just e, lastElem :: acc )
             )
             ( Nothing, [] )
         |> (\( l, a ) ->
@@ -50,19 +63,25 @@ foldWithLast step list =
         |> List.reverse
 
 
-flagsToFile : String -> File
+flagsToFile : String -> ( File, List String )
 flagsToFile csv =
     let
+        toRange : { a | codeValue : Int, category : Category } -> { from : Int, to : Int, category : Category }
         toRange e =
             { from = e.codeValue
             , to = e.codeValue
             , category = e.category
             }
 
-        ranges =
+        raw : List { codeValue : Int, characterName : String, category : Category }
+        raw =
             csv
                 |> String.split "\n"
                 |> List.filterMap parseLine
+
+        ranges : List { from : Int, to : Int, category : Category }
+        ranges =
+            raw
                 |> List.map toRange
                 |> foldWithLast
                     (\e last ->
@@ -73,38 +92,34 @@ flagsToFile csv =
                             Nothing
                     )
 
-        declarations =
-            [ categoriesToDeclaration
+        ( declarations, logs ) =
+            [ categoriesToDeclarationWithSimpleCheck
                 { name = "isUpper"
                 , categories = [ LetterUppercase ]
                 , comment = "Detect upper case characters (Unicode category Lu)"
                 , group = "Letters"
-                , simple =
-                    Just
-                        ( \c -> Char.toUpper c == c && Char.toLower c /= c
-                        , \c ->
-                            Elm.Op.and
-                                (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
-                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                        )
+                , simpleCheck = \c -> Char.toUpper c == c && Char.toLower c /= c
+                , simpleCheckExpression =
+                    \c ->
+                        Elm.Op.and
+                            (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
+                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
                 }
-                ranges
-            , categoriesToDeclaration
+                raw
+            , categoriesToDeclarationWithSimpleCheck
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
                 , comment = "Detect lower case characters (Unicode category Ll)"
                 , group = "Letters"
-                , simple =
-                    Just
-                        ( \c -> Char.toLower c == c && Char.toUpper c /= c
-                        , \c ->
-                            Elm.Op.and
-                                (Elm.Op.equal (Gen.Char.call_.toLower c) c)
-                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
-                        )
+                , simpleCheck = \c -> Char.toLower c == c && Char.toUpper c /= c
+                , simpleCheckExpression =
+                    \c ->
+                        Elm.Op.and
+                            (Elm.Op.equal (Gen.Char.call_.toLower c) c)
+                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                ranges
-            , categoriesToDeclaration
+                raw
+            , categoriesToDeclarationWithSimpleCheck
                 { name = "isAlpha"
                 , categories =
                     [ LetterLowercase
@@ -115,17 +130,15 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
                 , group = "Letters"
-                , simple =
-                    Just
-                        ( \c -> Char.toLower c /= c || Char.toUpper c /= c
-                        , \c ->
-                            Elm.Op.or
-                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
-                        )
+                , simpleCheck = \c -> Char.toLower c /= c || Char.toUpper c /= c
+                , simpleCheckExpression =
+                    \c ->
+                        Elm.Op.or
+                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                ranges
-            , categoriesToDeclaration
+                raw
+            , categoriesToDeclarationWithSimpleCheck
                 { name = "isAlphaNum"
                 , categories =
                     [ LetterLowercase
@@ -139,31 +152,27 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
                 , group = "Letters"
-                , simple =
-                    Just
-                        ( \c -> Char.toLower c /= c || Char.toUpper c /= c
-                        , \c ->
-                            Elm.Op.or
-                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
-                        )
+                , simpleCheck = \c -> Char.toLower c /= c || Char.toUpper c /= c
+                , simpleCheckExpression =
+                    \c ->
+                        Elm.Op.or
+                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                ranges
-            , categoriesToDeclaration
-                { name = "isDigit"
-                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
-                , group = "Digits"
-                , simple = Nothing
-                }
-                ranges
+                raw
+            , ( categoriesToDeclaration
+                    { name = "isDigit"
+                    , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                    , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                    , group = "Digits"
+                    }
+                    ranges
+              , []
+              )
             ]
-                ++ List.take 1 GenerateCategories.declarations
-                ++ (getCategoryDeclaration ranges
-                        :: List.drop 1 GenerateCategories.declarations
-                   )
+                |> List.unzip
     in
-    Elm.fileWith [ "Unicode" ]
+    ( Elm.fileWith [ "Unicode" ]
         { docs =
             \groups ->
                 "Unicode aware functions for working with characters."
@@ -187,10 +196,17 @@ flagsToFile csv =
                         )
         , aliases = []
         }
-        declarations
+        (declarations
+            ++ List.take 1 GenerateCategories.declarations
+            ++ (getCategoryDeclaration ranges
+                    :: List.drop 1 GenerateCategories.declarations
+               )
+        )
+    , List.concat logs
+    )
 
 
-splitAt : Int -> Tree -> Tree
+splitAt : Int -> Tree a -> Tree a
 splitAt at tree =
     case tree of
         Split cat l r ->
@@ -242,31 +258,35 @@ splitAt at tree =
                     (Node { all = ha, even = he, odd = ho })
 
 
-toEvenOddRange : { a | from : Int, to : Int, category : Category } -> EvenOddRange
-toEvenOddRange { from, to, category } =
+toEvenOddRange : ({ a | from : Int, to : Int } -> payload) -> { a | from : Int, to : Int } -> EvenOddRange payload
+toEvenOddRange getPayload ({ from, to } as input) =
+    let
+        payload =
+            getPayload input
+    in
     if from == to then
         if modBy 2 from == 0 then
-            Even from from category
+            Even from from payload
 
         else
-            Odd from from category
+            Odd from from payload
 
     else
-        All from to category
+        All from to payload
 
 
-type EvenOddRange
-    = All Int Int Category
-    | Odd Int Int Category
-    | Even Int Int Category
+type EvenOddRange a
+    = All Int Int a
+    | Odd Int Int a
+    | Even Int Int a
 
 
-type Tree
-    = Split Int Tree Tree
+type Tree a
+    = Split Int (Tree a) (Tree a)
     | Node
-        { all : List ( Int, Int, Category )
-        , even : List ( Int, Int, Category )
-        , odd : List ( Int, Int, Category )
+        { all : List ( Int, Int, a )
+        , even : List ( Int, Int, a )
+        , odd : List ( Int, Int, a )
         }
 
 
@@ -338,6 +358,31 @@ letCode inner code =
                     }
                 )
                 [ code ]
+            )
+        |> Elm.Let.toExpression
+
+
+letCodeWithSimpleCheck : { simpleCheckExpression : Expression -> Expression, body : { code : Expression, simple : Expression } -> Expression } -> Expression -> Expression
+letCodeWithSimpleCheck { body, simpleCheckExpression } code =
+    Elm.Let.letIn (\codeVar simpleVar -> body { code = codeVar, simple = simpleVar })
+        |> Elm.Let.value "code"
+            (Elm.apply
+                (Elm.value
+                    { importFrom = [ "Char" ]
+                    , name = "toCode"
+                    , annotation = Just (Type.function [ Type.named [] "Char" ] Type.int)
+                    }
+                )
+                [ code ]
+            )
+        |> Elm.Let.value "simple"
+            (simpleCheckExpression
+                (Elm.value
+                    { importFrom = []
+                    , name = "c"
+                    , annotation = Just Type.int
+                    }
+                )
             )
         |> Elm.Let.toExpression
 
@@ -427,7 +472,7 @@ getCategoryDeclaration ranges =
 
         checks code =
             ranges
-                |> rangesToTree
+                |> rangesToTree .category
                 |> split
                 |> treeToExpression code
     in
@@ -452,13 +497,12 @@ categoriesToDeclaration :
     , categories : List Category
     , comment : String
     , group : String
-    , simple : Maybe ( Char -> Bool, Expression -> Expression )
     }
     -> List { category : Category, from : Int, to : Int }
     -> Declaration
 categoriesToDeclaration { name, categories, comment, group } ranges =
     let
-        treeToExpression : Expression -> Tree -> Expression
+        treeToExpression : Expression -> Tree a -> Expression
         treeToExpression code t =
             case t of
                 Node { all, even, odd } ->
@@ -500,9 +544,7 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
         checks code =
             ranges
                 |> List.filter (\{ category } -> List.member category categories)
-                -- Squash all the categories into one
-                |> List.map (\r -> { r | category = SymbolOther })
-                |> rangesToTree
+                |> rangesToTree (\_ -> ())
                 |> treeToExpression code
     in
     Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
@@ -512,10 +554,200 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
         |> Elm.exposeWith { exposeConstructor = False, group = Just group }
 
 
-rangesToTree : List { a | from : Int, to : Int, category : Category } -> Tree
-rangesToTree ranges =
+categoriesToDeclarationWithSimpleCheck :
+    { name : String
+    , categories : List Category
+    , comment : String
+    , group : String
+    , simpleCheck : Char -> Bool
+    , simpleCheckExpression : Expression -> Expression
+    }
+    -> List { codeValue : Int, characterName : String, category : Category }
+    -> ( Declaration, List String )
+categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } raw =
+    let
+        toBody : { code : Expression, simple : Expression } -> Expression
+        toBody { code, simple } =
+            let
+                rangeToConditionWithSimple : ( Int, Int, CorrectChecks ) -> Expression
+                rangeToConditionWithSimple (( _, _, payload ) as range) =
+                    case payload of
+                        Either ->
+                            Elm.parens <|
+                                Elm.Op.and simple (rangeToCondition code range)
+
+                        CategoryOnly ->
+                            rangeToCondition code range
+
+                        SimpleOnly ->
+                            Elm.parens <|
+                                Elm.Op.and simple (rangeToCondition code range)
+
+                go : Tree CorrectChecks -> Expression
+                go t =
+                    case t of
+                        Node { all, even, odd } ->
+                            let
+                                modded =
+                                    if List.isEmpty even then
+                                        if List.isEmpty odd then
+                                            []
+
+                                        else
+                                            [ Elm.parens <|
+                                                Elm.Op.and
+                                                    (modIs code 1)
+                                                    (Elm.parens <| joinOr (List.map rangeToConditionWithSimple odd))
+                                            ]
+
+                                    else if List.isEmpty odd then
+                                        [ Elm.parens <|
+                                            Elm.Op.and
+                                                (modIs code 0)
+                                                (Elm.parens <| joinOr (List.map rangeToConditionWithSimple even))
+                                        ]
+
+                                    else
+                                        [ Elm.parens <|
+                                            Elm.ifThen (modIs code 0)
+                                                (joinOr (List.map rangeToConditionWithSimple even))
+                                                (joinOr (List.map rangeToConditionWithSimple odd))
+                                        ]
+                            in
+                            joinOr
+                                (List.map rangeToConditionWithSimple all ++ modded)
+
+                        Split at l r ->
+                            Elm.ifThen (Elm.Op.lt code (Elm.hex at))
+                                (go l)
+                                (go r)
+            in
+            go tree
+
+        rearrangedRanges : List { from : Int, to : Int, hasAny : Bool, correctChecks : CorrectChecks }
+        rearrangedRanges =
+            raw
+                |> List.filterMap
+                    (\{ codeValue, category } ->
+                        let
+                            belongs =
+                                List.member category categories
+
+                            isSimple =
+                                simpleCheck (Char.fromCode codeValue) == belongs
+
+                            maybeChecks =
+                                if belongs then
+                                    if isSimple then
+                                        Just Either
+
+                                    else
+                                        Just CategoryOnly
+
+                                else if isSimple then
+                                    Just SimpleOnly
+
+                                else
+                                    Nothing
+                        in
+                        Maybe.map
+                            (\c ->
+                                { from = codeValue
+                                , to = codeValue
+                                , hasAny = belongs
+                                , correctChecks = c
+                                }
+                            )
+                            maybeChecks
+                    )
+                |> foldWithLast
+                    (\e last ->
+                        if not last.hasAny then
+                            Just e
+
+                        else
+                            let
+                                correctChecks : Maybe CorrectChecks
+                                correctChecks =
+                                    case ( last.correctChecks, e.correctChecks ) of
+                                        ( Either, _ ) ->
+                                            Just e.correctChecks
+
+                                        ( _, Either ) ->
+                                            Just last.correctChecks
+
+                                        _ ->
+                                            if last.correctChecks == e.correctChecks then
+                                                Just last.correctChecks
+
+                                            else
+                                                Nothing
+                            in
+                            Maybe.map
+                                (\cc ->
+                                    { from = last.from
+                                    , to = e.to
+                                    , hasAny = True
+                                    , correctChecks = cc
+                                    }
+                                )
+                                correctChecks
+                    )
+                -- The last element might have `hasAny = False`, if so filter it out.
+                |> List.filter .hasAny
+
+        tree : Tree CorrectChecks
+        tree =
+            rangesToTree .correctChecks rearrangedRanges
+    in
+    ( Elm.fn ( "c", Just <| Type.named [] "Char" )
+        (letCodeWithSimpleCheck
+            { simpleCheckExpression = simpleCheckExpression
+            , body = toBody
+            }
+        )
+        |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
+        |> Elm.declaration name
+        |> Elm.withDocumentation comment
+        |> Elm.exposeWith { exposeConstructor = False, group = Just group }
+    , rearrangedRangesToStrings name rearrangedRanges
+    )
+
+
+rearrangedRangesToStrings : String -> List { from : Int, to : Int, hasAny : Bool, correctChecks : CorrectChecks } -> List String
+rearrangedRangesToStrings name ranges =
+    let
+        fromInt : Int -> String
+        fromInt arg =
+            String.padLeft 4 '0' (Hex.toString arg)
+    in
     ranges
-        |> List.map toEvenOddRange
+        |> List.map (\{ from, to, correctChecks } -> name ++ " " ++ fromInt from ++ "-" ++ fromInt to ++ ": " ++ correctChecksToString correctChecks)
+
+
+correctChecksToString : CorrectChecks -> String
+correctChecksToString correctChecks =
+    case correctChecks of
+        Either ->
+            "Either"
+
+        SimpleOnly ->
+            "SimpleOnly"
+
+        CategoryOnly ->
+            "CategoryOnly"
+
+
+type CorrectChecks
+    = Either
+    | SimpleOnly
+    | CategoryOnly
+
+
+rangesToTree : ({ a | from : Int, to : Int } -> payload) -> List { a | from : Int, to : Int } -> Tree payload
+rangesToTree getPayload ranges =
+    ranges
+        |> List.map (toEvenOddRange getPayload)
         |> foldWithLast
             (\curr last ->
                 case ( curr, last ) of
@@ -588,7 +820,7 @@ rangesToTree ranges =
         |> split
 
 
-categorize : List EvenOddRange -> { all : List ( Int, Int, Category ), even : List ( Int, Int, Category ), odd : List ( Int, Int, Category ) }
+categorize : List (EvenOddRange a) -> { all : List ( Int, Int, a ), even : List ( Int, Int, a ), odd : List ( Int, Int, a ) }
 categorize =
     List.foldr
         (\e n ->
@@ -613,7 +845,7 @@ categorize =
         { all = [], even = [], odd = [] }
 
 
-split : Tree -> Tree
+split : Tree a -> Tree a
 split t =
     case t of
         Split at l r ->
