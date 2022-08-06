@@ -101,6 +101,7 @@ category =
 categoryFromString : Declaration
 categoryFromString =
     let
+        body : Elm.Expression -> Elm.Expression
         body generalCategory =
             Elm.Case.string generalCategory
                 { cases =
@@ -131,7 +132,7 @@ categoryFromString =
                         }
                 }
     in
-    Elm.fn "generalCategory" body
+    Elm.fn ( "generalCategory", Nothing ) body
         |> Elm.withType
             (Type.function
                 [ Type.string ]
@@ -145,15 +146,16 @@ categoryFromString =
 categoryToString : Declaration
 categoryToString =
     let
+        body : Elm.Expression -> Elm.Expression
         body generalCategory =
             categoryList
                 |> List.map
                     (\( short, long, _ ) ->
-                        Elm.Case.branch0 [] long (Elm.string short)
+                        Elm.Case.branch0 long (Elm.string short)
                     )
-                |> Elm.Case.custom generalCategory
+                |> Elm.Case.custom generalCategory categoryAnnotation
     in
-    Elm.fn "generalCategory" body
+    Elm.fn ( "generalCategory", Nothing ) body
         |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
         |> Elm.declaration "categoryToString"
         |> Elm.withDocumentation "Convert a category to its short category name (Lu, Ll, Lt, ...)."
@@ -163,15 +165,16 @@ categoryToString =
 categoryToDescription : Declaration
 categoryToDescription =
     let
+        body : Elm.Expression -> Elm.Expression
         body generalCategory =
             categoryList
                 |> List.map
                     (\( _, long, longer ) ->
-                        Elm.Case.branch0 [] long (Elm.string longer)
+                        Elm.Case.branch0 long (Elm.string longer)
                     )
-                |> Elm.Case.custom generalCategory
+                |> Elm.Case.custom generalCategory categoryAnnotation
     in
-    Elm.fn "generalCategory" body
+    Elm.fn ( "generalCategory", Nothing ) body
         |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
         |> Elm.declaration "categoryToDescription"
         |> Elm.withDocumentation "Converts a category to its English description. Mostly useful for debugging purposes."

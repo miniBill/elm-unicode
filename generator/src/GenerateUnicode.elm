@@ -5,6 +5,7 @@ import Common
 import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
 import Elm.Let
+import Elm.Op
 import GenerateCategories
 import Hex
 import Result
@@ -251,14 +252,14 @@ parseLine line =
 
 rangeToCondition : Expression -> ( Int, Int, a ) -> Expression
 rangeToCondition code ( from, to, _ ) =
-    Elm.parensExposed <|
+    Elm.parens <|
         if from == to then
-            Elm.equal code (Elm.hex from)
+            Elm.Op.equal code (Elm.hex from)
 
         else
-            Elm.and
-                (Elm.gte code <| Elm.hex from)
-                (Elm.lte code <| Elm.hex to)
+            Elm.Op.and
+                (Elm.Op.gte code <| Elm.hex from)
+                (Elm.Op.lte code <| Elm.hex to)
 
 
 joinOr : List Expression -> Expression
@@ -268,13 +269,13 @@ joinOr lst =
             Elm.bool False
 
         fst :: tail ->
-            List.foldl (\e a -> Elm.or a e) fst tail
+            List.foldl (\e a -> Elm.Op.or a e) fst tail
 
 
 modIs : Expression -> Int -> Expression
 modIs code n =
-    Elm.parensExposed <|
-        Elm.equal
+    Elm.parens <|
+        Elm.Op.equal
             (Elm.apply
                 (Elm.value
                     { importFrom = []
@@ -355,17 +356,17 @@ getCategoryDeclaration ranges =
                                                 []
 
                                             else
-                                                [ Elm.parensExposed <|
-                                                    Elm.and
+                                                [ Elm.parens <|
+                                                    Elm.Op.and
                                                         (modIs code 1)
-                                                        (joinOr (List.map (rangeToCondition code) odd))
+                                                        (Elm.parens <| joinOr (List.map (rangeToCondition code) odd))
                                                 ]
 
                                         else if List.isEmpty odd then
-                                            [ Elm.parensExposed <|
-                                                Elm.and
+                                            [ Elm.parens <|
+                                                Elm.Op.and
                                                     (modIs code 0)
-                                                    (joinOr (List.map (rangeToCondition code) even))
+                                                    (Elm.parens <| joinOr (List.map (rangeToCondition code) even))
                                             ]
 
                                         else
@@ -382,7 +383,7 @@ getCategoryDeclaration ranges =
                         |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) (Elm.value { importFrom = [], name = "Nothing", annotation = Nothing })
 
                 Split at l r ->
-                    Elm.ifThen (Elm.lt code (Elm.hex at))
+                    Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                         (treeToExpression code l)
                         (treeToExpression code r)
 
@@ -392,7 +393,7 @@ getCategoryDeclaration ranges =
                 |> split
                 |> treeToExpression code
     in
-    Elm.fn "c" (letCode checks)
+    Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
         |> Elm.withType annotation
         |> Elm.declaration "getCategory"
         |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
@@ -402,6 +403,7 @@ getCategoryDeclaration ranges =
 categoryToConstructor : Category -> Expression
 categoryToConstructor category =
     let
+        name : String
         name =
             case category of
                 LetterUppercase ->
@@ -521,21 +523,21 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                                     []
 
                                 else
-                                    [ Elm.parensExposed <|
-                                        Elm.and
+                                    [ Elm.parens <|
+                                        Elm.Op.and
                                             (modIs code 1)
-                                            (joinOr (List.map (rangeToCondition code) odd))
+                                            (Elm.parens <| joinOr (List.map (rangeToCondition code) odd))
                                     ]
 
                             else if List.isEmpty odd then
-                                [ Elm.parensExposed <|
-                                    Elm.and
+                                [ Elm.parens <|
+                                    Elm.Op.and
                                         (modIs code 0)
-                                        (joinOr (List.map (rangeToCondition code) even))
+                                        (Elm.parens <| joinOr (List.map (rangeToCondition code) even))
                                 ]
 
                             else
-                                [ Elm.parensExposed <|
+                                [ Elm.parens <|
                                     Elm.ifThen (modIs code 0)
                                         (joinOr (List.map (rangeToCondition code) even))
                                         (joinOr (List.map (rangeToCondition code) odd))
@@ -545,7 +547,7 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                         (List.map (rangeToCondition code) all ++ modded)
 
                 Split at l r ->
-                    Elm.ifThen (Elm.lt code (Elm.hex at))
+                    Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                         (treeToExpression code l)
                         (treeToExpression code r)
 
@@ -557,7 +559,7 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                 |> rangesToTree
                 |> treeToExpression code
     in
-    Elm.fn "c" (letCode checks)
+    Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
         |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
         |> Elm.declaration name
         |> Elm.withDocumentation comment
