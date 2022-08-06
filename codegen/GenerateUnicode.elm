@@ -132,7 +132,14 @@ flagsToFile csv =
                 , group = "Letters"
                 }
                 ranges
-            , categoriesToDeclarationWithSimpleCheck
+            , categoriesToDeclaration
+                { name = "isDigit"
+                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                , group = "Digits"
+                }
+                ranges
+            , categoriesToDeclaration
                 { name = "isAlphaNum"
                 , categories =
                     [ LetterLowercase
@@ -146,19 +153,6 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
                 , group = "Letters"
-                , simpleCheck = \c -> Char.toLower c /= c || Char.toUpper c /= c
-                , simpleCheckExpression =
-                    \c ->
-                        Elm.Op.or
-                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
-                }
-                rawDict
-            , categoriesToDeclaration
-                { name = "isDigit"
-                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
-                , group = "Digits"
                 }
                 ranges
             ]
