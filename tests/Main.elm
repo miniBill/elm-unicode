@@ -2,15 +2,31 @@ module Main exposing (..)
 
 import Expect exposing (Expectation)
 import Hex
+import Set
 import Test exposing (..)
 import Unicode exposing (Category(..))
 
 
 suite : Test
 suite =
-    describe "Is coherent" <|
-        List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code) <|
-            List.range 0 0x0010FFFF
+    List.range 0 0x10FF
+        |> (++) (List.map Char.toCode specials)
+        |> Set.fromList
+        |> Set.toList
+        |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)
+        |> describe "Is coherent"
+
+
+{-| Some special cases that are worth checking explicitly.
+-}
+specials : List Char
+specials =
+    [ 'ǲ'
+    , 'ﬀ'
+    , 'K'
+    , 'ẞ'
+    , 'ῼ'
+    ]
 
 
 checkCode : Int -> Expectation
