@@ -1,14 +1,14 @@
-all: src/Categories.elm src/Unicode.elm docs.json
+all: src/Unicode.elm docs.json
 
 dist/UnicodeData.txt:
 	mkdir -p $(dir $@)
 	curl 'https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt' > $@
 
-codegen/helpers/Categories.elm: codegen/GenerateCategories.elm dist/UnicodeData.txt
+codegen/Categories.elm: codegen/GenerateCategories.elm dist/UnicodeData.txt
 	pnpm codegen run $< --output $(dir $@)
 	elm-format --yes $@
 
-src/Unicode.elm: dist/unicode.js dist/Unicode.elm.js dist/UnicodeData.txt
+src/Unicode.elm: codegen/GenerateUnicode.elm dist/UnicodeData.txt codegen/Categories.elm
 	pnpm codegen run $< --flags-from dist/UnicodeData.txt --output $(dir $@)
 	elm-format --yes $@
 

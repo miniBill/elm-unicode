@@ -1,21 +1,24 @@
 module GenerateUnicode exposing (main)
 
 import Categories exposing (Category(..), categoryFromString)
-import Common
 import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
 import Elm.Let
 import Elm.Op
 import Gen.Char
+import Gen.CodeGen.Generate as Generate
 import GenerateCategories
 import Hex
 import List.Extra
 import Result
 
 
-main : Program Common.Flags Common.Model Common.Msg
+main : Program String () ()
 main =
-    Common.program flagsToFile
+    Generate.fromText <|
+        \input ->
+            [ flagsToFile input
+            ]
 
 
 foldWithLast : (a -> a -> Maybe a) -> List a -> List a
@@ -47,7 +50,7 @@ foldWithLast step list =
         |> List.reverse
 
 
-flagsToFile : Common.Flags -> File
+flagsToFile : String -> File
 flagsToFile csv =
     let
         toRange e =
@@ -77,12 +80,13 @@ flagsToFile csv =
                 , comment = "Detect upper case characters (Unicode category Lu)"
                 , group = "Letters"
                 , simple =
-                    ( \c -> Char.toUpper c == c && Char.toLower /= c
-                    , \c ->
-                        Elm.Op.and
-                            (Elm.Op.equal (Gen.Char.toUpper c) c)
-                            (Elm.Op.notEqual (Gen.Char.toLower c) c)
-                    )
+                    Just
+                        ( \c -> Char.toUpper c == c && Char.toLower c /= c
+                        , \c ->
+                            Elm.Op.and
+                                (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
+                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                        )
                 }
                 ranges
             , categoriesToDeclaration
@@ -90,6 +94,14 @@ flagsToFile csv =
                 , categories = [ LetterLowercase ]
                 , comment = "Detect lower case characters (Unicode category Ll)"
                 , group = "Letters"
+                , simple =
+                    Just
+                        ( \c -> Char.toLower c == c && Char.toUpper c /= c
+                        , \c ->
+                            Elm.Op.and
+                                (Elm.Op.equal (Gen.Char.call_.toLower c) c)
+                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
+                        )
                 }
                 ranges
             , categoriesToDeclaration
@@ -103,6 +115,14 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
                 , group = "Letters"
+                , simple =
+                    Just
+                        ( \c -> Char.toLower c /= c || Char.toUpper c /= c
+                        , \c ->
+                            Elm.Op.or
+                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
+                        )
                 }
                 ranges
             , categoriesToDeclaration
@@ -119,6 +139,14 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
                 , group = "Letters"
+                , simple =
+                    Just
+                        ( \c -> Char.toLower c /= c || Char.toUpper c /= c
+                        , \c ->
+                            Elm.Op.or
+                                (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                                (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
+                        )
                 }
                 ranges
             , categoriesToDeclaration
@@ -126,6 +154,7 @@ flagsToFile csv =
                 , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
                 , comment = "Detect digits (Unicode categories Nd, Nl, No)"
                 , group = "Digits"
+                , simple = Nothing
                 }
                 ranges
             ]
@@ -411,6 +440,7 @@ getCategoryDeclaration ranges =
 
 categoryToConstructor : Category -> Expression
 categoryToConstructor category =
+    -- TODO: this can probably be simplified
     let
         name : String
         name =
@@ -517,6 +547,7 @@ categoriesToDeclaration :
     , categories : List Category
     , comment : String
     , group : String
+    , simple : Maybe ( Char -> Bool, Expression -> Expression )
     }
     -> List { category : Category, from : Int, to : Int }
     -> Declaration
