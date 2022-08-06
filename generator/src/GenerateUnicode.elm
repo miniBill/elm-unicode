@@ -8,6 +8,7 @@ import Elm.Let
 import Elm.Op
 import GenerateCategories
 import Hex
+import List.Extra
 import Result
 
 
@@ -675,19 +676,14 @@ split t =
 
         Node n ->
             let
-                splitLen =
-                    List.length n.all // 2
-
-                pivot =
-                    n.all
-                        |> List.drop splitLen
-                        |> List.head
+                len =
+                    List.length n.all
             in
-            if List.length n.all <= 12 then
+            if len <= 12 then
                 t
 
             else
-                case pivot of
+                case List.Extra.getAt (len // 2) n.all of
                     Just ( f, _, _ ) ->
                         split <| splitAt (f - 1) <| Node n
 
