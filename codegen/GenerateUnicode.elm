@@ -119,7 +119,7 @@ flagsToFile csv =
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
                 rawDict
-            , categoriesToDeclarationWithSimpleCheck
+            , categoriesToDeclaration
                 { name = "isAlpha"
                 , categories =
                     [ LetterLowercase
@@ -130,14 +130,8 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
                 , group = "Letters"
-                , simpleCheck = \c -> Char.toLower c /= c || Char.toUpper c /= c
-                , simpleCheckExpression =
-                    \c ->
-                        Elm.Op.or
-                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                rawDict
+                ranges
             , categoriesToDeclarationWithSimpleCheck
                 { name = "isAlphaNum"
                 , categories =
