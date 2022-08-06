@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Main exposing (suite)
 
 import Expect exposing (Expectation)
 import Hex
@@ -21,11 +21,12 @@ suite =
 -}
 specials : List Char
 specials =
-    [ 'ǲ'
+    [ 'ǲ' -- Upper and lower are both different
     , 'ﬀ'
     , 'K'
-    , 'ẞ'
+    , 'ẞ' -- (toUpper >> toLower) /= toUpper
     , 'ῼ'
+    , '\u{0378}' -- Missing from Unicode table
     ]
 
 
