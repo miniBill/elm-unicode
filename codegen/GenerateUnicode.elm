@@ -1,6 +1,7 @@
 module GenerateUnicode exposing (main)
 
 import Categories exposing (Category(..), categoryFromString)
+import Dict exposing (Dict)
 import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
 import Elm.Let
@@ -71,6 +72,12 @@ flagsToFile csv =
                 |> String.split "\n"
                 |> List.filterMap parseLine
 
+        rawDict : Dict Int Category
+        rawDict =
+            raw
+                |> List.map (\{ codeValue, category } -> ( codeValue, category ))
+                |> Dict.fromList
+
         ranges : List { from : Int, to : Int, category : Category }
         ranges =
             raw
@@ -98,7 +105,7 @@ flagsToFile csv =
                             (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
                 }
-                raw
+                rawDict
             , categoriesToDeclarationWithSimpleCheck
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
@@ -111,7 +118,7 @@ flagsToFile csv =
                             (Elm.Op.equal (Gen.Char.call_.toLower c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                raw
+                rawDict
             , categoriesToDeclarationWithSimpleCheck
                 { name = "isAlpha"
                 , categories =
@@ -130,7 +137,7 @@ flagsToFile csv =
                             (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                raw
+                rawDict
             , categoriesToDeclarationWithSimpleCheck
                 { name = "isAlphaNum"
                 , categories =
@@ -152,7 +159,7 @@ flagsToFile csv =
                             (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                raw
+                rawDict
             , categoriesToDeclaration
                 { name = "isDigit"
                 , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
@@ -550,31 +557,18 @@ categoriesToDeclarationWithSimpleCheck :
     , simpleCheck : Char -> Bool
     , simpleCheckExpression : Expression -> Expression
     }
-    -> List { codeValue : Int, characterName : String, category : Category }
+    -> Dict Int Category
     -> Declaration
-categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } raw =
+categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } rawDict =
     let
         toBody : { code : Expression, simple : Expression } -> Expression
         toBody { code, simple } =
             let
-                rangeToConditionWithSimple : ( Int, Int, CorrectChecks ) -> Expression
-                rangeToConditionWithSimple (( _, _, payload ) as range) =
-                    case payload of
-                        Either ->
-                            Elm.parens <|
-                                Elm.Op.and simple (rangeToCondition code range)
+                rangesToCondition : List ( Int, Int, a ) -> List Expression
+                rangesToCondition ranges =
+                    List.map (rangeToCondition code) ranges
 
-                        CategoryOnly ->
-                            rangeToCondition code range
-
-                        SimpleOnly ->
-                            Elm.parens <|
-                                Elm.Op.and simple (rangeToCondition code range)
-
-                rangesToCondition =
-                    joinOr << List.map rangeToConditionWithSimple
-
-                go : Tree CorrectChecks -> Expression
+                go : Tree a -> Expression
                 go t =
                     case t of
                         Node { all, even, odd } ->
@@ -588,111 +582,120 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                             [ Elm.parens <|
                                                 Elm.Op.and
                                                     (modIs code 1)
-                                                    (Elm.parens <| rangesToCondition odd)
+                                                    (Elm.parens <| joinOr <| rangesToCondition odd)
                                             ]
 
                                     else if List.isEmpty odd then
                                         [ Elm.parens <|
                                             Elm.Op.and
                                                 (modIs code 0)
-                                                (Elm.parens <| rangesToCondition even)
+                                                (Elm.parens <| joinOr <| rangesToCondition even)
                                         ]
 
                                     else
                                         [ Elm.parens <|
                                             Elm.ifThen (modIs code 0)
-                                                (rangesToCondition even)
-                                                (rangesToCondition odd)
+                                                (joinOr <| rangesToCondition even)
+                                                (joinOr <| rangesToCondition odd)
                                         ]
                             in
                             joinOr
-                                (List.map rangeToConditionWithSimple all ++ modded)
+                                (rangesToCondition all ++ modded)
 
                         Split at l r ->
                             Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                                 (go l)
                                 (go r)
             in
-            go tree
+            Elm.Op.or
+                (Elm.parens (Elm.Op.and simple (Elm.parens (go simpleTree))))
+                (go categoryTree)
 
-        rearrangedRanges : List { from : Int, to : Int, hasAny : Bool, correctChecks : CorrectChecks }
-        rearrangedRanges =
-            raw
+        simpleRanges : List { from : Int, to : Int, hasAny : Bool }
+        simpleRanges =
+            List.range 0 0x000F0000
                 |> List.filterMap
-                    (\{ codeValue, category } ->
+                    (\codeValue ->
+                        let
+                            belongs =
+                                case Dict.get codeValue rawDict of
+                                    Nothing ->
+                                        False
+
+                                    Just category ->
+                                        List.member category categories
+
+                            isSimple =
+                                simpleCheck (Char.fromCode codeValue) == belongs
+                        in
+                        if isSimple || belongs then
+                            Just
+                                { from = codeValue
+                                , to = codeValue
+                                , hasAny = belongs
+                                }
+
+                        else
+                            Nothing
+                    )
+                |> foldWithLast
+                    (\e last ->
+                        if e.from /= last.to + 1 then
+                            Nothing
+
+                        else
+                            Just
+                                { from = last.from
+                                , to = e.to
+                                , hasAny = last.hasAny || e.hasAny
+                                }
+                    )
+                |> List.filter .hasAny
+
+        categoryRanges : List { from : Int, to : Int, hasAnyException : Bool }
+        categoryRanges =
+            rawDict
+                |> Dict.toList
+                |> List.filterMap
+                    (\( codeValue, category ) ->
                         let
                             belongs =
                                 List.member category categories
 
                             isSimple =
                                 simpleCheck (Char.fromCode codeValue) == belongs
-
-                            maybeChecks =
-                                if belongs then
-                                    if isSimple then
-                                        Just Either
-
-                                    else
-                                        Just CategoryOnly
-
-                                else if isSimple then
-                                    Just SimpleOnly
-
-                                else
-                                    Nothing
                         in
-                        Maybe.map
-                            (\c ->
+                        if belongs then
+                            Just
                                 { from = codeValue
                                 , to = codeValue
-                                , hasAny = belongs
-                                , correctChecks = c
+                                , hasAnyException = belongs && not isSimple
                                 }
-                            )
-                            maybeChecks
+
+                        else
+                            Nothing
                     )
                 |> foldWithLast
                     (\e last ->
-                        if not last.hasAny then
-                            Just e
-
-                        else if e.from /= last.to + 1 then
+                        if e.from /= last.to + 1 then
                             Nothing
 
                         else
-                            let
-                                correctChecks : Maybe CorrectChecks
-                                correctChecks =
-                                    case ( last.correctChecks, e.correctChecks ) of
-                                        ( Either, _ ) ->
-                                            Just e.correctChecks
-
-                                        ( _, Either ) ->
-                                            Just last.correctChecks
-
-                                        _ ->
-                                            if last.correctChecks == e.correctChecks then
-                                                Just last.correctChecks
-
-                                            else
-                                                Nothing
-                            in
-                            Maybe.map
-                                (\cc ->
-                                    { from = last.from
-                                    , to = e.to
-                                    , hasAny = True
-                                    , correctChecks = cc
-                                    }
-                                )
-                                correctChecks
+                            Just
+                                { from = last.from
+                                , to = e.to
+                                , hasAnyException = last.hasAnyException || e.hasAnyException
+                                }
                     )
-                -- The last element might have `hasAny = False`, if so filter it out.
-                |> List.filter .hasAny
+                |> List.filter .hasAnyException
 
-        tree : Tree CorrectChecks
-        tree =
-            rangesToTree .correctChecks rearrangedRanges
+        simpleTree : Tree ()
+        simpleTree =
+            rangesToTree (\_ -> ()) simpleRanges
+
+        categoryTree : Tree ()
+        categoryTree =
+            rangesToTree (\_ -> ()) categoryRanges
     in
     Elm.fn ( "c", Just <| Type.named [] "Char" )
         (letCodeWithSimpleCheck
