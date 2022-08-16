@@ -315,18 +315,17 @@ joinOr lst =
 
 modIs : Expression -> Int -> Expression
 modIs code n =
-    Elm.parens <|
-        Elm.Op.equal
-            (Elm.apply
-                (Elm.value
-                    { importFrom = []
-                    , name = "modBy"
-                    , annotation = Just (Type.function [ Type.int, Type.int ] Type.int)
-                    }
-                )
-                [ Elm.int 2, code ]
+    Elm.Op.equal
+        (Elm.apply
+            (Elm.value
+                { importFrom = []
+                , name = "modBy"
+                , annotation = Just (Type.function [ Type.int, Type.int ] Type.int)
+                }
             )
-            (Elm.int n)
+            [ Elm.int 2, code ]
+        )
+        (Elm.int n)
 
 
 letCode :
@@ -341,36 +340,31 @@ letCode :
     -> Expression
 letCode inner code =
     Elm.Let.letIn
-        (\codeVar lessThan equals inRange ->
-            inner
-                { code = codeVar
-                , lessThan =
-                    \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
-                , equals =
-                    \i ->
-                        Elm.apply equals [ Elm.hex i ]
-                , inRange =
-                    \from to ->
-                        if from == 0 then
-                            Elm.Op.lte codeVar (Elm.hex to)
+        (\codeVar ->
+            Elm.Let.letIn
+                (\lessThan equals inRange ->
+                    inner
+                        { code = codeVar
+                        , lessThan =
+                            \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
+                        , equals =
+                            \i ->
+                                Elm.apply equals [ Elm.hex i ]
+                        , inRange =
+                            \from to ->
+                                if from == 0 then
+                                    Elm.Op.lte codeVar (Elm.hex to)
 
-                        else
-                            Elm.apply inRange [ Elm.hex from, Elm.hex to ]
-                }
-        )
-        |> Elm.Let.value "code"
-            (Elm.apply
-                (Elm.value
-                    { importFrom = [ "Char" ]
-                    , name = "toCode"
-                    , annotation = Just (Type.function [ Type.named [] "Char" ] Type.int)
-                    }
+                                else
+                                    Elm.apply inRange [ Elm.hex from, Elm.hex to ]
+                        }
                 )
-                [ code ]
-            )
-        |> Elm.Let.value "l" lessThanDef
-        |> Elm.Let.value "e" equalsDef
-        |> Elm.Let.value "r" inRangeDef
+                |> Elm.Let.value "l" (lessThanDef codeVar)
+                |> Elm.Let.value "e" (equalsDef codeVar)
+                |> Elm.Let.value "r" (inRangeDef codeVar)
+                |> Elm.Let.toExpression
+        )
+        |> Elm.Let.value "code" (Gen.Char.call_.toCode code)
         |> Elm.Let.toExpression
 
 
@@ -389,77 +383,57 @@ letCodeWithSimpleCheck :
     -> Expression
 letCodeWithSimpleCheck { body, simpleCheckExpression } code =
     Elm.Let.letIn
-        (\codeVar simpleVar lessThan equals inRange ->
-            body
-                { code = codeVar
-                , simple = simpleVar
-                , lessThan =
-                    \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
-                , equals =
-                    \i ->
-                        Elm.apply equals [ Elm.hex i ]
-                , inRange =
-                    \from to ->
-                        if from == 0 then
-                            Elm.Op.lte codeVar (Elm.hex to)
+        (\codeVar simpleVar ->
+            Elm.Let.letIn
+                (\lessThan equals inRange ->
+                    body
+                        { code = codeVar
+                        , simple = simpleVar
+                        , lessThan =
+                            \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
+                        , equals =
+                            \i ->
+                                Elm.apply equals [ Elm.hex i ]
+                        , inRange =
+                            \from to ->
+                                if from == 0 then
+                                    Elm.Op.lte codeVar (Elm.hex to)
 
-                        else
-                            Elm.apply inRange [ Elm.hex from, Elm.hex to ]
-                }
+                                else
+                                    Elm.apply inRange [ Elm.hex from, Elm.hex to ]
+                        }
+                )
+                |> Elm.Let.value "l" (lessThanDef codeVar)
+                |> Elm.Let.value "e" (equalsDef codeVar)
+                |> Elm.Let.value "r" (inRangeDef codeVar)
+                |> Elm.Let.toExpression
         )
         |> Elm.Let.value "code"
-            (Elm.apply
-                (Elm.value
-                    { importFrom = [ "Char" ]
-                    , name = "toCode"
-                    , annotation = Just (Type.function [ Type.named [] "Char" ] Type.int)
-                    }
-                )
-                [ code ]
-            )
+            (Gen.Char.call_.toCode code)
         |> Elm.Let.value "simple"
-            (simpleCheckExpression
-                (Elm.value
-                    { importFrom = []
-                    , name = "c"
-                    , annotation = Just Type.int
-                    }
-                )
-            )
-        |> Elm.Let.value "l" lessThanDef
-        |> Elm.Let.value "e" equalsDef
-        |> Elm.Let.value "r" inRangeDef
+            (simpleCheckExpression code)
         |> Elm.Let.toExpression
 
 
-lessThanDef : Expression
-lessThanDef =
-    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.lt codeVariable hex
+lessThanDef : Expression -> Expression
+lessThanDef code =
+    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.lt code hex
 
 
-equalsDef : Expression
-equalsDef =
-    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.equal hex codeVariable
+equalsDef : Expression -> Expression
+equalsDef code =
+    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.equal hex code
 
 
-inRangeDef : Expression
-inRangeDef =
+inRangeDef : Expression -> Expression
+inRangeDef code =
     Elm.fn2 ( "from", Just Type.int )
         ( "to", Just Type.int )
         (\from to ->
             Elm.Op.and
-                (Elm.Op.lte from codeVariable)
-                (Elm.Op.lte codeVariable to)
+                (Elm.Op.lte from code)
+                (Elm.Op.lte code to)
         )
-
-
-codeVariable : Expression
-codeVariable =
-    Elm.value
-        { importFrom = []
-        , name = "code"
-        , annotation = Just Type.int
-        }
 
 
 getCategoryDeclaration :
@@ -533,17 +507,15 @@ getCategoryDeclaration ranges =
                                                         []
 
                                                     else
-                                                        [ Elm.parens <|
-                                                            Elm.Op.and
-                                                                (modIs code 1)
-                                                                (Elm.parens <| joinOr <| rangesToConditions odd)
+                                                        [ Elm.Op.and
+                                                            (modIs code 1)
+                                                            (joinOr <| rangesToConditions odd)
                                                         ]
 
                                                 else if List.isEmpty odd then
-                                                    [ Elm.parens <|
-                                                        Elm.Op.and
-                                                            (modIs code 0)
-                                                            (Elm.parens <| joinOr <| rangesToConditions even)
+                                                    [ Elm.Op.and
+                                                        (modIs code 0)
+                                                        (joinOr <| rangesToConditions even)
                                                     ]
 
                                                 else
@@ -552,12 +524,12 @@ getCategoryDeclaration ranges =
                                                         (joinOr <| rangesToConditions odd)
                                                     ]
                                         in
-                                        ( Elm.apply (Elm.value { importFrom = [], name = "Just", annotation = Nothing }) [ categoryToConstructor category ]
+                                        ( just (categoryToConstructor category)
                                         , joinOr
                                             (rangesToConditions all ++ modded)
                                         )
                                     )
-                                |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) (Elm.value { importFrom = [], name = "Nothing", annotation = Nothing })
+                                |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) nothing
 
                         Split at l r ->
                             Elm.ifThen (lessThan at)
@@ -577,6 +549,27 @@ getCategoryDeclaration ranges =
         |> Elm.declaration "getCategory"
         |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
         |> Elm.withDocumentation doc
+
+
+nothing : Expression
+nothing =
+    Elm.value
+        { importFrom = []
+        , name = "Nothing"
+        , annotation = Nothing
+        }
+
+
+just : Expression -> Expression
+just value =
+    Elm.apply
+        (Elm.value
+            { importFrom = []
+            , name = "Just"
+            , annotation = Nothing
+            }
+        )
+        [ value ]
 
 
 categoryToConstructor : Category -> Expression
@@ -627,24 +620,21 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                                             []
 
                                         else
-                                            [ Elm.parens <|
-                                                Elm.Op.and
-                                                    (modIs code 1)
-                                                    (Elm.parens <| joinOr (rangesToCondition odd))
+                                            [ Elm.Op.and
+                                                (modIs code 1)
+                                                (joinOr (rangesToCondition odd))
                                             ]
 
                                     else if List.isEmpty odd then
-                                        [ Elm.parens <|
-                                            Elm.Op.and
-                                                (modIs code 0)
-                                                (Elm.parens <| joinOr (rangesToCondition even))
+                                        [ Elm.Op.and
+                                            (modIs code 0)
+                                            (joinOr (rangesToCondition even))
                                         ]
 
                                     else
-                                        [ Elm.parens <|
-                                            Elm.ifThen (modIs code 0)
-                                                (joinOr (rangesToCondition even))
-                                                (joinOr (rangesToCondition odd))
+                                        [ Elm.ifThen (modIs code 0)
+                                            (joinOr (rangesToCondition even))
+                                            (joinOr (rangesToCondition odd))
                                         ]
                             in
                             joinOr
@@ -713,24 +703,21 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                             []
 
                                         else
-                                            [ Elm.parens <|
-                                                Elm.Op.and
-                                                    (modIs code 1)
-                                                    (Elm.parens <| joinOr <| rangesToCondition odd)
+                                            [ Elm.Op.and
+                                                (modIs code 1)
+                                                (joinOr <| rangesToCondition odd)
                                             ]
 
                                     else if List.isEmpty odd then
-                                        [ Elm.parens <|
-                                            Elm.Op.and
-                                                (modIs code 0)
-                                                (Elm.parens <| joinOr <| rangesToCondition even)
+                                        [ Elm.Op.and
+                                            (modIs code 0)
+                                            (joinOr <| rangesToCondition even)
                                         ]
 
                                     else
-                                        [ Elm.parens <|
-                                            Elm.ifThen (modIs code 0)
-                                                (joinOr <| rangesToCondition even)
-                                                (joinOr <| rangesToCondition odd)
+                                        [ Elm.ifThen (modIs code 0)
+                                            (joinOr <| rangesToCondition even)
+                                            (joinOr <| rangesToCondition odd)
                                         ]
                             in
                             joinOr
@@ -742,7 +729,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 (go r)
             in
             Elm.Op.or
-                (Elm.parens (Elm.Op.and simple (Elm.parens (go simpleTree))))
+                (Elm.Op.and simple (go simpleTree))
                 (go categoryTree)
 
         simpleRanges : List { from : Int, to : Int, hasAny : Bool }
