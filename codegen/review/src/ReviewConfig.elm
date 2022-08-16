@@ -11,7 +11,6 @@ when inside the directory containing this file.
 
 -}
 
-
 import Docs.ReviewAtDocs
 import NoDebug.Log
 import NoDebug.TodoOrToString
@@ -51,6 +50,8 @@ config =
     , NoUnused.CustomTypeConstructorArgs.rule
     , NoUnused.Dependencies.rule
     , NoUnused.Exports.rule
+        |> Rule.ignoreErrorsForDirectories [ "Gen/" ]
+        |> Rule.ignoreErrorsForFiles [ "Categories.elm" ]
     , NoUnused.Modules.rule
     , NoUnused.Parameters.rule
     , NoUnused.Patterns.rule
