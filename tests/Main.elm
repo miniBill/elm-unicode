@@ -1,4 +1,4 @@
-module Main exposing (suite)
+module Main exposing (specials, suite)
 
 import Expect exposing (Expectation)
 import Hex
@@ -90,16 +90,16 @@ checkCode code =
             , ( "isDigit", Unicode.isDigit, isDigit )
             ]
                 |> List.map
-                    (\( name, function, expected ) ->
+                    (\( name, function, expected ) v ->
                         if expected then
-                            Expect.true
-                                ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be True")
-                                << function
+                            function v
+                                |> Expect.equal True
+                                |> Expect.onFail ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be True")
 
                         else
-                            Expect.false
-                                ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be False")
-                                << function
+                            function v
+                                |> Expect.equal False
+                                |> Expect.onFail ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be False")
                     )
     in
     Expect.all expectations char
