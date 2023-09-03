@@ -122,7 +122,7 @@ flagsToFile csv =
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
                 rawDict
-            , categoriesToDeclarationWithSimpleCheck
+            , categoriesToDeclaration
                 { name = "isAlpha"
                 , categories =
                     [ LetterLowercase
@@ -133,14 +133,8 @@ flagsToFile csv =
                     ]
                 , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
                 , group = "Letters"
-                , simpleCheck = \c -> Char.toLower c /= c || Char.toUpper c /= c
-                , simpleCheckExpression =
-                    \c ->
-                        Elm.Op.or
-                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                rawDict
+                ranges
             , categoriesToDeclaration
                 { name = "isDigit"
                 , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
@@ -734,9 +728,9 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 (go l)
                                 (go r)
             in
-            Elm.Op.or
-                (Elm.Op.and simple (go simpleTree))
-                (go categoryTree)
+            Elm.ifThen simple
+                (go simpleTree)
+                (go nonsimpleTree)
 
         simpleRanges : List { from : Int, to : Int, hasAny : Bool }
         simpleRanges =
@@ -779,8 +773,8 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                     )
                 |> List.filter .hasAny
 
-        categoryRanges : List { from : Int, to : Int, hasAnyException : Bool }
-        categoryRanges =
+        nonsimpleRanges : List { from : Int, to : Int, hasAnyException : Bool }
+        nonsimpleRanges =
             rawDict
                 |> Dict.toList
                 |> List.filterMap
@@ -794,11 +788,15 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 isSimple =
                                     simpleCheck (Char.fromCode codeValue)
                             in
-                            Just
-                                { from = codeValue
-                                , to = codeValue
-                                , hasAnyException = not isSimple
-                                }
+                            if not isSimple then
+                                Just
+                                    { from = codeValue
+                                    , to = codeValue
+                                    , hasAnyException = not isSimple
+                                    }
+
+                            else
+                                Nothing
 
                         else
                             Nothing
@@ -821,9 +819,9 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         simpleTree =
             rangesToTree False (\_ -> ()) simpleRanges
 
-        categoryTree : Tree ()
-        categoryTree =
-            rangesToTree True (\_ -> ()) categoryRanges
+        nonsimpleTree : Tree ()
+        nonsimpleTree =
+            rangesToTree True (\_ -> ()) nonsimpleRanges
     in
     Elm.fn ( "c", Just <| Type.named [] "Char" )
         (letCodeWithSimpleCheck
