@@ -6,37 +6,43 @@ module VersionCheck exposing (suite)
 import Expect exposing (Expectation)
 import Hex
 import Main
-import Set
-import Test exposing (Test, describe, test)
-import TestData
+import Test exposing (Test, test)
 import Unicode
 
 
 suite : Test
 suite =
     if False then
-        (if True then
-            List.range 0 0x20FF ++ Main.specials
-
-         else
-            0x0378 :: TestData.testData
-        )
-            |> Set.fromList
-            |> Set.toList
-            |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)
-            |> describe "Is coherent with older version"
+        test "Is coherent with older version" <|
+            \_ ->
+                Expect.all
+                    (List.map (\input _ -> checkCode input) Main.inputs)
+                    ()
 
     else
         test "Read the top of the file" <| \_ -> Expect.pass
 
 
 checkCode : Int -> Expectation
-checkCode codepoint =
+checkCode code =
     let
         char : Char
         char =
-            Char.fromCode codepoint
+            Char.fromCode code
+
+        errorMessage : String
+        errorMessage =
+            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar char ++ "] OldUnicode.getCategory = " ++ Debug.toString oldCategory ++ " then Unicode.getCategory should be the same, but it was" ++ Debug.toString newCategory
+
+        newCategory : String
+        newCategory =
+            Debug.toString <| Unicode.getCategory char
+
+        oldCategory : String
+        oldCategory =
+            -- Debug.toString <| OldUnicode.getCategory char
+            Debug.toString <| Unicode.getCategory char
     in
-    (Debug.toString <| Unicode.getCategory char)
-        -- |> Expect.equal (Debug.toString <| OldUnicode.getCategory char)
-        |> (\_ -> Expect.pass)
+    newCategory
+        |> Expect.equal oldCategory
+        |> Expect.onFail errorMessage

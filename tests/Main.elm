@@ -1,4 +1,4 @@
-module Main exposing (specials, suite)
+module Main exposing (inputs, suite)
 
 import Expect exposing (Expectation)
 import Hex
@@ -8,21 +8,21 @@ import TestData
 import Unicode exposing (Category(..))
 
 
+inputs : List Int
+inputs =
+    (if True then
+        List.range 0 0x20FF ++ specials
+
+     else
+        0x0378 :: TestData.testData
+    )
+        |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
+        |> Set.fromList
+        |> Set.toList
+
+
 suite : Test
 suite =
-    let
-        inputs : List Int
-        inputs =
-            (if True then
-                List.range 0 0x20FF ++ specials
-
-             else
-                0x0378 :: TestData.testData
-            )
-                |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
-                |> Set.fromList
-                |> Set.toList
-    in
     test "Is coherent" <|
         \_ ->
             Expect.all (List.map (\input _ -> checkCode input) inputs) ()
