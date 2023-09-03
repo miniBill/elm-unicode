@@ -47,8 +47,8 @@ isUpper c =
     if simple then
         ((code <= 0x215F) || r 0x2170 0x24B5) || r 0x24D0 0x000F0000
 
-    else if l 0x0001D4AD then
-        if l 0x2132 then
+    else if l 0x0001D4CF then
+        if l 0x213D then
             (((((((((r 0x03D2 0x03D4 || e 0x2102) || e 0x2107)
                     || r 0x210B 0x210D
                   )
@@ -62,52 +62,50 @@ isUpper c =
               )
                 || e 0x2128
              )
-                || r 0x212C 0x212D
+                || r 0x212A 0x212D
             )
-                || r 0x2130 0x2131
+                || r 0x2130 0x2133
 
         else
-            (((((((((e 0x2133 || r 0x213E 0x213F) || e 0x2145)
-                    || r 0x0001D400 0x0001D419
-                  )
+            (((((((((r 0x213E 0x213F || e 0x2145) || r 0x0001D400 0x0001D419)
                     || r 0x0001D434 0x0001D44D
-                 )
+                  )
                     || r 0x0001D468 0x0001D481
-                )
+                 )
                     || e 0x0001D49C
+                )
+                    || r 0x0001D49E 0x0001D49F
                )
-                || r 0x0001D49E 0x0001D49F
-              )
                 || e 0x0001D4A2
-             )
-                || r 0x0001D4A5 0x0001D4A6
-            )
-                || r 0x0001D4A9 0x0001D4AC
-
-    else if l 0x0001D56B then
-        (((((((((r 0x0001D4AE 0x0001D4B5 || r 0x0001D4D0 0x0001D4E9)
-                    || r 0x0001D504 0x0001D505
-               )
-                || r 0x0001D507 0x0001D50A
               )
-                || r 0x0001D50D 0x0001D514
+                || r 0x0001D4A5 0x0001D4A6
              )
-                || r 0x0001D516 0x0001D51C
+                || r 0x0001D4A9 0x0001D4AC
             )
+                || r 0x0001D4AE 0x0001D4B5
+
+    else if l 0x0001D59F then
+        (((((((((r 0x0001D4D0 0x0001D4E9 || r 0x0001D504 0x0001D505)
+                    || r 0x0001D507 0x0001D50A
+               )
+                || r 0x0001D50D 0x0001D514
+              )
+                || r 0x0001D516 0x0001D51C
+             )
                 || r 0x0001D538 0x0001D539
+            )
+                || r 0x0001D53B 0x0001D53E
            )
-            || r 0x0001D53B 0x0001D53E
-          )
             || r 0x0001D540 0x0001D544
-         )
+          )
             || e 0x0001D546
-        )
+         )
             || r 0x0001D54A 0x0001D550
+        )
+            || r 0x0001D56C 0x0001D585
 
     else
-        ((((((((((r 0x0001D56C 0x0001D585 || r 0x0001D5A0 0x0001D5B9)
-                    || r 0x0001D5D4 0x0001D5ED
-                )
+        (((((((((r 0x0001D5A0 0x0001D5B9 || r 0x0001D5D4 0x0001D5ED)
                     || r 0x0001D608 0x0001D621
                )
                 || r 0x0001D63C 0x0001D655
@@ -151,137 +149,105 @@ isLower c =
         (((code <= 0x0344) || r 0x0346 0x216F) || r 0x2180 0x24CF)
             || r 0x24EA 0x000F0000
 
-    else if l 0x2C76 then
-        if l 0x029E then
-            if l 0x0266 then
-                (((((((((e 0x0138 || e 0x018D) || e 0x019B) || r 0x01AA 0x01AB)
-                        || e 0x01BA
-                     )
-                        || e 0x01BE
-                    )
-                        || e 0x0221
+    else if l 0xA7F9 then
+        if l 0x2109 then
+            if l 0x024E then
+                ((((((r 0x0137 0x0138 || r 0x018C 0x018D) || r 0x0199 0x019B)
+                        || r 0x01AA 0x01AB
                    )
-                    || r 0x0234 0x0239
+                    || r 0x01B9 0x01BA
                   )
-                    || e 0x0255
+                    || r 0x01BD 0x01BF
                  )
-                    || r 0x025D 0x025F
+                    || e 0x0221
                 )
-                    || ((modBy 2 code == 0)
-                            && (r 0x0258 0x025A || r 0x0262 0x0264)
-                       )
+                    || r 0x0233 0x0239
 
             else
-                (((((((((e 0x0267 || r 0x026D 0x026E) || e 0x0270)
-                        || r 0x0273 0x0274
-                      )
-                        || r 0x0276 0x027C
-                     )
-                        || r 0x027E 0x027F
+                (((((((r 0x024F 0x0293 || r 0x0295 0x02AF) || r 0x03FB 0x03FC)
+                        || r 0x0560 0x0588
                     )
-                        || e 0x0281
+                        || r 0x1D00 0x1D2B
                    )
-                    || r 0x0284 0x0286
-                  )
-                    || r 0x028D 0x0291
-                 )
-                    || e 0x0293
-                )
-                    || r 0x0295 0x029C
-
-        else if l 0x1E9E then
-            ((((((((r 0x029F 0x02AF || e 0x03FC) || e 0x0560) || e 0x0588)
-                    || r 0x1D00 0x1D2B
-                )
                     || r 0x1D6B 0x1D77
-               )
-                || r 0x1D7A 0x1D7C
+                  )
+                    || r 0x1D79 0x1D9A
+                 )
+                    || r 0x1E95 0x1E9D
+                )
+                    || e 0x1E9F
+
+        else if l 0x2C70 then
+            ((((((e 0x210A || r 0x210E 0x210F) || e 0x2113) || e 0x212F)
+                || e 0x2134
               )
-                || r 0x1D7E 0x1D8D
+                || e 0x2139
              )
-                || r 0x1D8F 0x1D9A
+                || r 0x213C 0x213D
             )
-                || r 0x1E9C 0x1E9D
+                || r 0x2146 0x2149
 
         else
-            (((((((((e 0x1E9F || e 0x210A) || r 0x210E 0x210F) || e 0x2113)
-                    || e 0x212F
+            ((((((((e 0x2C71 || r 0x2C73 0x2C74) || r 0x2C76 0x2C7B)
+                    || r 0x2CE3 0x2CE4
                  )
-                    || e 0x2134
+                    || r 0xA72F 0xA731
                 )
-                    || e 0x2139
-               )
-                || r 0x213C 0x213D
-              )
-                || r 0x2146 0x2149
-             )
-                || e 0x2C71
-            )
-                || e 0x2C74
-
-    else if l 0x0001D551 then
-        if l 0xAB5F then
-            (((((((((r 0x2C77 0x2C7B || e 0x2CE4) || r 0xA730 0xA731)
                     || r 0xA771 0xA778
-                  )
-                    || e 0xA78E
-                 )
-                    || e 0xA795
-                )
-                    || e 0xA7AF
                )
-                || e 0xA7FA
+                || e 0xA78E
               )
-                || r 0xAB30 0xAB52
+                || r 0xA793 0xA795
              )
-                || r 0xAB54 0xAB5A
+                || e 0xA7AF
             )
                 || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
 
-        else
-            (((((((((r 0xAB60 0xAB68 || r 0x0001D41A 0x0001D433)
-                        || r 0x0001D44E 0x0001D454
-                   )
-                    || r 0x0001D456 0x0001D467
-                  )
-                    || r 0x0001D482 0x0001D49B
-                 )
-                    || r 0x0001D4B6 0x0001D4B9
-                )
-                    || e 0x0001D4BB
+    else if l 0x0001D621 then
+        if l 0x0001D4BA then
+            ((((((e 0xA7FA || r 0xAB30 0xAB5A) || r 0xAB60 0xAB68)
+                    || r 0x0001D41A 0x0001D433
                )
-                || r 0x0001D4BD 0x0001D4C3
+                || r 0x0001D44E 0x0001D454
               )
-                || r 0x0001D4C5 0x0001D4CF
+                || r 0x0001D456 0x0001D467
              )
-                || r 0x0001D4EA 0x0001D503
+                || r 0x0001D482 0x0001D49B
             )
-                || r 0x0001D51E 0x0001D537
+                || r 0x0001D4B6 0x0001D4B9
 
-    else if l 0x0001D715 then
-        ((((((((r 0x0001D552 0x0001D56B || r 0x0001D586 0x0001D59F)
-                || r 0x0001D5BA 0x0001D5D3
+        else
+            (((((((e 0x0001D4BB || r 0x0001D4BD 0x0001D4C3)
+                    || r 0x0001D4C5 0x0001D4CF
+                 )
+                    || r 0x0001D4EA 0x0001D503
+                )
+                    || r 0x0001D51E 0x0001D537
+               )
+                || r 0x0001D552 0x0001D56B
               )
-                || r 0x0001D5EE 0x0001D607
+                || r 0x0001D586 0x0001D59F
              )
-                || r 0x0001D622 0x0001D63B
+                || r 0x0001D5BA 0x0001D5D3
             )
-                || r 0x0001D656 0x0001D66F
+                || r 0x0001D5EE 0x0001D607
+
+    else if l 0x0001D74F then
+        ((((((r 0x0001D622 0x0001D63B || r 0x0001D656 0x0001D66F)
+                || r 0x0001D68A 0x0001D6A5
+            )
+                || r 0x0001D6C2 0x0001D6DA
            )
-            || r 0x0001D68A 0x0001D6A5
-          )
-            || r 0x0001D6C2 0x0001D6DA
-         )
             || r 0x0001D6DC 0x0001D6E1
-        )
+          )
             || r 0x0001D6FC 0x0001D714
+         )
+            || r 0x0001D716 0x0001D71B
+        )
+            || r 0x0001D736 0x0001D74E
 
     else
-        (((((((((r 0x0001D716 0x0001D71B || r 0x0001D736 0x0001D74E)
-                    || r 0x0001D750 0x0001D755
-               )
-                || r 0x0001D770 0x0001D788
-              )
+        (((((((r 0x0001D750 0x0001D755 || r 0x0001D770 0x0001D788)
                 || r 0x0001D78A 0x0001D78F
              )
                 || r 0x0001D7AA 0x0001D7C2

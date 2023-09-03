@@ -782,21 +782,16 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                         let
                             belongs =
                                 List.member category categories
-                        in
-                        if belongs then
-                            let
-                                isSimple =
-                                    simpleCheck (Char.fromCode codeValue)
-                            in
-                            if not isSimple then
-                                Just
-                                    { from = codeValue
-                                    , to = codeValue
-                                    , hasAnyException = not isSimple
-                                    }
 
-                            else
-                                Nothing
+                            isSimple =
+                                simpleCheck (Char.fromCode codeValue)
+                        in
+                        if belongs || isSimple then
+                            Just
+                                { from = codeValue
+                                , to = codeValue
+                                , hasAnyException = not isSimple
+                                }
 
                         else
                             Nothing
