@@ -49,7 +49,8 @@ checks =
     , ( "isAlpha", OldUnicode.isAlpha >> boolToString )
     , ( "isAlphaNum", OldUnicode.isAlphaNum >> boolToString )
     , ( "isDigit", OldUnicode.isDigit >> boolToString )
-    , ( "getCategory", OldUnicode.getCategory >> Maybe.map OldUnicode.categoryToString >> Maybe.withDefault "?" )
+
+    -- , ( "getCategory", OldUnicode.getCategory >> Maybe.map OldUnicode.categoryToString >> Maybe.withDefault "?" )
     ]
 
 
