@@ -1,8 +1,18 @@
-all: src/Unicode.elm docs.json
+all: src/Unicode.elm docs.json tests/TestData.elm
 
 dist/UnicodeData.txt:
 	mkdir -p $(dir $@)
 	curl 'https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt' > $@
+
+tests/TestData.elm: dist/UnicodeData.txt Makefile
+	echo "module TestData exposing (testData)" > $@
+	echo "" >> $@
+	echo "testData : List Int" >> $@
+	echo "testData =" >> $@
+	echo -n "    [ 0x" >> $@
+	grep -oE '^[^;]*' < $< | sed '2,$$s/^/    , 0x/' >> $@
+	echo "    ]" >> $@
+	elm-format --yes $@
 
 codegen/Gen/Basics.elm: codegen/elm.codegen.json dist/yarn-run
 	yarn elm-codegen install

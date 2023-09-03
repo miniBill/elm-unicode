@@ -3,3 +3,4 @@ dist
 codegen/Gen
 codegen/Categories.elm
 node_modules
+tests/TestData.elm
