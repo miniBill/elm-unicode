@@ -24,4 +24,4 @@ docs.json: src/Unicode.elm
 
 .PHONY: clean
 clean:
-	rm -rf dist elm-stuff codegen/elm-stuff node_modules
+	rm -rf dist elm-stuff codegen/elm-stuff node_modules codegen/Gen codegen/Categories.elm
