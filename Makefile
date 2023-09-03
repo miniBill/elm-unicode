@@ -25,7 +25,7 @@ src/Unicode.elm: codegen/GenerateUnicode.elm codegen/Gen/Basics.elm dist/Unicode
 	yarn elm-codegen run $< --flags-from dist/UnicodeData.txt --output $(dir $@)
 	elm-format --yes $@
 
-dist/yarn-run:
+dist/yarn-run: package.json yarn.lock
 	mkdir -p $(dir $@)
 	yarn install && touch $@
 
