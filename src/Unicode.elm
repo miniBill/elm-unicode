@@ -23,8 +23,6 @@ module Unicode exposing
 
 -}
 
-import Char
-
 
 {-| Detect upper case characters (Unicode category Lu)
 -}
