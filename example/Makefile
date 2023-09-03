@@ -1,6 +1,9 @@
 .PHONY: all
 
-all: dist/elm.min.js dist/elm-old.min.js
+all: dist/elm.min.js.gz dist/elm-old.min.js.gz
+
+dist/%.gz: dist/%
+	pigz -9 < $< > $@
 
 dist/%.min.js: dist/%.js dist/yarn-run
 	yarn uglifyjs $< --mangle --output $@
