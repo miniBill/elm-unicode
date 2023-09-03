@@ -32,6 +32,7 @@ import NoUnused.Exports
 import NoUnused.Parameters
 import NoUnused.Patterns
 import NoUnused.Variables
+import ParensRule
 import Review.Rule as Rule exposing (Rule)
 import Simplify
 
@@ -66,4 +67,6 @@ config =
     , NoUnused.Patterns.rule
     , NoUnused.Variables.rule
     , Simplify.rule Simplify.defaults
+    , ParensRule.rule
     ]
+        |> List.map (Rule.ignoreErrorsForFiles [ "src/OldUnicode.elm" ])
