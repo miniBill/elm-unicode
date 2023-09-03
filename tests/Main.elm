@@ -14,7 +14,7 @@ suite =
         List.range 0 0x20FF ++ specials
 
      else
-        TestData.testData
+        0x0378 :: TestData.testData
     )
         |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList

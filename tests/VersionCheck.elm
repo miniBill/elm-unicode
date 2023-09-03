@@ -19,7 +19,7 @@ suite =
             List.range 0 0x20FF ++ Main.specials
 
          else
-            TestData.testData
+            0x0378 :: TestData.testData
         )
             |> Set.fromList
             |> Set.toList
