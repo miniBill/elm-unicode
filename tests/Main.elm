@@ -10,12 +10,7 @@ import Unicode exposing (Category(..))
 
 inputs : List Int
 inputs =
-    (if True then
-        List.range 0 0x20FF ++ specials
-
-     else
-        0x0378 :: TestData.testData
-    )
+    (specials ++ TestData.testData)
         |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList
         |> Set.toList
