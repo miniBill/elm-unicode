@@ -8,13 +8,19 @@ import Hex
 import Main
 import Set
 import Test exposing (Test, describe, test)
+import TestData
 import Unicode
 
 
 suite : Test
 suite =
     if False then
-        (List.range 0 0x20FF ++ Main.specials)
+        (if True then
+            List.range 0 0x20FF ++ Main.specials
+
+         else
+            TestData.testData
+        )
             |> Set.fromList
             |> Set.toList
             |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)

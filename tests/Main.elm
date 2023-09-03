@@ -4,12 +4,18 @@ import Expect exposing (Expectation)
 import Hex
 import Set
 import Test exposing (Test, describe, test)
+import TestData
 import Unicode exposing (Category(..))
 
 
 suite : Test
 suite =
-    (List.range 0 0x20FF ++ specials)
+    (if True then
+        List.range 0 0x20FF ++ specials
+
+     else
+        TestData.testData
+    )
         |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList
         |> Set.toList
