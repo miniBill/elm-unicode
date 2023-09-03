@@ -4,8 +4,6 @@
         "packages": {
             "elm/core": "1.0.5"
         },
-        "local": [
-            "codegen/helpers/"
-        ]
+        "local": []
     }
 }
