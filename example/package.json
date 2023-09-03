@@ -2,5 +2,6 @@
   "devDependencies": {
     "elm-optimize-level-2": "^0.3.5",
     "uglify-js": "^3.17.4"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

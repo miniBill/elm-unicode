@@ -7,5 +7,6 @@
     },
     "scripts": {
         "regen": "pnpm codegen install"
-    }
+    },
+    "license": "BSD-3-Clause"
 }
