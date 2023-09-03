@@ -13,7 +13,7 @@ src/Unicode.elm: codegen/GenerateUnicode.elm dist/UnicodeData.txt codegen/Catego
 	elm-format --yes $@
 
 docs.json: src/Unicode.elm
-	elm make --docs=$@ $^
+	elm make --docs=$@
 
 .PHONY: clean
 clean:
