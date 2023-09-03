@@ -4,13 +4,14 @@ import Expect exposing (Expectation)
 import Hex
 import Set
 import Test exposing (..)
+import TestData
 import Unicode exposing (Category(..))
 
 
 suite : Test
 suite =
-    List.range 0 0x20FF
-        |> (++) (List.map Char.toCode specials)
+    (specials ++ TestData.testData)
+        |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList
         |> Set.toList
         |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)
@@ -19,7 +20,7 @@ suite =
 
 {-| Some special cases that are worth checking explicitly.
 -}
-specials : List Char
+specials : List Int
 specials =
     [ 'ǲ' -- Upper and lower are both different
     , 'ﬀ'
@@ -28,6 +29,7 @@ specials =
     , 'ῼ'
     , '\u{0378}' -- Missing from Unicode table
     ]
+        |> List.map Char.toCode
 
 
 checkCode : Int -> Expectation
