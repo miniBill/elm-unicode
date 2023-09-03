@@ -13,9 +13,8 @@ import Unicode
 
 suite : Test
 suite =
-    if True then
-        List.range 0 0x20FF
-            |> (++) (List.map Char.toCode Main.specials)
+    if False then
+        (List.range 0 0x20FF ++ Main.specials)
             |> Set.fromList
             |> Set.toList
             |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)
@@ -34,4 +33,4 @@ checkCode codepoint =
     in
     (Debug.toString <| Unicode.getCategory char)
         -- |> Expect.equal (Debug.toString <| OldUnicode.getCategory char)
-        |> Expect.equal (Debug.toString <| Unicode.getCategory char)
+        |> (\_ -> Expect.pass)

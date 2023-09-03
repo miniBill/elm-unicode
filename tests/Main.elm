@@ -3,14 +3,13 @@ module Main exposing (specials, suite)
 import Expect exposing (Expectation)
 import Hex
 import Set
-import Test exposing (..)
-import TestData
+import Test exposing (Test, describe, test)
 import Unicode exposing (Category(..))
 
 
 suite : Test
 suite =
-    (specials ++ TestData.testData)
+    (List.range 0 0x20FF ++ specials)
         |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList
         |> Set.toList
@@ -35,12 +34,15 @@ specials =
 checkCode : Int -> Expectation
 checkCode code =
     let
+        char : Char
         char =
             Char.fromCode code
 
+        category : Maybe Category
         category =
             Unicode.getCategory char
 
+        no : { isUpper : Bool, isLower : Bool, isAlpha : Bool, isAlphaNum : Bool, isDigit : Bool }
         no =
             { isUpper = False
             , isLower = False
@@ -49,9 +51,11 @@ checkCode code =
             , isDigit = False
             }
 
+        letter : { isUpper : Bool, isLower : Bool, isAlpha : Bool, isAlphaNum : Bool, isDigit : Bool }
         letter =
             { no | isAlpha = True, isAlphaNum = True }
 
+        digit : { isUpper : Bool, isLower : Bool, isAlpha : Bool, isAlphaNum : Bool, isDigit : Bool }
         digit =
             { no | isDigit = True, isAlphaNum = True }
 
@@ -84,6 +88,7 @@ checkCode code =
                 _ ->
                     no
 
+        expectations : List (Char -> Expectation)
         expectations =
             [ ( "isUpper", Unicode.isUpper, isUpper )
             , ( "isLower", Unicode.isLower, isLower )
