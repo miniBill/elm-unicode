@@ -2,7 +2,8 @@
     "devDependencies": {
         "@lydell/elm": "^0.19.1-5",
         "elm-codegen": "^0.5.0",
-        "elm-review": "^2.10.2"
+        "elm-review": "^2.10.2",
+        "elm-test": "^0.19.1-revision12"
     },
     "scripts": {
         "regen": "pnpm codegen install"
