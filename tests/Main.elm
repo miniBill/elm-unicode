@@ -3,24 +3,29 @@ module Main exposing (specials, suite)
 import Expect exposing (Expectation)
 import Hex
 import Set
-import Test exposing (Test, describe, test)
+import Test exposing (Test, test)
 import TestData
 import Unicode exposing (Category(..))
 
 
 suite : Test
 suite =
-    (if True then
-        List.range 0 0x20FF ++ specials
+    let
+        inputs : List Int
+        inputs =
+            (if True then
+                List.range 0 0x20FF ++ specials
 
-     else
-        0x0378 :: TestData.testData
-    )
-        |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
-        |> Set.fromList
-        |> Set.toList
-        |> List.map (\code -> test ("for \\u{" ++ Hex.toString code ++ "} - " ++ String.fromChar (Char.fromCode code)) <| \_ -> checkCode code)
-        |> describe "Is coherent"
+             else
+                0x0378 :: TestData.testData
+            )
+                |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
+                |> Set.fromList
+                |> Set.toList
+    in
+    test "Is coherent" <|
+        \_ ->
+            Expect.all (List.map (\input _ -> checkCode input) inputs) ()
 
 
 {-| Some special cases that are worth checking explicitly.
@@ -94,6 +99,10 @@ checkCode code =
                 _ ->
                     no
 
+        errorPrefix : String -> String -> String
+        errorPrefix name expected =
+            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar (Char.fromCode code) ++ "] If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be " ++ expected
+
         expectations : List (Char -> Expectation)
         expectations =
             [ ( "isUpper", Unicode.isUpper, isUpper )
@@ -107,12 +116,12 @@ checkCode code =
                         if expected then
                             function v
                                 |> Expect.equal True
-                                |> Expect.onFail ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be True")
+                                |> Expect.onFail (errorPrefix name "True")
 
                         else
                             function v
                                 |> Expect.equal False
-                                |> Expect.onFail ("If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be False")
+                                |> Expect.onFail (errorPrefix name "False")
                     )
     in
     Expect.all expectations char
