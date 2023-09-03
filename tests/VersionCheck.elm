@@ -1,26 +1,22 @@
 module VersionCheck exposing (suite)
 
-{- To use this test module, move Unicode.elm to OldUnicode.elm, regen Unicode.elm and then uncomment the relevant lines. -}
--- import OldUnicode
+{- To use this test module, copy the released Unicode.elm to OldUnicode.elm. -}
 
 import Expect exposing (Expectation)
 import Hex
 import Main
+import OldUnicode
 import Test exposing (Test, test)
 import Unicode
 
 
 suite : Test
 suite =
-    if False then
-        test "Is coherent with older version" <|
-            \_ ->
-                Expect.all
-                    (List.map (\input _ -> checkCode input) Main.inputs)
-                    ()
-
-    else
-        test "Read the top of the file" <| \_ -> Expect.pass
+    test "Is coherent with older version" <|
+        \_ ->
+            Expect.all
+                (List.map (\input _ -> checkCode input) Main.inputs)
+                ()
 
 
 checkCode : Int -> Expectation
@@ -40,8 +36,7 @@ checkCode code =
 
         oldCategory : String
         oldCategory =
-            -- Debug.toString <| OldUnicode.getCategory char
-            Debug.toString <| Unicode.getCategory char
+            Debug.toString <| OldUnicode.getCategory char
     in
     newCategory
         |> Expect.equal oldCategory
