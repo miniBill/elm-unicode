@@ -1,10 +1,7 @@
 {
     "devDependencies": {
-        "commander": "^9.2.0",
-        "elm": "^0.19.1-5",
-        "elm-codegen": "^0.1.1",
-        "elm-hot": "^1.1.6",
-        "node-elm-compiler": "^5.0.6"
+        "@lydell/elm": "^0.19.1-5",
+        "elm-codegen": "^0.5.0"
     },
     "scripts": {
         "regen": "pnpm codegen install"
