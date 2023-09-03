@@ -101,7 +101,7 @@ checkCode code =
 
         errorPrefix : String -> String -> String
         errorPrefix name expected =
-            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar (Char.fromCode code) ++ "] If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be " ++ expected
+            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar char ++ "] If getCategory is " ++ Debug.toString category ++ " then " ++ name ++ " should be " ++ expected
 
         expectations : List (Char -> Expectation)
         expectations =
