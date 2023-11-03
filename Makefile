@@ -17,7 +17,7 @@ tests/TestData.elm: dist/UnicodeData.txt Makefile
 codegen/Gen/Basics.elm: codegen/elm.codegen.json dist/yarn-run
 	yarn elm-codegen install
 
-codegen/Categories.elm: codegen/GenerateCategories.elm codegen/Gen/Basics.elm dist/UnicodeData.txt dist/yarn-run
+codegen/Categories.elm: codegen/GenerateCategories.elm codegen/Gen/Basics.elm codegen/elm.json dist/UnicodeData.txt dist/yarn-run
 	yarn elm-codegen run $< --output $(dir $@)
 	elm-format --yes $@
 
