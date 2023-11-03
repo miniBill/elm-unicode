@@ -158,6 +158,20 @@ flagsToFile csv =
                 , group = "Letters"
                 }
                 ranges
+            , categoriesToDeclaration
+                { name = "isSpace"
+                , categories = [ SeparatorSpace ]
+                , comment = "Detect spaces (Unicode category Zs)"
+                , group = "Separators"
+                }
+                ranges
+            , categoriesToDeclaration
+                { name = "isSeparator"
+                , categories = [ SeparatorSpace, SeparatorLine, SeparatorParagraph ]
+                , comment = "Detect spaces (Unicode categories Zs, Zl, Zp)"
+                , group = "Separators"
+                }
+                ranges
             ]
     in
     Elm.fileWith [ "Unicode" ]

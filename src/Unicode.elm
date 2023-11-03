@@ -2,6 +2,7 @@ module Unicode exposing
     ( isUpper, isLower, isAlpha, isAlphaNum
     , isDigit
     , Category(..), getCategory, categoryFromString, categoryToString, categoryToDescription
+    , isSpace, isSeparator
     )
 
 {-| Unicode aware functions for working with characters.
@@ -20,6 +21,11 @@ module Unicode exposing
 ## Categories
 
 @docs Category, getCategory, categoryFromString, categoryToString, categoryToDescription
+
+
+## Separators
+
+@docs isSpace, isSeparator
 
 -}
 
@@ -674,6 +680,54 @@ isAlphaNum c =
 
     else
         e 0x0002B739 || e 0x0002B740 || e 0x0002B81D || e 0x0002B820 || e 0x0002CEA1 || e 0x0002CEB0 || e 0x0002EBE0 || r 0x0002F800 0x0002FA1D || e 0x00030000 || e 0x0003134A || e 0x00031350 || e 0x000323AF
+
+
+{-| Detect spaces (Unicode category Zs)
+-}
+isSpace : Char -> Bool
+isSpace c =
+    let
+        code =
+            Char.toCode c
+
+        l hex =
+            code < hex
+
+        e hex =
+            hex == code
+
+        r from to =
+            (from <= code) && (code <= to)
+    in
+    if l 0x0100 then
+        e 0x20 || e 0xA0
+
+    else
+        e 0x1680 || r 0x2000 0x200A || e 0x202F || e 0x205F || e 0x3000
+
+
+{-| Detect spaces (Unicode categories Zs, Zl, Zp)
+-}
+isSeparator : Char -> Bool
+isSeparator c =
+    let
+        code =
+            Char.toCode c
+
+        l hex =
+            code < hex
+
+        e hex =
+            hex == code
+
+        r from to =
+            (from <= code) && (code <= to)
+    in
+    if l 0x0100 then
+        e 0x20 || e 0xA0
+
+    else
+        e 0x1680 || r 0x2000 0x200A || r 0x2028 0x2029 || e 0x202F || e 0x205F || e 0x3000
 
 
 {-| A category as defined by the Unicode standard.
