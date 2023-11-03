@@ -3,14 +3,14 @@ module Main exposing (inputs, suite)
 import Expect exposing (Expectation)
 import Hex
 import Set
-import Test exposing (Test, test)
+import Test exposing (Test, describe, test)
 import TestData
 import Unicode exposing (Category(..))
 
 
 inputs : List Int
 inputs =
-    (specials ++ TestData.testData)
+    (List.map Char.toCode specials ++ TestData.testData)
         |> List.concatMap (\n -> [ n - 1, n, n + 1 ])
         |> Set.fromList
         |> Set.toList
@@ -18,14 +18,30 @@ inputs =
 
 suite : Test
 suite =
-    test "Is coherent" <|
-        \_ ->
-            Expect.all (List.map (\input _ -> checkCode input) inputs) ()
+    describe "Main tests"
+        [ test "Is coherent" <|
+            \_ ->
+                Expect.all (List.map (\input _ -> checkCode input) inputs) ()
+        , describe "Is defined for special chars" <|
+            List.map
+                (\input ->
+                    test (String.fromChar input) <|
+                        \_ ->
+                            if input == '\u{0378}' then
+                                -- This is a special value outside the table
+                                Expect.pass
+
+                            else
+                                Unicode.getCategory input
+                                    |> Expect.notEqual Nothing
+                )
+                specials
+        ]
 
 
 {-| Some special cases that are worth checking explicitly.
 -}
-specials : List Int
+specials : List Char
 specials =
     [ 'ǲ' -- Upper and lower are both different
     , 'ﬀ'
@@ -33,8 +49,8 @@ specials =
     , 'ẞ' -- (toUpper >> toLower) /= toUpper
     , 'ῼ'
     , '\u{0378}' -- Missing from Unicode table
+    , '肖' -- an Hanzi
     ]
-        |> List.map Char.toCode
 
 
 checkCode : Int -> Expectation
