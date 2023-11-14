@@ -12,6 +12,7 @@ import GenerateCategories
 import Hex
 import List.Extra
 import Result
+import Set exposing (Set)
 
 
 main : Program String () ()
@@ -48,40 +49,75 @@ foldWithLast step list =
         |> (\( l, a ) ->
                 case l of
                     Nothing ->
-                        a
+                        List.reverse a
 
                     Just le ->
-                        le :: a
+                        List.reverse <| le :: a
            )
-        |> List.reverse
 
 
 flagsToFile : String -> File
 flagsToFile csv =
     let
-        toRange : { a | codeValue : Int, category : Category } -> { from : Int, to : Int, category : Category }
-        toRange e =
-            { from = e.codeValue
-            , to = e.codeValue
-            , category = e.category
-            }
-
-        raw : List { codeValue : Int, characterName : String, category : Category }
+        raw : List { codeValue : CodeValue, category : Category }
         raw =
             csv
                 |> String.split "\n"
                 |> List.filterMap parseLine
 
-        rawDict : Dict Int Category
-        rawDict =
-            raw
-                |> List.map (\{ codeValue, category } -> ( codeValue, category ))
-                |> Dict.fromList
-
         ranges : List { from : Int, to : Int, category : Category }
         ranges =
             raw
-                |> List.map toRange
+                |> List.foldl
+                    (\e ( last, acc ) ->
+                        case last of
+                            Nothing ->
+                                ( Just e, acc )
+
+                            Just l ->
+                                case ( l.codeValue, e.codeValue ) of
+                                    ( First li, Last ei ) ->
+                                        ( Nothing
+                                        , { from = li
+                                          , to = ei
+                                          , category = l.category
+                                          }
+                                            :: acc
+                                        )
+
+                                    ( Single ls, _ ) ->
+                                        ( Just e
+                                        , { from = ls
+                                          , to = ls
+                                          , category = l.category
+                                          }
+                                            :: acc
+                                        )
+
+                                    _ ->
+                                        Debug.todo <| "Invalid input file: found " ++ Debug.toString e ++ " after " ++ Debug.toString l
+                    )
+                    ( Nothing, [] )
+                |> (\( last, acc ) ->
+                        case last of
+                            Nothing ->
+                                List.reverse acc
+
+                            Just l ->
+                                case l.codeValue of
+                                    Single ls ->
+                                        List.reverse <|
+                                            { from = ls
+                                            , to = ls
+                                            , category = l.category
+                                            }
+                                                :: acc
+
+                                    _ ->
+                                        Debug.todo <|
+                                            "Invalid input file: list ended with "
+                                                ++ Debug.toString l
+                   )
                 |> foldWithLast
                     (\e last ->
                         if
@@ -108,7 +144,7 @@ flagsToFile csv =
                             (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
                 }
-                rawDict
+                ranges
             , categoriesToDeclarationWithSimpleCheck
                 { name = "isLower"
                 , categories = [ LetterLowercase ]
@@ -121,7 +157,7 @@ flagsToFile csv =
                             (Elm.Op.equal (Gen.Char.call_.toLower c) c)
                             (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
                 }
-                rawDict
+                ranges
             , categoriesToDeclaration
                 { name = "isAlpha"
                 , categories =
@@ -290,14 +326,27 @@ type Tree a
         }
 
 
-parseLine : String -> Maybe { codeValue : Int, characterName : String, category : Category }
+type CodeValue
+    = Single Int
+    | First Int
+    | Last Int
+
+
+parseLine : String -> Maybe { codeValue : CodeValue, category : Category }
 parseLine line =
     case String.split ";" line of
         codeValueHex :: characterName :: generalCategory :: _ ->
             Maybe.map2
                 (\codeValue category ->
-                    { codeValue = codeValue
-                    , characterName = characterName
+                    { codeValue =
+                        if String.endsWith "First>" characterName then
+                            First codeValue
+
+                        else if String.endsWith "Last>" characterName then
+                            Last codeValue
+
+                        else
+                            Single codeValue
                     , category = category
                     }
                 )
@@ -682,10 +731,23 @@ categoriesToDeclarationWithSimpleCheck :
     , simpleCheck : Char -> Bool
     , simpleCheckExpression : Expression -> Expression
     }
-    -> Dict Int Category
+    -> List { from : Int, to : Int, category : Category }
     -> Declaration
-categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } rawDict =
+categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpleCheck, simpleCheckExpression } ranges =
     let
+        inCategory : Set Int
+        inCategory =
+            ranges
+                |> List.concatMap
+                    (\range ->
+                        if List.member range.category categories then
+                            List.range range.from range.to
+
+                        else
+                            []
+                    )
+                |> Set.fromList
+
         toBody :
             { code : Expression
             , simple : Expression
@@ -697,14 +759,13 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         toBody { code, simple, lessThan, equals, inRange } =
             let
                 rangesToCondition : List ( Int, Int, a ) -> List Expression
-                rangesToCondition ranges =
+                rangesToCondition =
                     List.map
                         (rangeToCondition
                             { equals = equals
                             , inRange = inRange
                             }
                         )
-                        ranges
 
                 go : Tree a -> Expression
                 go t =
@@ -752,14 +813,11 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                 |> List.filterMap
                     (\codeValue ->
                         let
+                            belongs : Bool
                             belongs =
-                                case Dict.get codeValue rawDict of
-                                    Nothing ->
-                                        False
+                                Set.member codeValue inCategory
 
-                                    Just category ->
-                                        List.member category categories
-
+                            isSimple : Bool
                             isSimple =
                                 simpleCheck (Char.fromCode codeValue) == belongs
                         in
@@ -789,10 +847,14 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
 
         nonsimpleRanges : List { from : Int, to : Int, hasAnyException : Bool }
         nonsimpleRanges =
-            rawDict
-                |> Dict.toList
+            ranges
+                |> List.concatMap
+                    (\{ from, to, category } ->
+                        List.map (Tuple.pair category) <|
+                            List.range from to
+                    )
                 |> List.filterMap
-                    (\( codeValue, category ) ->
+                    (\( category, codeValue ) ->
                         let
                             belongs =
                                 List.member category categories

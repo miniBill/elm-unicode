@@ -28,7 +28,7 @@ checkCode code =
 
         errorMessage : String
         errorMessage =
-            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar char ++ "] OldUnicode.getCategory = " ++ Debug.toString oldCategory ++ " then Unicode.getCategory should be the same, but it was" ++ Debug.toString newCategory
+            "[U+" ++ Hex.toString code ++ " - " ++ String.fromChar char ++ "] OldUnicode.getCategory = " ++ Debug.toString oldCategory ++ " then Unicode.getCategory should be the same, but it was " ++ Debug.toString newCategory
 
         newCategory : String
         newCategory =
