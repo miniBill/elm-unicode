@@ -3,7 +3,7 @@
     "name": "miniBill/elm-unicode",
     "summary": "Unicode-aware functions for Chars",
     "license": "BSD-3-Clause",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "exposed-modules": [
         "Unicode"
     ],
