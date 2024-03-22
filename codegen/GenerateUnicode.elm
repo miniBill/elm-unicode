@@ -368,12 +368,12 @@ rangeToCondition { equals, inRange } ( from, to, _ ) =
 
 joinOr : List Expression -> Expression
 joinOr lst =
-    case lst of
+    case List.reverse lst of
         [] ->
             Elm.bool False
 
-        fst :: tail ->
-            List.foldl (\e a -> Elm.Op.or a e) fst tail
+        last :: init ->
+            List.foldl Elm.Op.or last init
 
 
 modIs : Expression -> Int -> Expression
