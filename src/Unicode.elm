@@ -39,7 +39,7 @@ isUpper c =
             Char.toCode c
 
         simple =
-            (Char.toUpper c == c) && (Char.toLower c /= c)
+            Char.toUpper c == c && Char.toLower c /= c
 
         l hex =
             code < hex
@@ -48,10 +48,10 @@ isUpper c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if simple then
-        (code <= 0x215F) || r 0x2170 0x24B5 || r 0x24D0 0x000F0000
+        code <= 0x215F || r 0x2170 0x24B5 || r 0x24D0 0x000F0000
 
     else if l 0x0001D4CF then
         if l 0x213D then
@@ -76,7 +76,7 @@ isLower c =
             Char.toCode c
 
         simple =
-            (Char.toLower c == c) && (Char.toUpper c /= c)
+            Char.toLower c == c && Char.toUpper c /= c
 
         l hex =
             code < hex
@@ -85,10 +85,10 @@ isLower c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if simple then
-        (code <= 0x0344) || r 0x0346 0x216F || r 0x2180 0x24CF || r 0x24EA 0x000F0000
+        code <= 0x0344 || r 0x0346 0x216F || r 0x2180 0x24CF || r 0x24EA 0x000F0000
 
     else if l 0xA7F9 then
         if l 0x2109 then
@@ -102,7 +102,7 @@ isLower c =
             e 0x210A || r 0x210E 0x210F || e 0x2113 || e 0x212F || e 0x2134 || e 0x2139 || r 0x213C 0x213D || r 0x2146 0x2149
 
         else
-            e 0x2C71 || r 0x2C73 0x2C74 || r 0x2C76 0x2C7B || r 0x2CE3 0x2CE4 || r 0xA72F 0xA731 || r 0xA771 0xA778 || e 0xA78E || r 0xA793 0xA795 || e 0xA7AF || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
+            e 0x2C71 || r 0x2C73 0x2C74 || r 0x2C76 0x2C7B || r 0x2CE3 0x2CE4 || r 0xA72F 0xA731 || r 0xA771 0xA778 || e 0xA78E || r 0xA793 0xA795 || e 0xA7AF || modBy 2 code == 1 && r 0xA7D3 0xA7D5
 
     else if l 0x0001D621 then
         if l 0x0001D4BA then
@@ -133,18 +133,18 @@ isAlpha c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         r 0x41 0x5A || r 0x61 0x7A || e 0xAA || e 0xB5 || e 0xBA || r 0xC0 0xD6 || r 0xD8 0xF6 || r 0xF8 0xFF
 
-    else if l 0xA9E5 then
+    else if l 0xA9F9 then
         if l 0x106D then
             if l 0x0ADF then
                 if l 0x085F then
                     if l 0x061F then
                         if l 0x038B then
-                            r 0x0100 0x02C1 || r 0x02C6 0x02D1 || r 0x02E0 0x02E4 || r 0x0370 0x0374 || r 0x0376 0x0377 || r 0x037A 0x037D || e 0x037F || e 0x0386 || r 0x0388 0x038A || ((modBy 2 code == 0) && r 0x02EC 0x02EE)
+                            r 0x0100 0x02C1 || r 0x02C6 0x02D1 || r 0x02E0 0x02E4 || r 0x0370 0x0374 || r 0x0376 0x0377 || r 0x037A 0x037D || e 0x037F || e 0x0386 || r 0x0388 0x038A || modBy 2 code == 0 && r 0x02EC 0x02EE
 
                         else
                             e 0x038C || r 0x038E 0x03A1 || r 0x03A3 0x03F5 || r 0x03F7 0x0481 || r 0x048A 0x052F || r 0x0531 0x0556 || e 0x0559 || r 0x0560 0x0588 || r 0x05D0 0x05EA || r 0x05EF 0x05F2
@@ -221,7 +221,7 @@ isAlpha c =
                 r 0x1C4D 0x1C4F || r 0x1C5A 0x1C7D || r 0x1C80 0x1C88 || r 0x1C90 0x1CBA || r 0x1CBD 0x1CBF || r 0x1CE9 0x1CEC || r 0x1CEE 0x1CF3 || r 0x1CF5 0x1CF6 || e 0x1CFA || r 0x1D00 0x1DBF
 
             else
-                r 0x1E00 0x1F15 || r 0x1F18 0x1F1D || r 0x1F20 0x1F45 || r 0x1F48 0x1F4D || r 0x1F50 0x1F57 || r 0x1F60 0x1F7D || r 0x1F80 0x1FB4 || r 0x1FB6 0x1FBC || e 0x1FBE || r 0x1FC2 0x1FC4 || ((modBy 2 code == 1) && r 0x1F59 0x1F5F)
+                r 0x1E00 0x1F15 || r 0x1F18 0x1F1D || r 0x1F20 0x1F45 || r 0x1F48 0x1F4D || r 0x1F50 0x1F57 || r 0x1F60 0x1F7D || r 0x1F80 0x1FB4 || r 0x1FB6 0x1FBC || e 0x1FBE || r 0x1FC2 0x1FC4 || modBy 2 code == 1 && r 0x1F59 0x1F5F
 
         else if l 0x3030 then
             if l 0x2182 then
@@ -229,7 +229,7 @@ isAlpha c =
                     r 0x1FC6 0x1FCC || r 0x1FD0 0x1FD3 || r 0x1FD6 0x1FDB || r 0x1FE0 0x1FEC || r 0x1FF2 0x1FF4 || r 0x1FF6 0x1FFC || e 0x2071 || e 0x207F || r 0x2090 0x209C
 
                 else
-                    e 0x2102 || e 0x2107 || r 0x210A 0x2113 || e 0x2115 || r 0x2119 0x211D || r 0x212A 0x212D || r 0x212F 0x2139 || r 0x213C 0x213F || r 0x2145 0x2149 || e 0x214E || ((modBy 2 code == 0) && r 0x2124 0x2128)
+                    e 0x2102 || e 0x2107 || r 0x210A 0x2113 || e 0x2115 || r 0x2119 0x211D || r 0x212A 0x212D || r 0x212F 0x2139 || r 0x213C 0x213F || r 0x2145 0x2149 || e 0x214E || modBy 2 code == 0 && r 0x2124 0x2128
 
             else if l 0x2D9F then
                 r 0x2183 0x2184 || r 0x2C00 0x2CE4 || r 0x2CEB 0x2CEE || r 0x2CF2 0x2CF3 || r 0x2D00 0x2D25 || e 0x2D27 || e 0x2D2D || r 0x2D30 0x2D67 || e 0x2D6F || r 0x2D80 0x2D96
@@ -237,129 +237,129 @@ isAlpha c =
             else
                 r 0x2DA0 0x2DA6 || r 0x2DA8 0x2DAE || r 0x2DB0 0x2DB6 || r 0x2DB8 0x2DBE || r 0x2DC0 0x2DC6 || r 0x2DC8 0x2DCE || r 0x2DD0 0x2DD6 || r 0x2DD8 0x2DDE || e 0x2E2F || r 0x3005 0x3006
 
-        else if l 0xA716 then
-            if l 0x31EF then
-                r 0x3031 0x3035 || r 0x303B 0x303C || r 0x3041 0x3096 || r 0x309D 0x309F || r 0x30A1 0x30FA || r 0x30FC 0x30FF || r 0x3105 0x312F || r 0x3131 0x318E || r 0x31A0 0x31BF
+        else if l 0xA721 then
+            if l 0x33FF then
+                r 0x3031 0x3035 || r 0x303B 0x303C || r 0x3041 0x3096 || r 0x309D 0x309F || r 0x30A1 0x30FA || r 0x30FC 0x30FF || r 0x3105 0x312F || r 0x3131 0x318E || r 0x31A0 0x31BF || r 0x31F0 0x31FF
 
             else
-                r 0x31F0 0x31FF || r 0x3400 0x4DBF || r 0x4E00 0xA48C || r 0xA4D0 0xA4FD || r 0xA500 0xA60C || r 0xA610 0xA61F || r 0xA62A 0xA62B || r 0xA640 0xA66E || r 0xA67F 0xA69D || r 0xA6A0 0xA6E5
+                r 0x3400 0x4DBF || r 0x4E00 0xA48C || r 0xA4D0 0xA4FD || r 0xA500 0xA60C || r 0xA610 0xA61F || r 0xA62A 0xA62B || r 0xA640 0xA66E || r 0xA67F 0xA69D || r 0xA6A0 0xA6E5 || r 0xA717 0xA71F
 
-        else if l 0xA881 then
-            r 0xA717 0xA71F || r 0xA722 0xA788 || r 0xA78B 0xA7CA || r 0xA7D0 0xA7D1 || r 0xA7D6 0xA7D9 || r 0xA7F2 0xA801 || r 0xA803 0xA805 || r 0xA807 0xA80A || r 0xA80C 0xA822 || r 0xA840 0xA873 || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
+        else if l 0xA8F1 then
+            r 0xA722 0xA788 || r 0xA78B 0xA7CA || r 0xA7D0 0xA7D1 || r 0xA7D6 0xA7D9 || r 0xA7F2 0xA801 || r 0xA803 0xA805 || r 0xA807 0xA80A || r 0xA80C 0xA822 || r 0xA840 0xA873 || r 0xA882 0xA8B3 || modBy 2 code == 1 && r 0xA7D3 0xA7D5
 
         else
-            r 0xA882 0xA8B3 || r 0xA8F2 0xA8F7 || e 0xA8FB || r 0xA8FD 0xA8FE || r 0xA90A 0xA925 || r 0xA930 0xA946 || r 0xA960 0xA97C || r 0xA984 0xA9B2 || e 0xA9CF || r 0xA9E0 0xA9E4
+            r 0xA8F2 0xA8F7 || e 0xA8FB || r 0xA8FD 0xA8FE || r 0xA90A 0xA925 || r 0xA930 0xA946 || r 0xA960 0xA97C || r 0xA984 0xA9B2 || e 0xA9CF || r 0xA9E0 0xA9E4 || r 0xA9E6 0xA9EF
 
-    else if l 0x0001147F then
-        if l 0x000105BA then
-            if l 0xFD91 then
-                if l 0xAB2F then
-                    if l 0xAAB4 then
-                        r 0xA9E6 0xA9EF || r 0xA9FA 0xA9FE || r 0xAA00 0xAA28 || r 0xAA40 0xAA42 || r 0xAA44 0xAA4B || r 0xAA60 0xAA76 || e 0xAA7A || r 0xAA7E 0xAAAF || e 0xAAB1
+    else if l 0x000114C3 then
+        if l 0x000105FF then
+            if l 0xFDEF then
+                if l 0xAB5B then
+                    if l 0xAAB8 then
+                        r 0xA9FA 0xA9FE || r 0xAA00 0xAA28 || r 0xAA40 0xAA42 || r 0xAA44 0xAA4B || r 0xAA60 0xAA76 || e 0xAA7A || r 0xAA7E 0xAAAF || e 0xAAB1 || r 0xAAB5 0xAAB6
 
                     else
-                        r 0xAAB5 0xAAB6 || r 0xAAB9 0xAABD || r 0xAADB 0xAADD || r 0xAAE0 0xAAEA || r 0xAAF2 0xAAF4 || r 0xAB01 0xAB06 || r 0xAB09 0xAB0E || r 0xAB11 0xAB16 || r 0xAB20 0xAB26 || r 0xAB28 0xAB2E || ((modBy 2 code == 0) && r 0xAAC0 0xAAC2)
+                        r 0xAAB9 0xAABD || r 0xAADB 0xAADD || r 0xAAE0 0xAAEA || r 0xAAF2 0xAAF4 || r 0xAB01 0xAB06 || r 0xAB09 0xAB0E || r 0xAB11 0xAB16 || r 0xAB20 0xAB26 || r 0xAB28 0xAB2E || r 0xAB30 0xAB5A || modBy 2 code == 0 && r 0xAAC0 0xAAC2
 
-                else if l 0xFB1C then
-                    r 0xAB30 0xAB5A || r 0xAB5C 0xAB69 || r 0xAB70 0xABE2 || r 0xAC00 0xD7A3 || r 0xD7B0 0xD7C6 || r 0xD7CB 0xD7FB || r 0xF900 0xFA6D || r 0xFA70 0xFAD9 || r 0xFB00 0xFB06 || r 0xFB13 0xFB17
-
-                else
-                    e 0xFB1D || r 0xFB1F 0xFB28 || r 0xFB2A 0xFB36 || r 0xFB38 0xFB3C || e 0xFB3E || r 0xFB40 0xFB41 || r 0xFB43 0xFB44 || r 0xFB46 0xFBB1 || r 0xFBD3 0xFD3D || r 0xFD50 0xFD8F
-
-            else if l 0x0001029F then
-                if l 0xFFD1 then
-                    r 0xFD92 0xFDC7 || r 0xFDF0 0xFDFB || r 0xFE70 0xFE74 || r 0xFE76 0xFEFC || r 0xFF21 0xFF3A || r 0xFF41 0xFF5A || r 0xFF66 0xFFBE || r 0xFFC2 0xFFC7 || r 0xFFCA 0xFFCF
+                else if l 0xFB1E then
+                    r 0xAB5C 0xAB69 || r 0xAB70 0xABE2 || r 0xAC00 0xD7A3 || r 0xD7B0 0xD7C6 || r 0xD7CB 0xD7FB || r 0xF900 0xFA6D || r 0xFA70 0xFAD9 || r 0xFB00 0xFB06 || r 0xFB13 0xFB17 || e 0xFB1D
 
                 else
-                    r 0xFFD2 0xFFD7 || r 0xFFDA 0xFFDC || r 0x00010000 0x0001000B || r 0x0001000D 0x00010026 || r 0x00010028 0x0001003A || r 0x0001003C 0x0001003D || r 0x0001003F 0x0001004D || r 0x00010050 0x0001005D || r 0x00010080 0x000100FA || r 0x00010280 0x0001029C
+                    r 0xFB1F 0xFB28 || r 0xFB2A 0xFB36 || r 0xFB38 0xFB3C || e 0xFB3E || r 0xFB40 0xFB41 || r 0xFB43 0xFB44 || r 0xFB46 0xFBB1 || r 0xFBD3 0xFD3D || r 0xFD50 0xFD8F || r 0xFD92 0xFDC7
 
-            else if l 0x000104D7 then
-                r 0x000102A0 0x000102D0 || r 0x00010300 0x0001031F || r 0x0001032D 0x00010340 || r 0x00010342 0x00010349 || r 0x00010350 0x00010375 || r 0x00010380 0x0001039D || r 0x000103A0 0x000103C3 || r 0x000103C8 0x000103CF || r 0x00010400 0x0001049D || r 0x000104B0 0x000104D3
-
-            else
-                r 0x000104D8 0x000104FB || r 0x00010500 0x00010527 || r 0x00010530 0x00010563 || r 0x00010570 0x0001057A || r 0x0001057C 0x0001058A || r 0x0001058C 0x00010592 || r 0x00010594 0x00010595 || r 0x00010597 0x000105A1 || r 0x000105A3 0x000105B1 || r 0x000105B3 0x000105B9
-
-        else if l 0x00010EFF then
-            if l 0x0001097F then
-                if l 0x00010809 then
-                    r 0x000105BB 0x000105BC || r 0x00010600 0x00010736 || r 0x00010740 0x00010755 || r 0x00010760 0x00010767 || r 0x00010780 0x00010785 || r 0x00010787 0x000107B0 || r 0x000107B2 0x000107BA || r 0x00010800 0x00010805 || e 0x00010808
+            else if l 0x000102FF then
+                if l 0xFFD9 then
+                    r 0xFDF0 0xFDFB || r 0xFE70 0xFE74 || r 0xFE76 0xFEFC || r 0xFF21 0xFF3A || r 0xFF41 0xFF5A || r 0xFF66 0xFFBE || r 0xFFC2 0xFFC7 || r 0xFFCA 0xFFCF || r 0xFFD2 0xFFD7
 
                 else
-                    r 0x0001080A 0x00010835 || r 0x00010837 0x00010838 || e 0x0001083C || r 0x0001083F 0x00010855 || r 0x00010860 0x00010876 || r 0x00010880 0x0001089E || r 0x000108E0 0x000108F2 || r 0x000108F4 0x000108F5 || r 0x00010900 0x00010915 || r 0x00010920 0x00010939
+                    r 0xFFDA 0xFFDC || r 0x00010000 0x0001000B || r 0x0001000D 0x00010026 || r 0x00010028 0x0001003A || r 0x0001003C 0x0001003D || r 0x0001003F 0x0001004D || r 0x00010050 0x0001005D || r 0x00010080 0x000100FA || r 0x00010280 0x0001029C || r 0x000102A0 0x000102D0
 
-            else if l 0x00010AFF then
-                r 0x00010980 0x000109B7 || r 0x000109BE 0x000109BF || e 0x00010A00 || r 0x00010A10 0x00010A13 || r 0x00010A15 0x00010A17 || r 0x00010A19 0x00010A35 || r 0x00010A60 0x00010A7C || r 0x00010A80 0x00010A9C || r 0x00010AC0 0x00010AC7 || r 0x00010AC9 0x00010AE4
-
-            else
-                r 0x00010B00 0x00010B35 || r 0x00010B40 0x00010B55 || r 0x00010B60 0x00010B72 || r 0x00010B80 0x00010B91 || r 0x00010C00 0x00010C48 || r 0x00010C80 0x00010CB2 || r 0x00010CC0 0x00010CF2 || r 0x00010D00 0x00010D23 || r 0x00010E80 0x00010EA9 || r 0x00010EB0 0x00010EB1
-
-        else if l 0x00011212 then
-            if l 0x00011082 then
-                r 0x00010F00 0x00010F1C || e 0x00010F27 || r 0x00010F30 0x00010F45 || r 0x00010F70 0x00010F81 || r 0x00010FB0 0x00010FC4 || r 0x00010FE0 0x00010FF6 || r 0x00011003 0x00011037 || r 0x00011071 0x00011072 || e 0x00011075
+            else if l 0x000104FF then
+                r 0x00010300 0x0001031F || r 0x0001032D 0x00010340 || r 0x00010342 0x00010349 || r 0x00010350 0x00010375 || r 0x00010380 0x0001039D || r 0x000103A0 0x000103C3 || r 0x000103C8 0x000103CF || r 0x00010400 0x0001049D || r 0x000104B0 0x000104D3 || r 0x000104D8 0x000104FB
 
             else
-                r 0x00011083 0x000110AF || r 0x000110D0 0x000110E8 || r 0x00011103 0x00011126 || e 0x00011144 || e 0x00011147 || r 0x00011150 0x00011172 || e 0x00011176 || r 0x00011183 0x000111B2 || r 0x000111C1 0x000111C4 || r 0x00011200 0x00011211 || ((modBy 2 code == 0) && r 0x000111DA 0x000111DC)
+                r 0x00010500 0x00010527 || r 0x00010530 0x00010563 || r 0x00010570 0x0001057A || r 0x0001057C 0x0001058A || r 0x0001058C 0x00010592 || r 0x00010594 0x00010595 || r 0x00010597 0x000105A1 || r 0x000105A3 0x000105B1 || r 0x000105B3 0x000105B9 || r 0x000105BB 0x000105BC
 
-        else if l 0x00011312 then
-            r 0x00011213 0x0001122B || r 0x0001123F 0x00011240 || r 0x00011280 0x00011286 || e 0x00011288 || r 0x0001128A 0x0001128D || r 0x0001128F 0x0001129D || r 0x0001129F 0x000112A8 || r 0x000112B0 0x000112DE || r 0x00011305 0x0001130C || r 0x0001130F 0x00011310
-
-        else
-            r 0x00011313 0x00011328 || r 0x0001132A 0x00011330 || r 0x00011332 0x00011333 || r 0x00011335 0x00011339 || e 0x0001133D || e 0x00011350 || r 0x0001135D 0x00011361 || r 0x00011400 0x00011434 || r 0x00011447 0x0001144A || r 0x0001145F 0x00011461
-
-    else if l 0x0001BC7F then
-        if l 0x00011EDF then
-            if l 0x000119A9 then
-                if l 0x000116FF then
-                    r 0x00011480 0x000114AF || r 0x000114C4 0x000114C5 || e 0x000114C7 || r 0x00011580 0x000115AE || r 0x000115D8 0x000115DB || r 0x00011600 0x0001162F || e 0x00011644 || r 0x00011680 0x000116AA || e 0x000116B8
+        else if l 0x00010F26 then
+            if l 0x000109BD then
+                if l 0x00010836 then
+                    r 0x00010600 0x00010736 || r 0x00010740 0x00010755 || r 0x00010760 0x00010767 || r 0x00010780 0x00010785 || r 0x00010787 0x000107B0 || r 0x000107B2 0x000107BA || r 0x00010800 0x00010805 || e 0x00010808 || r 0x0001080A 0x00010835
 
                 else
-                    r 0x00011700 0x0001171A || r 0x00011740 0x00011746 || r 0x00011800 0x0001182B || r 0x000118A0 0x000118DF || r 0x000118FF 0x00011906 || e 0x00011909 || r 0x0001190C 0x00011913 || r 0x00011915 0x00011916 || r 0x00011918 0x0001192F || r 0x000119A0 0x000119A7 || ((modBy 2 code == 1) && r 0x0001193F 0x00011941)
+                    r 0x00010837 0x00010838 || e 0x0001083C || r 0x0001083F 0x00010855 || r 0x00010860 0x00010876 || r 0x00010880 0x0001089E || r 0x000108E0 0x000108F2 || r 0x000108F4 0x000108F5 || r 0x00010900 0x00010915 || r 0x00010920 0x00010939 || r 0x00010980 0x000109B7
 
-            else if l 0x00011C3F then
-                r 0x000119AA 0x000119D0 || e 0x00011A00 || r 0x00011A0B 0x00011A32 || e 0x00011A3A || e 0x00011A50 || r 0x00011A5C 0x00011A89 || e 0x00011A9D || r 0x00011AB0 0x00011AF8 || r 0x00011C00 0x00011C08 || r 0x00011C0A 0x00011C2E || ((modBy 2 code == 1) && r 0x000119E1 0x000119E3)
-
-            else
-                e 0x00011C40 || r 0x00011C72 0x00011C8F || r 0x00011D00 0x00011D06 || r 0x00011D08 0x00011D09 || r 0x00011D0B 0x00011D30 || e 0x00011D46 || r 0x00011D60 0x00011D65 || r 0x00011D67 0x00011D68 || r 0x00011D6A 0x00011D89 || e 0x00011D98
-
-        else if l 0x00016E3F then
-            if l 0x00013440 then
-                r 0x00011EE0 0x00011EF2 || e 0x00011F02 || r 0x00011F04 0x00011F10 || r 0x00011F12 0x00011F33 || e 0x00011FB0 || r 0x00012000 0x00012399 || r 0x00012480 0x00012543 || r 0x00012F90 0x00012FF0 || r 0x00013000 0x0001342F
+            else if l 0x00010B3F then
+                r 0x000109BE 0x000109BF || e 0x00010A00 || r 0x00010A10 0x00010A13 || r 0x00010A15 0x00010A17 || r 0x00010A19 0x00010A35 || r 0x00010A60 0x00010A7C || r 0x00010A80 0x00010A9C || r 0x00010AC0 0x00010AC7 || r 0x00010AC9 0x00010AE4 || r 0x00010B00 0x00010B35
 
             else
-                r 0x00013441 0x00013446 || r 0x00014400 0x00014646 || r 0x00016800 0x00016A38 || r 0x00016A40 0x00016A5E || r 0x00016A70 0x00016ABE || r 0x00016AD0 0x00016AED || r 0x00016B00 0x00016B2F || r 0x00016B40 0x00016B43 || r 0x00016B63 0x00016B77 || r 0x00016B7D 0x00016B8F
+                r 0x00010B40 0x00010B55 || r 0x00010B60 0x00010B72 || r 0x00010B80 0x00010B91 || r 0x00010C00 0x00010C48 || r 0x00010C80 0x00010CB2 || r 0x00010CC0 0x00010CF2 || r 0x00010D00 0x00010D23 || r 0x00010E80 0x00010EA9 || r 0x00010EB0 0x00010EB1 || r 0x00010F00 0x00010F1C
 
-        else if l 0x0001AFF4 then
-            r 0x00016E40 0x00016E7F || r 0x00016F00 0x00016F4A || e 0x00016F50 || r 0x00016F93 0x00016F9F || r 0x00016FE0 0x00016FE1 || e 0x00016FE3 || r 0x00017000 0x000187F7 || r 0x00018800 0x00018CD5 || r 0x00018D00 0x00018D08 || r 0x0001AFF0 0x0001AFF3
-
-        else
-            r 0x0001AFF5 0x0001AFFB || r 0x0001AFFD 0x0001AFFE || r 0x0001B000 0x0001B122 || e 0x0001B132 || r 0x0001B150 0x0001B152 || e 0x0001B155 || r 0x0001B164 0x0001B167 || r 0x0001B170 0x0001B2FB || r 0x0001BC00 0x0001BC6A || r 0x0001BC70 0x0001BC7C
-
-    else if l 0x0001E2BF then
-        if l 0x0001D549 then
-            if l 0x0001D4BA then
-                r 0x0001BC80 0x0001BC88 || r 0x0001BC90 0x0001BC99 || r 0x0001D400 0x0001D454 || r 0x0001D456 0x0001D49C || r 0x0001D49E 0x0001D49F || e 0x0001D4A2 || r 0x0001D4A5 0x0001D4A6 || r 0x0001D4A9 0x0001D4AC || r 0x0001D4AE 0x0001D4B9
+        else if l 0x0001123E then
+            if l 0x000110CF then
+                e 0x00010F27 || r 0x00010F30 0x00010F45 || r 0x00010F70 0x00010F81 || r 0x00010FB0 0x00010FC4 || r 0x00010FE0 0x00010FF6 || r 0x00011003 0x00011037 || r 0x00011071 0x00011072 || e 0x00011075 || r 0x00011083 0x000110AF
 
             else
-                e 0x0001D4BB || r 0x0001D4BD 0x0001D4C3 || r 0x0001D4C5 0x0001D505 || r 0x0001D507 0x0001D50A || r 0x0001D50D 0x0001D514 || r 0x0001D516 0x0001D51C || r 0x0001D51E 0x0001D539 || r 0x0001D53B 0x0001D53E || r 0x0001D540 0x0001D544 || e 0x0001D546
+                r 0x000110D0 0x000110E8 || r 0x00011103 0x00011126 || e 0x00011144 || e 0x00011147 || r 0x00011150 0x00011172 || e 0x00011176 || r 0x00011183 0x000111B2 || r 0x000111C1 0x000111C4 || r 0x00011200 0x00011211 || r 0x00011213 0x0001122B || modBy 2 code == 0 && r 0x000111DA 0x000111DC
 
-        else if l 0x0001D789 then
-            r 0x0001D54A 0x0001D550 || r 0x0001D552 0x0001D6A5 || r 0x0001D6A8 0x0001D6C0 || r 0x0001D6C2 0x0001D6DA || r 0x0001D6DC 0x0001D6FA || r 0x0001D6FC 0x0001D714 || r 0x0001D716 0x0001D734 || r 0x0001D736 0x0001D74E || r 0x0001D750 0x0001D76E || r 0x0001D770 0x0001D788
-
-        else
-            r 0x0001D78A 0x0001D7A8 || r 0x0001D7AA 0x0001D7C2 || r 0x0001D7C4 0x0001D7CB || r 0x0001DF00 0x0001DF1E || r 0x0001DF25 0x0001DF2A || r 0x0001E030 0x0001E06D || r 0x0001E100 0x0001E12C || r 0x0001E137 0x0001E13D || e 0x0001E14E || r 0x0001E290 0x0001E2AD
-
-    else if l 0x0001EE60 then
-        if l 0x0001EE04 then
-            r 0x0001E2C0 0x0001E2EB || r 0x0001E4D0 0x0001E4EB || r 0x0001E7E0 0x0001E7E6 || r 0x0001E7E8 0x0001E7EB || r 0x0001E7ED 0x0001E7EE || r 0x0001E7F0 0x0001E7FE || r 0x0001E800 0x0001E8C4 || r 0x0001E900 0x0001E943 || e 0x0001E94B || r 0x0001EE00 0x0001EE03
+        else if l 0x00011329 then
+            r 0x0001123F 0x00011240 || r 0x00011280 0x00011286 || e 0x00011288 || r 0x0001128A 0x0001128D || r 0x0001128F 0x0001129D || r 0x0001129F 0x000112A8 || r 0x000112B0 0x000112DE || r 0x00011305 0x0001130C || r 0x0001130F 0x00011310 || r 0x00011313 0x00011328
 
         else
-            r 0x0001EE05 0x0001EE1F || r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 || r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || e 0x0001EE54 || ((modBy 2 code == 1) && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B || r 0x0001EE57 0x0001EE5F))
+            r 0x0001132A 0x00011330 || r 0x00011332 0x00011333 || r 0x00011335 0x00011339 || e 0x0001133D || e 0x00011350 || r 0x0001135D 0x00011361 || r 0x00011400 0x00011434 || r 0x00011447 0x0001144A || r 0x0001145F 0x00011461 || r 0x00011480 0x000114AF
 
-    else if l 0x0001EEA4 then
-        r 0x0001EE61 0x0001EE62 || e 0x0001EE64 || r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E || r 0x0001EE80 0x0001EE89 || r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3
+    else if l 0x0001BC8F then
+        if l 0x00011F01 then
+            if l 0x000119FF then
+                if l 0x0001173F then
+                    r 0x000114C4 0x000114C5 || e 0x000114C7 || r 0x00011580 0x000115AE || r 0x000115D8 0x000115DB || r 0x00011600 0x0001162F || e 0x00011644 || r 0x00011680 0x000116AA || e 0x000116B8 || r 0x00011700 0x0001171A
+
+                else
+                    r 0x00011740 0x00011746 || r 0x00011800 0x0001182B || r 0x000118A0 0x000118DF || r 0x000118FF 0x00011906 || e 0x00011909 || r 0x0001190C 0x00011913 || r 0x00011915 0x00011916 || r 0x00011918 0x0001192F || r 0x000119A0 0x000119A7 || r 0x000119AA 0x000119D0 || modBy 2 code == 1 && (r 0x0001193F 0x00011941 || r 0x000119E1 0x000119E3)
+
+            else if l 0x00011C71 then
+                e 0x00011A00 || r 0x00011A0B 0x00011A32 || e 0x00011A3A || e 0x00011A50 || r 0x00011A5C 0x00011A89 || e 0x00011A9D || r 0x00011AB0 0x00011AF8 || r 0x00011C00 0x00011C08 || r 0x00011C0A 0x00011C2E || e 0x00011C40
+
+            else
+                r 0x00011C72 0x00011C8F || r 0x00011D00 0x00011D06 || r 0x00011D08 0x00011D09 || r 0x00011D0B 0x00011D30 || e 0x00011D46 || r 0x00011D60 0x00011D65 || r 0x00011D67 0x00011D68 || r 0x00011D6A 0x00011D89 || e 0x00011D98 || r 0x00011EE0 0x00011EF2
+
+        else if l 0x00016EFF then
+            if l 0x000143FF then
+                e 0x00011F02 || r 0x00011F04 0x00011F10 || r 0x00011F12 0x00011F33 || e 0x00011FB0 || r 0x00012000 0x00012399 || r 0x00012480 0x00012543 || r 0x00012F90 0x00012FF0 || r 0x00013000 0x0001342F || r 0x00013441 0x00013446
+
+            else
+                r 0x00014400 0x00014646 || r 0x00016800 0x00016A38 || r 0x00016A40 0x00016A5E || r 0x00016A70 0x00016ABE || r 0x00016AD0 0x00016AED || r 0x00016B00 0x00016B2F || r 0x00016B40 0x00016B43 || r 0x00016B63 0x00016B77 || r 0x00016B7D 0x00016B8F || r 0x00016E40 0x00016E7F
+
+        else if l 0x0001AFFC then
+            r 0x00016F00 0x00016F4A || e 0x00016F50 || r 0x00016F93 0x00016F9F || r 0x00016FE0 0x00016FE1 || e 0x00016FE3 || r 0x00017000 0x000187F7 || r 0x00018800 0x00018CD5 || r 0x00018D00 0x00018D08 || r 0x0001AFF0 0x0001AFF3 || r 0x0001AFF5 0x0001AFFB
+
+        else
+            r 0x0001AFFD 0x0001AFFE || r 0x0001B000 0x0001B122 || e 0x0001B132 || r 0x0001B150 0x0001B152 || e 0x0001B155 || r 0x0001B164 0x0001B167 || r 0x0001B170 0x0001B2FB || r 0x0001BC00 0x0001BC6A || r 0x0001BC70 0x0001BC7C || r 0x0001BC80 0x0001BC88
+
+    else if l 0x0001E4CF then
+        if l 0x0001D551 then
+            if l 0x0001D4BC then
+                r 0x0001BC90 0x0001BC99 || r 0x0001D400 0x0001D454 || r 0x0001D456 0x0001D49C || r 0x0001D49E 0x0001D49F || e 0x0001D4A2 || r 0x0001D4A5 0x0001D4A6 || r 0x0001D4A9 0x0001D4AC || r 0x0001D4AE 0x0001D4B9 || e 0x0001D4BB
+
+            else
+                r 0x0001D4BD 0x0001D4C3 || r 0x0001D4C5 0x0001D505 || r 0x0001D507 0x0001D50A || r 0x0001D50D 0x0001D514 || r 0x0001D516 0x0001D51C || r 0x0001D51E 0x0001D539 || r 0x0001D53B 0x0001D53E || r 0x0001D540 0x0001D544 || e 0x0001D546 || r 0x0001D54A 0x0001D550
+
+        else if l 0x0001D7A9 then
+            r 0x0001D552 0x0001D6A5 || r 0x0001D6A8 0x0001D6C0 || r 0x0001D6C2 0x0001D6DA || r 0x0001D6DC 0x0001D6FA || r 0x0001D6FC 0x0001D714 || r 0x0001D716 0x0001D734 || r 0x0001D736 0x0001D74E || r 0x0001D750 0x0001D76E || r 0x0001D770 0x0001D788 || r 0x0001D78A 0x0001D7A8
+
+        else
+            r 0x0001D7AA 0x0001D7C2 || r 0x0001D7C4 0x0001D7CB || r 0x0001DF00 0x0001DF1E || r 0x0001DF25 0x0001DF2A || r 0x0001E030 0x0001E06D || r 0x0001E100 0x0001E12C || r 0x0001E137 0x0001E13D || e 0x0001E14E || r 0x0001E290 0x0001E2AD || r 0x0001E2C0 0x0001E2EB
+
+    else if l 0x0001EE63 then
+        if l 0x0001EE20 then
+            r 0x0001E4D0 0x0001E4EB || r 0x0001E7E0 0x0001E7E6 || r 0x0001E7E8 0x0001E7EB || r 0x0001E7ED 0x0001E7EE || r 0x0001E7F0 0x0001E7FE || r 0x0001E800 0x0001E8C4 || r 0x0001E900 0x0001E943 || e 0x0001E94B || r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F
+
+        else
+            r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 || r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || e 0x0001EE54 || r 0x0001EE61 0x0001EE62 || modBy 2 code == 1 && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B || r 0x0001EE57 0x0001EE5F)
+
+    else if l 0x0001EEAA then
+        e 0x0001EE64 || r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E || r 0x0001EE80 0x0001EE89 || r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3 || r 0x0001EEA5 0x0001EEA9
 
     else
-        r 0x0001EEA5 0x0001EEA9 || r 0x0001EEAB 0x0001EEBB || r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 || r 0x0002F800 0x0002FA1D || r 0x00030000 0x0003134A || r 0x00031350 0x000323AF
+        r 0x0001EEAB 0x0001EEBB || r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 || r 0x0002EBF0 0x0002EE5D || r 0x0002F800 0x0002FA1D || r 0x00030000 0x0003134A || r 0x00031350 0x000323AF
 
 
 {-| Detect digits (Unicode categories Nd, Nl, No)
@@ -377,7 +377,7 @@ isDigit c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         r 0x30 0x39 || r 0xB2 0xB3 || e 0xB9 || r 0xBC 0xBE
@@ -453,7 +453,7 @@ isAlphaNum c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         r 0x30 0x39 || r 0x41 0x5A || r 0x61 0x7A || e 0xAA || r 0xB2 0xB3 || e 0xB5 || r 0xB9 0xBA || r 0xBC 0xBE || r 0xC0 0xD6 || r 0xD8 0xF6 || r 0xF8 0xFF
@@ -464,7 +464,7 @@ isAlphaNum c =
                 if l 0x093C then
                     if l 0x0670 then
                         if l 0x03A2 then
-                            r 0x0100 0x02C1 || r 0x02C6 0x02D1 || r 0x02E0 0x02E4 || r 0x0370 0x0374 || r 0x0376 0x0377 || r 0x037A 0x037D || e 0x037F || e 0x0386 || r 0x0388 0x038A || e 0x038C || r 0x038E 0x03A1 || ((modBy 2 code == 0) && r 0x02EC 0x02EE)
+                            r 0x0100 0x02C1 || r 0x02C6 0x02D1 || r 0x02E0 0x02E4 || r 0x0370 0x0374 || r 0x0376 0x0377 || r 0x037A 0x037D || e 0x037F || e 0x0386 || r 0x0388 0x038A || e 0x038C || r 0x038E 0x03A1 || modBy 2 code == 0 && r 0x02EC 0x02EE
 
                         else
                             r 0x03A3 0x03F5 || r 0x03F7 0x0481 || r 0x048A 0x052F || r 0x0531 0x0556 || e 0x0559 || r 0x0560 0x0588 || r 0x05D0 0x05EA || r 0x05EF 0x05F2 || r 0x0620 0x064A || r 0x0660 0x0669 || r 0x066E 0x066F
@@ -538,7 +538,7 @@ isAlphaNum c =
                     r 0x1B83 0x1BA0 || r 0x1BAE 0x1BE5 || r 0x1C00 0x1C23 || r 0x1C40 0x1C49 || r 0x1C4D 0x1C7D || r 0x1C80 0x1C88 || r 0x1C90 0x1CBA || r 0x1CBD 0x1CBF || r 0x1CE9 0x1CEC || r 0x1CEE 0x1CF3 || r 0x1CF5 0x1CF6
 
             else if l 0x1FC1 then
-                e 0x1CFA || r 0x1D00 0x1DBF || r 0x1E00 0x1F15 || r 0x1F18 0x1F1D || r 0x1F20 0x1F45 || r 0x1F48 0x1F4D || r 0x1F50 0x1F57 || r 0x1F60 0x1F7D || r 0x1F80 0x1FB4 || r 0x1FB6 0x1FBC || e 0x1FBE || ((modBy 2 code == 1) && r 0x1F59 0x1F5F)
+                e 0x1CFA || r 0x1D00 0x1DBF || r 0x1E00 0x1F15 || r 0x1F18 0x1F1D || r 0x1F20 0x1F45 || r 0x1F48 0x1F4D || r 0x1F50 0x1F57 || r 0x1F60 0x1F7D || r 0x1F80 0x1FB4 || r 0x1FB6 0x1FBC || e 0x1FBE || modBy 2 code == 1 && r 0x1F59 0x1F5F
 
             else
                 r 0x1FC2 0x1FC4 || r 0x1FC6 0x1FCC || r 0x1FD0 0x1FD3 || r 0x1FD6 0x1FDB || r 0x1FE0 0x1FEC || r 0x1FF2 0x1FF4 || r 0x1FF6 0x1FFC || r 0x2070 0x2071 || r 0x2074 0x2079 || r 0x207F 0x2089 || r 0x2090 0x209C || e 0x2102
@@ -546,7 +546,7 @@ isAlphaNum c =
         else if l 0x31EF then
             if l 0x2D7F then
                 if l 0x24E9 then
-                    e 0x2107 || r 0x210A 0x2113 || e 0x2115 || r 0x2119 0x211D || r 0x212A 0x212D || r 0x212F 0x2139 || r 0x213C 0x213F || r 0x2145 0x2149 || e 0x214E || r 0x2150 0x2189 || r 0x2460 0x249B || ((modBy 2 code == 0) && r 0x2124 0x2128)
+                    e 0x2107 || r 0x210A 0x2113 || e 0x2115 || r 0x2119 0x211D || r 0x212A 0x212D || r 0x212F 0x2139 || r 0x213C 0x213F || r 0x2145 0x2149 || e 0x214E || r 0x2150 0x2189 || r 0x2460 0x249B || modBy 2 code == 0 && r 0x2124 0x2128
 
                 else
                     r 0x24EA 0x24FF || r 0x2776 0x2793 || r 0x2C00 0x2CE4 || r 0x2CEB 0x2CEE || r 0x2CF2 0x2CF3 || e 0x2CFD || r 0x2D00 0x2D25 || e 0x2D27 || e 0x2D2D || r 0x2D30 0x2D67 || e 0x2D6F
@@ -562,7 +562,7 @@ isAlphaNum c =
                 r 0x31F0 0x31FF || r 0x3220 0x3229 || r 0x3248 0x324F || r 0x3251 0x325F || r 0x3280 0x3289 || r 0x32B1 0x32BF || r 0x3400 0x4DBF || r 0x4E00 0xA48C || r 0xA4D0 0xA4FD || r 0xA500 0xA60C || r 0xA610 0xA62B
 
             else
-                r 0xA640 0xA66E || r 0xA67F 0xA69D || r 0xA6A0 0xA6EF || r 0xA717 0xA71F || r 0xA722 0xA788 || r 0xA78B 0xA7CA || r 0xA7D0 0xA7D1 || r 0xA7D6 0xA7D9 || r 0xA7F2 0xA801 || r 0xA803 0xA805 || r 0xA807 0xA80A || ((modBy 2 code == 1) && r 0xA7D3 0xA7D5)
+                r 0xA640 0xA66E || r 0xA67F 0xA69D || r 0xA6A0 0xA6EF || r 0xA717 0xA71F || r 0xA722 0xA788 || r 0xA78B 0xA7CA || r 0xA7D0 0xA7D1 || r 0xA7D6 0xA7D9 || r 0xA7F2 0xA801 || r 0xA803 0xA805 || r 0xA807 0xA80A || modBy 2 code == 1 && r 0xA7D3 0xA7D5
 
         else if l 0xA983 then
             r 0xA80C 0xA822 || r 0xA830 0xA835 || r 0xA840 0xA873 || r 0xA882 0xA8B3 || r 0xA8D0 0xA8D9 || r 0xA8F2 0xA8F7 || e 0xA8FB || r 0xA8FD 0xA8FE || r 0xA900 0xA925 || r 0xA930 0xA946 || r 0xA960 0xA97C
@@ -575,7 +575,7 @@ isAlphaNum c =
             if l 0x0001000C then
                 if l 0xFB1E then
                     if l 0xAB5B then
-                        r 0xAAB5 0xAAB6 || r 0xAAB9 0xAABD || r 0xAADB 0xAADD || r 0xAAE0 0xAAEA || r 0xAAF2 0xAAF4 || r 0xAB01 0xAB06 || r 0xAB09 0xAB0E || r 0xAB11 0xAB16 || r 0xAB20 0xAB26 || r 0xAB28 0xAB2E || r 0xAB30 0xAB5A || ((modBy 2 code == 0) && r 0xAAC0 0xAAC2)
+                        r 0xAAB5 0xAAB6 || r 0xAAB9 0xAABD || r 0xAADB 0xAADD || r 0xAAE0 0xAAEA || r 0xAAF2 0xAAF4 || r 0xAB01 0xAB06 || r 0xAB09 0xAB0E || r 0xAB11 0xAB16 || r 0xAB20 0xAB26 || r 0xAB28 0xAB2E || r 0xAB30 0xAB5A || modBy 2 code == 0 && r 0xAAC0 0xAAC2
 
                     else
                         r 0xAB5C 0xAB69 || r 0xAB70 0xABE2 || r 0xABF0 0xABF9 || r 0xAC00 0xD7A3 || r 0xD7B0 0xD7C6 || r 0xD7CB 0xD7FB || r 0xF900 0xFA6D || r 0xFA70 0xFAD9 || r 0xFB00 0xFB06 || r 0xFB13 0xFB17 || e 0xFB1D
@@ -633,7 +633,7 @@ isAlphaNum c =
                     e 0x000116B8 || r 0x000116C0 0x000116C9 || r 0x00011700 0x0001171A || r 0x00011730 0x0001173B || r 0x00011740 0x00011746 || r 0x00011800 0x0001182B || r 0x000118A0 0x000118F2 || r 0x000118FF 0x00011906 || e 0x00011909 || r 0x0001190C 0x00011913 || r 0x00011915 0x00011916
 
                 else
-                    r 0x00011918 0x0001192F || r 0x00011950 0x00011959 || r 0x000119A0 0x000119A7 || r 0x000119AA 0x000119D0 || e 0x00011A00 || r 0x00011A0B 0x00011A32 || e 0x00011A3A || e 0x00011A50 || r 0x00011A5C 0x00011A89 || e 0x00011A9D || r 0x00011AB0 0x00011AF8 || ((modBy 2 code == 1) && (r 0x0001193F 0x00011941 || r 0x000119E1 0x000119E3))
+                    r 0x00011918 0x0001192F || r 0x00011950 0x00011959 || r 0x000119A0 0x000119A7 || r 0x000119AA 0x000119D0 || e 0x00011A00 || r 0x00011A0B 0x00011A32 || e 0x00011A3A || e 0x00011A50 || r 0x00011A5C 0x00011A89 || e 0x00011A9D || r 0x00011AB0 0x00011AF8 || modBy 2 code == 1 && (r 0x0001193F 0x00011941 || r 0x000119E1 0x000119E3)
 
             else if l 0x00011D66 then
                 r 0x00011C00 0x00011C08 || r 0x00011C0A 0x00011C2E || e 0x00011C40 || r 0x00011C50 0x00011C6C || r 0x00011C72 0x00011C8F || r 0x00011D00 0x00011D06 || r 0x00011D08 0x00011D09 || r 0x00011D0B 0x00011D30 || e 0x00011D46 || r 0x00011D50 0x00011D59 || r 0x00011D60 0x00011D65
@@ -654,7 +654,7 @@ isAlphaNum c =
         else
             r 0x0001B150 0x0001B152 || e 0x0001B155 || r 0x0001B164 0x0001B167 || r 0x0001B170 0x0001B2FB || r 0x0001BC00 0x0001BC6A || r 0x0001BC70 0x0001BC7C || r 0x0001BC80 0x0001BC88 || r 0x0001BC90 0x0001BC99 || r 0x0001D2C0 0x0001D2D3 || r 0x0001D2E0 0x0001D2F3 || r 0x0001D360 0x0001D378 || r 0x0001D400 0x0001D454
 
-    else if l 0x0001E7EC then
+    else if l 0x0001E7EF then
         if l 0x0001D715 then
             if l 0x0001D515 then
                 r 0x0001D456 0x0001D49C || r 0x0001D49E 0x0001D49F || e 0x0001D4A2 || r 0x0001D4A5 0x0001D4A6 || r 0x0001D4A9 0x0001D4AC || r 0x0001D4AE 0x0001D4B9 || e 0x0001D4BB || r 0x0001D4BD 0x0001D4C3 || r 0x0001D4C5 0x0001D505 || r 0x0001D507 0x0001D50A || r 0x0001D50D 0x0001D514
@@ -666,20 +666,20 @@ isAlphaNum c =
             r 0x0001D716 0x0001D734 || r 0x0001D736 0x0001D74E || r 0x0001D750 0x0001D76E || r 0x0001D770 0x0001D788 || r 0x0001D78A 0x0001D7A8 || r 0x0001D7AA 0x0001D7C2 || r 0x0001D7C4 0x0001D7CB || r 0x0001D7CE 0x0001D7FF || r 0x0001DF00 0x0001DF1E || r 0x0001DF25 0x0001DF2A || r 0x0001E030 0x0001E06D
 
         else
-            r 0x0001E100 0x0001E12C || r 0x0001E137 0x0001E13D || r 0x0001E140 0x0001E149 || e 0x0001E14E || r 0x0001E290 0x0001E2AD || r 0x0001E2C0 0x0001E2EB || r 0x0001E2F0 0x0001E2F9 || r 0x0001E4D0 0x0001E4EB || r 0x0001E4F0 0x0001E4F9 || r 0x0001E7E0 0x0001E7E6 || r 0x0001E7E8 0x0001E7EB
+            r 0x0001E100 0x0001E12C || r 0x0001E137 0x0001E13D || r 0x0001E140 0x0001E149 || e 0x0001E14E || r 0x0001E290 0x0001E2AD || r 0x0001E2C0 0x0001E2EB || r 0x0001E2F0 0x0001E2F9 || r 0x0001E4D0 0x0001E4EB || r 0x0001E4F0 0x0001E4F9 || r 0x0001E7E0 0x0001E7E6 || r 0x0001E7E8 0x0001E7EB || r 0x0001E7ED 0x0001E7EE
 
-    else if l 0x0001EE53 then
-        if l 0x0001ED2E then
-            r 0x0001E7ED 0x0001E7EE || r 0x0001E7F0 0x0001E7FE || r 0x0001E800 0x0001E8C4 || r 0x0001E8C7 0x0001E8CF || r 0x0001E900 0x0001E943 || e 0x0001E94B || r 0x0001E950 0x0001E959 || r 0x0001EC71 0x0001ECAB || r 0x0001ECAD 0x0001ECAF || r 0x0001ECB1 0x0001ECB4 || r 0x0001ED01 0x0001ED2D
+    else if l 0x0001EE60 then
+        if l 0x0001EDFF then
+            r 0x0001E7F0 0x0001E7FE || r 0x0001E800 0x0001E8C4 || r 0x0001E8C7 0x0001E8CF || r 0x0001E900 0x0001E943 || e 0x0001E94B || r 0x0001E950 0x0001E959 || r 0x0001EC71 0x0001ECAB || r 0x0001ECAD 0x0001ECAF || r 0x0001ECB1 0x0001ECB4 || r 0x0001ED01 0x0001ED2D || r 0x0001ED2F 0x0001ED3D
 
         else
-            r 0x0001ED2F 0x0001ED3D || r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F || r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 || r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || ((modBy 2 code == 1) && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B))
+            r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F || r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 || r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || e 0x0001EE54 || modBy 2 code == 1 && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B || r 0x0001EE57 0x0001EE5F)
 
-    else if l 0x0001EEA4 then
-        e 0x0001EE54 || r 0x0001EE61 0x0001EE62 || e 0x0001EE64 || r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E || r 0x0001EE80 0x0001EE89 || r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3 || ((modBy 2 code == 1) && r 0x0001EE57 0x0001EE5F)
+    else if l 0x0001EEAA then
+        r 0x0001EE61 0x0001EE62 || e 0x0001EE64 || r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E || r 0x0001EE80 0x0001EE89 || r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3 || r 0x0001EEA5 0x0001EEA9
 
     else
-        r 0x0001EEA5 0x0001EEA9 || r 0x0001EEAB 0x0001EEBB || r 0x0001F100 0x0001F10C || r 0x0001FBF0 0x0001FBF9 || r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 || r 0x0002F800 0x0002FA1D || r 0x00030000 0x0003134A || r 0x00031350 0x000323AF
+        r 0x0001EEAB 0x0001EEBB || r 0x0001F100 0x0001F10C || r 0x0001FBF0 0x0001FBF9 || r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 || r 0x0002EBF0 0x0002EE5D || r 0x0002F800 0x0002FA1D || r 0x00030000 0x0003134A || r 0x00031350 0x000323AF
 
 
 {-| Detect spaces (Unicode category Zs)
@@ -697,7 +697,7 @@ isSpace c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         e 0x20 || e 0xA0
@@ -721,7 +721,7 @@ isSeparator c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         e 0x20 || e 0xA0
@@ -780,7 +780,7 @@ getCategory c =
             hex == code
 
         r from to =
-            (from <= code) && (code <= to)
+            from <= code && code <= to
     in
     if l 0x0100 then
         if l 0xA0 then
@@ -949,7 +949,7 @@ getCategory c =
         else
             Nothing
 
-    else if l 0x237B then
+    else if l 0x237C then
         if l 0x0C0D then
             if l 0x048E then
                 if l 0x01E8 then
@@ -3333,7 +3333,7 @@ getCategory c =
                         Nothing
 
                 else if l 0x1F67 then
-                    if e 0x1F2F || r 0x1F38 0x1F3F || r 0x1F48 0x1F4D || ((modBy 2 code == 1) && r 0x1F59 0x1F5F) then
+                    if e 0x1F2F || r 0x1F38 0x1F3F || r 0x1F48 0x1F4D || modBy 2 code == 1 && r 0x1F59 0x1F5F then
                         Just LetterUppercase
 
                     else if r 0x1F30 0x1F37 || r 0x1F40 0x1F45 || r 0x1F50 0x1F57 || r 0x1F60 0x1F66 then
@@ -3677,7 +3677,7 @@ getCategory c =
         else if e 0x230A || e 0x2329 then
             Just PunctuationOpen
 
-        else if r 0x230C 0x231F || r 0x2322 0x2328 || r 0x232B 0x237A then
+        else if r 0x230C 0x231F || r 0x2322 0x2328 || r 0x232B 0x237B then
             Just SymbolOther
 
         else if r 0x2320 0x2321 then
@@ -3688,75 +3688,72 @@ getCategory c =
 
     else if l 0xFE4F then
         if l 0xA65B then
-            if l 0x2CDA then
-                if l 0x2C69 then
-                    if l 0x27EE then
-                        if l 0x276B then
-                            if l 0x24FF then
-                                if e 0x237B || r 0x237D 0x239A || r 0x23B4 0x23DB || r 0x23E2 0x2426 || r 0x2440 0x244A || r 0x249C 0x24E9 then
-                                    Just SymbolOther
-
-                                else if e 0x237C || r 0x239B 0x23B3 || r 0x23DC 0x23E1 then
+            if l 0x2CDB then
+                if l 0x2C6A then
+                    if l 0x27EF then
+                        if l 0x276C then
+                            if l 0x25B6 then
+                                if e 0x237C || r 0x239B 0x23B3 || r 0x23DC 0x23E1 then
                                     Just SymbolMath
 
-                                else if r 0x2460 0x249B || r 0x24EA 0x24FE then
+                                else if r 0x237D 0x239A || r 0x23B4 0x23DB || r 0x23E2 0x2426 || r 0x2440 0x244A || r 0x249C 0x24E9 || r 0x2500 0x25B5 then
+                                    Just SymbolOther
+
+                                else if r 0x2460 0x249B || r 0x24EA 0x24FF then
                                     Just NumberOther
 
                                 else
                                     Nothing
 
-                            else if l 0x25F7 then
-                                if e 0x24FF then
-                                    Just NumberOther
-
-                                else if r 0x2500 0x25B6 || r 0x25B8 0x25C0 || r 0x25C2 0x25F6 then
+                            else if l 0x25FF then
+                                if e 0x25B6 || r 0x25B8 0x25C0 || r 0x25C2 0x25F7 then
                                     Just SymbolOther
 
-                                else if e 0x25B7 || e 0x25C1 then
+                                else if e 0x25B7 || e 0x25C1 || r 0x25F8 0x25FE then
                                     Just SymbolMath
 
                                 else
                                     Nothing
 
-                            else if e 0x25F7 || r 0x2600 0x266E || r 0x2670 0x2767 then
-                                Just SymbolOther
-
-                            else if r 0x25F8 0x25FF || e 0x266F then
+                            else if e 0x25FF || e 0x266F then
                                 Just SymbolMath
+
+                            else if r 0x2600 0x266E || r 0x2670 0x2767 then
+                                Just SymbolOther
 
                             else if e 0x2768 || e 0x276A then
                                 Just PunctuationOpen
 
-                            else if e 0x2769 then
+                            else if e 0x2769 || e 0x276B then
                                 Just PunctuationClose
 
                             else
                                 Nothing
 
-                        else if l 0x2793 then
-                            if e 0x276B || e 0x276D || e 0x276F || e 0x2771 || e 0x2773 || e 0x2775 then
-                                Just PunctuationClose
-
-                            else if e 0x276C || e 0x276E || e 0x2770 || e 0x2772 || e 0x2774 then
+                        else if l 0x27BF then
+                            if e 0x276C || e 0x276E || e 0x2770 || e 0x2772 || e 0x2774 then
                                 Just PunctuationOpen
 
-                            else if r 0x2776 0x2792 then
+                            else if e 0x276D || e 0x276F || e 0x2771 || e 0x2773 || e 0x2775 then
+                                Just PunctuationClose
+
+                            else if r 0x2776 0x2793 then
                                 Just NumberOther
+
+                            else if r 0x2794 0x27BE then
+                                Just SymbolOther
 
                             else
                                 Nothing
 
-                        else if l 0x27E6 then
-                            if e 0x2793 then
-                                Just NumberOther
-
-                            else if r 0x2794 0x27BF then
+                        else if l 0x27E7 then
+                            if e 0x27BF then
                                 Just SymbolOther
 
                             else if r 0x27C0 0x27C4 || r 0x27C7 0x27E5 then
                                 Just SymbolMath
 
-                            else if e 0x27C5 then
+                            else if e 0x27C5 || e 0x27E6 then
                                 Just PunctuationOpen
 
                             else if e 0x27C6 then
@@ -3765,21 +3762,18 @@ getCategory c =
                             else
                                 Nothing
 
-                        else if e 0x27E6 || e 0x27E8 || e 0x27EA || e 0x27EC then
-                            Just PunctuationOpen
-
                         else if e 0x27E7 || e 0x27E9 || e 0x27EB || e 0x27ED then
                             Just PunctuationClose
+
+                        else if e 0x27E8 || e 0x27EA || e 0x27EC || e 0x27EE then
+                            Just PunctuationOpen
 
                         else
                             Nothing
 
-                    else if l 0x2996 then
-                        if l 0x2989 then
-                            if e 0x27EE || e 0x2983 || e 0x2985 || e 0x2987 then
-                                Just PunctuationOpen
-
-                            else if e 0x27EF || e 0x2984 || e 0x2986 || e 0x2988 then
+                    else if l 0x2997 then
+                        if l 0x298A then
+                            if e 0x27EF || e 0x2984 || e 0x2986 || e 0x2988 then
                                 Just PunctuationClose
 
                             else if r 0x27F0 0x27FF || r 0x2900 0x2982 then
@@ -3788,35 +3782,38 @@ getCategory c =
                             else if r 0x2800 0x28FF then
                                 Just SymbolOther
 
-                            else
-                                Nothing
-
-                        else if l 0x298E then
-                            if e 0x2989 || e 0x298B || e 0x298D then
+                            else if e 0x2983 || e 0x2985 || e 0x2987 || e 0x2989 then
                                 Just PunctuationOpen
 
-                            else if e 0x298A || e 0x298C then
-                                Just PunctuationClose
-
                             else
                                 Nothing
 
-                        else if e 0x298E || e 0x2990 || e 0x2992 || e 0x2994 then
-                            Just PunctuationClose
+                        else if l 0x298F then
+                            if e 0x298A || e 0x298C || e 0x298E then
+                                Just PunctuationClose
+
+                            else if e 0x298B || e 0x298D then
+                                Just PunctuationOpen
+
+                            else
+                                Nothing
 
                         else if e 0x298F || e 0x2991 || e 0x2993 || e 0x2995 then
                             Just PunctuationOpen
 
+                        else if e 0x2990 || e 0x2992 || e 0x2994 || e 0x2996 then
+                            Just PunctuationClose
+
                         else
                             Nothing
 
-                    else if l 0x2B2F then
-                        if l 0x29D9 then
-                            if e 0x2996 || e 0x2998 then
-                                Just PunctuationClose
-
-                            else if e 0x2997 || e 0x29D8 then
+                    else if l 0x2B44 then
+                        if l 0x29DA then
+                            if e 0x2997 || e 0x29D8 then
                                 Just PunctuationOpen
+
+                            else if e 0x2998 || e 0x29D9 then
+                                Just PunctuationClose
 
                             else if r 0x2999 0x29D7 then
                                 Just SymbolMath
@@ -3824,35 +3821,35 @@ getCategory c =
                             else
                                 Nothing
 
-                        else if e 0x29D9 || e 0x29DB || e 0x29FD then
-                            Just PunctuationClose
-
                         else if e 0x29DA || e 0x29FC then
                             Just PunctuationOpen
 
-                        else if r 0x29DC 0x29FB || r 0x29FE 0x2AFF then
+                        else if e 0x29DB || e 0x29FD then
+                            Just PunctuationClose
+
+                        else if r 0x29DC 0x29FB || r 0x29FE 0x2AFF || r 0x2B30 0x2B43 then
                             Just SymbolMath
 
-                        else if r 0x2B00 0x2B2E then
+                        else if r 0x2B00 0x2B2F then
                             Just SymbolOther
 
                         else
                             Nothing
 
-                    else if l 0x2BFF then
-                        if e 0x2B2F || r 0x2B45 0x2B46 || r 0x2B4D 0x2B73 || r 0x2B76 0x2B95 || r 0x2B97 0x2BFE then
+                    else if l 0x2C2F then
+                        if e 0x2B44 || r 0x2B47 0x2B4C then
+                            Just SymbolMath
+
+                        else if r 0x2B45 0x2B46 || r 0x2B4D 0x2B73 || r 0x2B76 0x2B95 || r 0x2B97 0x2BFF then
                             Just SymbolOther
 
-                        else if r 0x2B30 0x2B44 || r 0x2B47 0x2B4C then
-                            Just SymbolMath
+                        else if r 0x2C00 0x2C2E then
+                            Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if e 0x2BFF then
-                        Just SymbolOther
-
-                    else if r 0x2C00 0x2C2F || e 0x2C60 || r 0x2C62 0x2C64 || e 0x2C67 then
+                    else if e 0x2C2F || e 0x2C60 || r 0x2C62 0x2C64 || e 0x2C67 || e 0x2C69 then
                         Just LetterUppercase
 
                     else if r 0x2C30 0x2C5F || e 0x2C61 || r 0x2C65 0x2C66 || e 0x2C68 then
@@ -3861,26 +3858,23 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x2CA6 then
-                    if l 0x2C8C then
-                        if l 0x2C7D then
-                            if e 0x2C69 || e 0x2C6B || r 0x2C6D 0x2C70 || e 0x2C72 || e 0x2C75 then
-                                Just LetterUppercase
-
-                            else if e 0x2C6A || e 0x2C6C || e 0x2C71 || r 0x2C73 0x2C74 || r 0x2C76 0x2C7B then
+                else if l 0x2CA7 then
+                    if l 0x2C8D then
+                        if l 0x2C80 then
+                            if e 0x2C6A || e 0x2C6C || e 0x2C71 || r 0x2C73 0x2C74 || r 0x2C76 0x2C7B then
                                 Just LetterLowercase
 
-                            else if e 0x2C7C then
+                            else if e 0x2C6B || r 0x2C6D 0x2C70 || e 0x2C72 || e 0x2C75 || r 0x2C7E 0x2C7F then
+                                Just LetterUppercase
+
+                            else if r 0x2C7C 0x2C7D then
                                 Just LetterModifier
 
                             else
                                 Nothing
 
-                        else if l 0x2C84 then
-                            if e 0x2C7D then
-                                Just LetterModifier
-
-                            else if r 0x2C7E 0x2C80 || e 0x2C82 then
+                        else if l 0x2C85 then
+                            if e 0x2C80 || e 0x2C82 || e 0x2C84 then
                                 Just LetterUppercase
 
                             else if e 0x2C81 || e 0x2C83 then
@@ -3889,112 +3883,112 @@ getCategory c =
                             else
                                 Nothing
 
-                        else if e 0x2C84 || e 0x2C86 || e 0x2C88 || e 0x2C8A then
-                            Just LetterUppercase
-
                         else if e 0x2C85 || e 0x2C87 || e 0x2C89 || e 0x2C8B then
                             Just LetterLowercase
 
-                        else
-                            Nothing
-
-                    else if l 0x2C98 then
-                        if e 0x2C8C || e 0x2C8E || e 0x2C90 || e 0x2C92 || e 0x2C94 || e 0x2C96 then
+                        else if e 0x2C86 || e 0x2C88 || e 0x2C8A || e 0x2C8C then
                             Just LetterUppercase
 
-                        else if e 0x2C8D || e 0x2C8F || e 0x2C91 || e 0x2C93 || e 0x2C95 || e 0x2C97 then
-                            Just LetterLowercase
-
                         else
                             Nothing
 
-                    else if l 0x2C9E then
-                        if e 0x2C98 || e 0x2C9A || e 0x2C9C then
+                    else if l 0x2C99 then
+                        if e 0x2C8D || e 0x2C8F || e 0x2C91 || e 0x2C93 || e 0x2C95 || e 0x2C97 then
+                            Just LetterLowercase
+
+                        else if e 0x2C8E || e 0x2C90 || e 0x2C92 || e 0x2C94 || e 0x2C96 || e 0x2C98 then
                             Just LetterUppercase
 
-                        else if e 0x2C99 || e 0x2C9B || e 0x2C9D then
-                            Just LetterLowercase
-
                         else
                             Nothing
 
-                    else if e 0x2C9E || e 0x2CA0 || e 0x2CA2 || e 0x2CA4 then
-                        Just LetterUppercase
+                    else if l 0x2C9F then
+                        if e 0x2C99 || e 0x2C9B || e 0x2C9D then
+                            Just LetterLowercase
+
+                        else if e 0x2C9A || e 0x2C9C || e 0x2C9E then
+                            Just LetterUppercase
+
+                        else
+                            Nothing
 
                     else if e 0x2C9F || e 0x2CA1 || e 0x2CA3 || e 0x2CA5 then
                         Just LetterLowercase
 
+                    else if e 0x2CA0 || e 0x2CA2 || e 0x2CA4 || e 0x2CA6 then
+                        Just LetterUppercase
+
                     else
                         Nothing
 
-                else if l 0x2CBF then
-                    if l 0x2CB1 then
-                        if e 0x2CA6 || e 0x2CA8 || e 0x2CAA || e 0x2CAC || e 0x2CAE || e 0x2CB0 then
-                            Just LetterUppercase
-
-                        else if e 0x2CA7 || e 0x2CA9 || e 0x2CAB || e 0x2CAD || e 0x2CAF then
+                else if l 0x2CC0 then
+                    if l 0x2CB2 then
+                        if e 0x2CA7 || e 0x2CA9 || e 0x2CAB || e 0x2CAD || e 0x2CAF || e 0x2CB1 then
                             Just LetterLowercase
 
-                        else
-                            Nothing
-
-                    else if l 0x2CB7 then
-                        if e 0x2CB1 || e 0x2CB3 || e 0x2CB5 then
-                            Just LetterLowercase
-
-                        else if e 0x2CB2 || e 0x2CB4 || e 0x2CB6 then
+                        else if e 0x2CA8 || e 0x2CAA || e 0x2CAC || e 0x2CAE || e 0x2CB0 then
                             Just LetterUppercase
 
                         else
                             Nothing
 
-                    else if e 0x2CB7 || e 0x2CB9 || e 0x2CBB || e 0x2CBD then
-                        Just LetterLowercase
+                    else if l 0x2CB8 then
+                        if e 0x2CB2 || e 0x2CB4 || e 0x2CB6 then
+                            Just LetterUppercase
+
+                        else if e 0x2CB3 || e 0x2CB5 || e 0x2CB7 then
+                            Just LetterLowercase
+
+                        else
+                            Nothing
 
                     else if e 0x2CB8 || e 0x2CBA || e 0x2CBC || e 0x2CBE then
                         Just LetterUppercase
 
-                    else
-                        Nothing
-
-                else if l 0x2CCB then
-                    if e 0x2CBF || e 0x2CC1 || e 0x2CC3 || e 0x2CC5 || e 0x2CC7 || e 0x2CC9 then
+                    else if e 0x2CB9 || e 0x2CBB || e 0x2CBD || e 0x2CBF then
                         Just LetterLowercase
 
-                    else if e 0x2CC0 || e 0x2CC2 || e 0x2CC4 || e 0x2CC6 || e 0x2CC8 || e 0x2CCA then
-                        Just LetterUppercase
-
                     else
                         Nothing
 
-                else if l 0x2CD1 then
-                    if e 0x2CCB || e 0x2CCD || e 0x2CCF then
+                else if l 0x2CCC then
+                    if e 0x2CC0 || e 0x2CC2 || e 0x2CC4 || e 0x2CC6 || e 0x2CC8 || e 0x2CCA then
+                        Just LetterUppercase
+
+                    else if e 0x2CC1 || e 0x2CC3 || e 0x2CC5 || e 0x2CC7 || e 0x2CC9 || e 0x2CCB then
                         Just LetterLowercase
 
-                    else if e 0x2CCC || e 0x2CCE || e 0x2CD0 then
+                    else
+                        Nothing
+
+                else if l 0x2CD2 then
+                    if e 0x2CCC || e 0x2CCE || e 0x2CD0 then
                         Just LetterUppercase
+
+                    else if e 0x2CCD || e 0x2CCF || e 0x2CD1 then
+                        Just LetterLowercase
 
                     else
                         Nothing
 
-                else if e 0x2CD1 || e 0x2CD3 || e 0x2CD5 || e 0x2CD7 || e 0x2CD9 then
-                    Just LetterLowercase
-
-                else if e 0x2CD2 || e 0x2CD4 || e 0x2CD6 || e 0x2CD8 then
+                else if e 0x2CD2 || e 0x2CD4 || e 0x2CD6 || e 0x2CD8 || e 0x2CDA then
                     Just LetterUppercase
+
+                else if e 0x2CD3 || e 0x2CD5 || e 0x2CD7 || e 0x2CD9 then
+                    Just LetterLowercase
 
                 else
                     Nothing
 
-            else if l 0x300B then
-                if l 0x2E16 then
+            else if l 0x300C then
+                if l 0x2E17 then
                     if l 0x2D6E then
-                        if l 0x2CEB then
-                            if e 0x2CDA || e 0x2CDC || e 0x2CDE || e 0x2CE0 || e 0x2CE2 then
-                                Just LetterUppercase
-
-                            else if e 0x2CDB || e 0x2CDD || e 0x2CDF || e 0x2CE1 || r 0x2CE3 0x2CE4 then
+                        if l 0x2CEC then
+                            if e 0x2CDB || e 0x2CDD || e 0x2CDF || e 0x2CE1 || r 0x2CE3 0x2CE4 then
                                 Just LetterLowercase
+
+                            else if e 0x2CDC || e 0x2CDE || e 0x2CE0 || e 0x2CE2 || e 0x2CEB then
+                                Just LetterUppercase
 
                             else if r 0x2CE5 0x2CEA then
                                 Just SymbolOther
@@ -4003,11 +3997,11 @@ getCategory c =
                                 Nothing
 
                         else if l 0x2CF8 then
-                            if e 0x2CEB || e 0x2CED || e 0x2CF2 then
-                                Just LetterUppercase
-
-                            else if e 0x2CEC || e 0x2CEE || e 0x2CF3 then
+                            if e 0x2CEC || e 0x2CEE || e 0x2CF3 then
                                 Just LetterLowercase
+
+                            else if e 0x2CED || e 0x2CF2 then
+                                Just LetterUppercase
 
                             else if r 0x2CEF 0x2CF1 then
                                 Just MarkNonSpacing
@@ -4065,7 +4059,7 @@ getCategory c =
                     else if e 0x2E05 || e 0x2E0A || e 0x2E0D then
                         Just PunctuationFinalQuote
 
-                    else if r 0x2E06 0x2E08 || e 0x2E0B || r 0x2E0E 0x2E15 then
+                    else if r 0x2E06 0x2E08 || e 0x2E0B || r 0x2E0E 0x2E16 then
                         Just PunctuationOther
 
                     else if e 0x2E09 || e 0x2E0C then
@@ -4074,13 +4068,13 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x2E41 then
-                    if l 0x2E23 then
-                        if e 0x2E16 || r 0x2E18 0x2E19 || e 0x2E1B || r 0x2E1E 0x2E1F then
-                            Just PunctuationOther
-
-                        else if e 0x2E17 || e 0x2E1A then
+                else if l 0x2E42 then
+                    if l 0x2E24 then
+                        if e 0x2E17 || e 0x2E1A then
                             Just PunctuationDash
+
+                        else if r 0x2E18 0x2E19 || e 0x2E1B || r 0x2E1E 0x2E1F then
+                            Just PunctuationOther
 
                         else if e 0x2E1C || e 0x2E20 then
                             Just PunctuationInitialQuote
@@ -4091,26 +4085,26 @@ getCategory c =
                         else if e 0x2E22 then
                             Just PunctuationOpen
 
-                        else
-                            Nothing
-
-                    else if l 0x2E28 then
-                        if e 0x2E23 || e 0x2E25 || e 0x2E27 then
+                        else if e 0x2E23 then
                             Just PunctuationClose
 
-                        else if e 0x2E24 || e 0x2E26 then
-                            Just PunctuationOpen
-
                         else
                             Nothing
 
-                    else if e 0x2E28 then
-                        Just PunctuationOpen
+                    else if l 0x2E29 then
+                        if e 0x2E24 || e 0x2E26 || e 0x2E28 then
+                            Just PunctuationOpen
+
+                        else if e 0x2E25 || e 0x2E27 then
+                            Just PunctuationClose
+
+                        else
+                            Nothing
 
                     else if e 0x2E29 then
                         Just PunctuationClose
 
-                    else if r 0x2E2A 0x2E2E || r 0x2E30 0x2E39 || r 0x2E3C 0x2E3F then
+                    else if r 0x2E2A 0x2E2E || r 0x2E30 0x2E39 || r 0x2E3C 0x2E3F || e 0x2E41 then
                         Just PunctuationOther
 
                     else if e 0x2E2F then
@@ -4122,40 +4116,44 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x2E5C then
-                    if e 0x2E41 || r 0x2E43 0x2E4F || r 0x2E52 0x2E54 then
-                        Just PunctuationOther
+                else if l 0x2E7F then
+                    if l 0x2E56 then
+                        if e 0x2E42 || e 0x2E55 then
+                            Just PunctuationOpen
 
-                    else if e 0x2E42 || e 0x2E55 || e 0x2E57 || e 0x2E59 || e 0x2E5B then
+                        else if r 0x2E43 0x2E4F || r 0x2E52 0x2E54 then
+                            Just PunctuationOther
+
+                        else if r 0x2E50 0x2E51 then
+                            Just SymbolOther
+
+                        else
+                            Nothing
+
+                    else if e 0x2E56 || e 0x2E58 || e 0x2E5A || e 0x2E5C then
+                        Just PunctuationClose
+
+                    else if e 0x2E57 || e 0x2E59 || e 0x2E5B then
                         Just PunctuationOpen
-
-                    else if r 0x2E50 0x2E51 then
-                        Just SymbolOther
-
-                    else if e 0x2E56 || e 0x2E58 || e 0x2E5A then
-                        Just PunctuationClose
-
-                    else
-                        Nothing
-
-                else if l 0x3000 then
-                    if e 0x2E5C then
-                        Just PunctuationClose
 
                     else if e 0x2E5D then
                         Just PunctuationDash
 
-                    else if r 0x2E80 0x2E99 || r 0x2E9B 0x2EF3 || r 0x2F00 0x2FD5 || r 0x2FF0 0x2FFB then
-                        Just SymbolOther
-
                     else
                         Nothing
 
-                else if e 0x3000 then
-                    Just SeparatorSpace
+                else if l 0x3004 then
+                    if r 0x2E80 0x2E99 || r 0x2E9B 0x2EF3 || r 0x2F00 0x2FD5 || r 0x2FF0 0x2FFF then
+                        Just SymbolOther
 
-                else if r 0x3001 0x3003 then
-                    Just PunctuationOther
+                    else if e 0x3000 then
+                        Just SeparatorSpace
+
+                    else if r 0x3001 0x3003 then
+                        Just PunctuationOther
+
+                    else
+                        Nothing
 
                 else if e 0x3004 then
                     Just SymbolOther
@@ -4172,20 +4170,20 @@ getCategory c =
                 else if e 0x3008 || e 0x300A then
                     Just PunctuationOpen
 
-                else if e 0x3009 then
+                else if e 0x3009 || e 0x300B then
                     Just PunctuationClose
 
                 else
                     Nothing
 
             else if l 0x3229 then
-                if l 0x3035 then
-                    if l 0x3017 then
-                        if e 0x300B || e 0x300D || e 0x300F || e 0x3011 || e 0x3015 then
-                            Just PunctuationClose
-
-                        else if e 0x300C || e 0x300E || e 0x3010 || e 0x3014 || e 0x3016 then
+                if l 0x3037 then
+                    if l 0x3018 then
+                        if e 0x300C || e 0x300E || e 0x3010 || e 0x3014 || e 0x3016 then
                             Just PunctuationOpen
+
+                        else if e 0x300D || e 0x300F || e 0x3011 || e 0x3015 || e 0x3017 then
+                            Just PunctuationClose
 
                         else if r 0x3012 0x3013 then
                             Just SymbolOther
@@ -4193,12 +4191,12 @@ getCategory c =
                         else
                             Nothing
 
-                    else if l 0x301D then
-                        if e 0x3017 || e 0x3019 || e 0x301B then
-                            Just PunctuationClose
-
-                        else if e 0x3018 || e 0x301A then
+                    else if l 0x301F then
+                        if e 0x3018 || e 0x301A || e 0x301D then
                             Just PunctuationOpen
+
+                        else if e 0x3019 || e 0x301B || e 0x301E then
+                            Just PunctuationClose
 
                         else if e 0x301C then
                             Just PunctuationDash
@@ -4206,13 +4204,10 @@ getCategory c =
                         else
                             Nothing
 
-                    else if e 0x301D then
-                        Just PunctuationOpen
-
-                    else if r 0x301E 0x301F then
+                    else if e 0x301F then
                         Just PunctuationClose
 
-                    else if e 0x3020 then
+                    else if e 0x3020 || e 0x3036 then
                         Just SymbolOther
 
                     else if r 0x3021 0x3029 then
@@ -4227,27 +4222,34 @@ getCategory c =
                     else if e 0x3030 then
                         Just PunctuationDash
 
-                    else if r 0x3031 0x3034 then
+                    else if r 0x3031 0x3035 then
                         Just LetterModifier
 
                     else
                         Nothing
 
-                else if l 0x30A0 then
-                    if e 0x3035 || e 0x303B || r 0x309D 0x309E then
-                        Just LetterModifier
+                else if l 0x30FA then
+                    if l 0x3040 then
+                        if e 0x3037 || r 0x303E 0x303F then
+                            Just SymbolOther
 
-                    else if r 0x3036 0x3037 || r 0x303E 0x303F then
-                        Just SymbolOther
+                        else if r 0x3038 0x303A then
+                            Just NumberLetter
 
-                    else if r 0x3038 0x303A then
-                        Just NumberLetter
+                        else if e 0x303B then
+                            Just LetterModifier
 
-                    else if e 0x303C || r 0x3041 0x3096 || e 0x309F then
+                        else if e 0x303C then
+                            Just LetterOther
+
+                        else if e 0x303D then
+                            Just PunctuationOther
+
+                        else
+                            Nothing
+
+                    else if r 0x3041 0x3096 || e 0x309F || r 0x30A1 0x30F9 then
                         Just LetterOther
-
-                    else if e 0x303D then
-                        Just PunctuationOther
 
                     else if r 0x3099 0x309A then
                         Just MarkNonSpacing
@@ -4255,14 +4257,17 @@ getCategory c =
                     else if r 0x309B 0x309C then
                         Just SymbolModifier
 
+                    else if r 0x309D 0x309E then
+                        Just LetterModifier
+
+                    else if e 0x30A0 then
+                        Just PunctuationDash
+
                     else
                         Nothing
 
-                else if l 0x318F then
-                    if e 0x30A0 then
-                        Just PunctuationDash
-
-                    else if r 0x30A1 0x30FA || e 0x30FF || r 0x3105 0x312F || r 0x3131 0x318E then
+                else if l 0x3191 then
+                    if e 0x30FA || e 0x30FF || r 0x3105 0x312F || r 0x3131 0x318E then
                         Just LetterOther
 
                     else if e 0x30FB then
@@ -4271,10 +4276,13 @@ getCategory c =
                     else if r 0x30FC 0x30FE then
                         Just LetterModifier
 
+                    else if e 0x3190 then
+                        Just SymbolOther
+
                     else
                         Nothing
 
-                else if r 0x3190 0x3191 || r 0x3196 0x319F || r 0x31C0 0x31E3 || r 0x3200 0x321E then
+                else if e 0x3191 || r 0x3196 0x319F || r 0x31C0 0x31E3 || e 0x31EF || r 0x3200 0x321E then
                     Just SymbolOther
 
                 else if r 0x3192 0x3195 || r 0x3220 0x3228 then
@@ -4655,7 +4663,7 @@ getCategory c =
             if l 0xA909 then
                 if l 0xA822 then
                     if l 0xA7F1 then
-                        if e 0xA7C1 || e 0xA7C3 || e 0xA7C8 || e 0xA7CA || e 0xA7D7 || e 0xA7D9 || ((modBy 2 code == 1) && r 0xA7D1 0xA7D5) then
+                        if e 0xA7C1 || e 0xA7C3 || e 0xA7C8 || e 0xA7CA || e 0xA7D7 || e 0xA7D9 || modBy 2 code == 1 && r 0xA7D1 0xA7D5 then
                             Just LetterLowercase
 
                         else if e 0xA7C2 || r 0xA7C4 0xA7C7 || e 0xA7C9 || e 0xA7D0 || e 0xA7D6 || e 0xA7D8 then
@@ -5093,9 +5101,9 @@ getCategory c =
         else
             Nothing
 
-    else if l 0x0001193A then
-        if l 0x00010EFF then
-            if l 0x0001034F then
+    else if l 0x0001193C then
+        if l 0x00010F1C then
+            if l 0x00010375 then
                 if l 0xFF62 then
                     if l 0xFF08 then
                         if l 0xFE61 then
@@ -5210,60 +5218,73 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x0001003B then
-                    if l 0xFFDF then
-                        if e 0xFF62 then
-                            Just PunctuationOpen
+                else if l 0x0001003E then
+                    if l 0xFFE1 then
+                        if l 0xFF9D then
+                            if e 0xFF62 then
+                                Just PunctuationOpen
 
-                        else if e 0xFF63 then
-                            Just PunctuationClose
+                            else if e 0xFF63 then
+                                Just PunctuationClose
 
-                        else if r 0xFF64 0xFF65 then
-                            Just PunctuationOther
+                            else if r 0xFF64 0xFF65 then
+                                Just PunctuationOther
 
-                        else if r 0xFF66 0xFF6F || r 0xFF71 0xFF9D || r 0xFFA0 0xFFBE || r 0xFFC2 0xFFC7 || r 0xFFCA 0xFFCF || r 0xFFD2 0xFFD7 || r 0xFFDA 0xFFDC then
+                            else if r 0xFF66 0xFF6F || r 0xFF71 0xFF9C then
+                                Just LetterOther
+
+                            else if e 0xFF70 then
+                                Just LetterModifier
+
+                            else
+                                Nothing
+
+                        else if e 0xFF9D || r 0xFFA0 0xFFBE || r 0xFFC2 0xFFC7 || r 0xFFCA 0xFFCF || r 0xFFD2 0xFFD7 || r 0xFFDA 0xFFDC then
                             Just LetterOther
 
-                        else if e 0xFF70 || r 0xFF9E 0xFF9F then
+                        else if r 0xFF9E 0xFF9F then
                             Just LetterModifier
+
+                        else if e 0xFFE0 then
+                            Just SymbolCurrency
 
                         else
                             Nothing
 
-                    else if l 0xFFE8 then
-                        if r 0xFFE0 0xFFE1 || r 0xFFE5 0xFFE6 then
+                    else if l 0xFFEC then
+                        if e 0xFFE1 || r 0xFFE5 0xFFE6 then
                             Just SymbolCurrency
 
-                        else if e 0xFFE2 then
+                        else if e 0xFFE2 || r 0xFFE9 0xFFEB then
                             Just SymbolMath
 
                         else if e 0xFFE3 then
                             Just SymbolModifier
 
-                        else if e 0xFFE4 then
+                        else if e 0xFFE4 || e 0xFFE8 then
                             Just SymbolOther
 
                         else
                             Nothing
 
-                    else if e 0xFFE8 || r 0xFFED 0xFFEE || r 0xFFFC 0xFFFD then
-                        Just SymbolOther
-
-                    else if r 0xFFE9 0xFFEC then
+                    else if e 0xFFEC then
                         Just SymbolMath
+
+                    else if r 0xFFED 0xFFEE || r 0xFFFC 0xFFFD then
+                        Just SymbolOther
 
                     else if r 0xFFF9 0xFFFB then
                         Just OtherFormat
 
-                    else if r 0x00010000 0x0001000B || r 0x0001000D 0x00010026 || r 0x00010028 0x0001003A then
+                    else if r 0x00010000 0x0001000B || r 0x0001000D 0x00010026 || r 0x00010028 0x0001003A || r 0x0001003C 0x0001003D then
                         Just LetterOther
 
                     else
                         Nothing
 
-                else if l 0x0001019F then
-                    if l 0x00010136 then
-                        if r 0x0001003C 0x0001003D || r 0x0001003F 0x0001004D || r 0x00010050 0x0001005D || r 0x00010080 0x000100FA then
+                else if l 0x000101CF then
+                    if l 0x0001013F then
+                        if r 0x0001003F 0x0001004D || r 0x00010050 0x0001005D || r 0x00010080 0x000100FA then
                             Just LetterOther
 
                         else if r 0x00010100 0x00010102 then
@@ -5272,10 +5293,13 @@ getCategory c =
                         else if r 0x00010107 0x00010133 then
                             Just NumberOther
 
+                        else if r 0x00010137 0x0001013E then
+                            Just SymbolOther
+
                         else
                             Nothing
 
-                    else if r 0x00010137 0x0001013F || r 0x00010179 0x00010189 || r 0x0001018C 0x0001018E || r 0x00010190 0x0001019C then
+                    else if e 0x0001013F || r 0x00010179 0x00010189 || r 0x0001018C 0x0001018E || r 0x00010190 0x0001019C || e 0x000101A0 then
                         Just SymbolOther
 
                     else if r 0x00010140 0x00010174 then
@@ -5287,27 +5311,27 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x000102E0 then
-                    if e 0x000101A0 || r 0x000101D0 0x000101FC then
+                else if l 0x000102FF then
+                    if r 0x000101D0 0x000101FC then
                         Just SymbolOther
 
-                    else if e 0x000101FD then
+                    else if e 0x000101FD || e 0x000102E0 then
                         Just MarkNonSpacing
 
                     else if r 0x00010280 0x0001029C || r 0x000102A0 0x000102D0 then
                         Just LetterOther
 
+                    else if r 0x000102E1 0x000102FB then
+                        Just NumberOther
+
                     else
                         Nothing
 
-                else if e 0x000102E0 then
-                    Just MarkNonSpacing
-
-                else if r 0x000102E1 0x000102FB || r 0x00010320 0x00010323 then
-                    Just NumberOther
-
-                else if r 0x00010300 0x0001031F || r 0x0001032D 0x00010340 || r 0x00010342 0x00010349 then
+                else if r 0x00010300 0x0001031F || r 0x0001032D 0x00010340 || r 0x00010342 0x00010349 || r 0x00010350 0x00010374 then
                     Just LetterOther
+
+                else if r 0x00010320 0x00010323 then
+                    Just NumberOther
 
                 else if e 0x00010341 || e 0x0001034A then
                     Just NumberLetter
@@ -5315,10 +5339,10 @@ getCategory c =
                 else
                     Nothing
 
-            else if l 0x0001091F then
-                if l 0x000105BA then
+            else if l 0x0001093E then
+                if l 0x000105FF then
                     if l 0x000104AF then
-                        if r 0x00010350 0x00010375 || r 0x00010380 0x0001039D || r 0x000103A0 0x000103C3 || r 0x000103C8 0x000103CF || r 0x00010450 0x0001049D then
+                        if e 0x00010375 || r 0x00010380 0x0001039D || r 0x000103A0 0x000103C3 || r 0x000103C8 0x000103CF || r 0x00010450 0x0001049D then
                             Just LetterOther
 
                         else if r 0x00010376 0x0001037A then
@@ -5342,26 +5366,33 @@ getCategory c =
                         else
                             Nothing
 
-                    else if r 0x000104B0 0x000104D3 || r 0x00010570 0x0001057A || r 0x0001057C 0x0001058A || r 0x0001058C 0x00010592 || r 0x00010594 0x00010595 then
+                    else if l 0x0001057B then
+                        if r 0x000104B0 0x000104D3 || r 0x00010570 0x0001057A then
+                            Just LetterUppercase
+
+                        else if r 0x000104D8 0x000104FB then
+                            Just LetterLowercase
+
+                        else if r 0x00010500 0x00010527 || r 0x00010530 0x00010563 then
+                            Just LetterOther
+
+                        else if e 0x0001056F then
+                            Just PunctuationOther
+
+                        else
+                            Nothing
+
+                    else if r 0x0001057C 0x0001058A || r 0x0001058C 0x00010592 || r 0x00010594 0x00010595 then
                         Just LetterUppercase
 
-                    else if r 0x000104D8 0x000104FB || r 0x00010597 0x000105A1 || r 0x000105A3 0x000105B1 || r 0x000105B3 0x000105B9 then
+                    else if r 0x00010597 0x000105A1 || r 0x000105A3 0x000105B1 || r 0x000105B3 0x000105B9 || r 0x000105BB 0x000105BC then
                         Just LetterLowercase
-
-                    else if r 0x00010500 0x00010527 || r 0x00010530 0x00010563 then
-                        Just LetterOther
-
-                    else if e 0x0001056F then
-                        Just PunctuationOther
 
                     else
                         Nothing
 
-                else if l 0x0001083E then
-                    if r 0x000105BB 0x000105BC then
-                        Just LetterLowercase
-
-                    else if r 0x00010600 0x00010736 || r 0x00010740 0x00010755 || r 0x00010760 0x00010767 || r 0x00010800 0x00010805 || e 0x00010808 || r 0x0001080A 0x00010835 || r 0x00010837 0x00010838 || e 0x0001083C then
+                else if l 0x00010857 then
+                    if r 0x00010600 0x00010736 || r 0x00010740 0x00010755 || r 0x00010760 0x00010767 || r 0x00010800 0x00010805 || e 0x00010808 || r 0x0001080A 0x00010835 || r 0x00010837 0x00010838 || e 0x0001083C || r 0x0001083F 0x00010855 then
                         Just LetterOther
 
                     else if r 0x00010780 0x00010785 || r 0x00010787 0x000107B0 || r 0x000107B2 0x000107BA then
@@ -5370,15 +5401,15 @@ getCategory c =
                     else
                         Nothing
 
-                else if l 0x0001087F then
-                    if r 0x0001083F 0x00010855 || r 0x00010860 0x00010876 then
-                        Just LetterOther
-
-                    else if e 0x00010857 then
+                else if l 0x000108DF then
+                    if e 0x00010857 then
                         Just PunctuationOther
 
-                    else if r 0x00010858 0x0001085F || r 0x00010879 0x0001087E then
+                    else if r 0x00010858 0x0001085F || r 0x00010879 0x0001087F || r 0x000108A7 0x000108AF then
                         Just NumberOther
+
+                    else if r 0x00010860 0x00010876 || r 0x00010880 0x0001089E then
+                        Just LetterOther
 
                     else if r 0x00010877 0x00010878 then
                         Just SymbolOther
@@ -5386,63 +5417,69 @@ getCategory c =
                     else
                         Nothing
 
-                else if e 0x0001087F || r 0x000108A7 0x000108AF || r 0x000108FB 0x000108FF || r 0x00010916 0x0001091B then
+                else if r 0x000108E0 0x000108F2 || r 0x000108F4 0x000108F5 || r 0x00010900 0x00010915 || r 0x00010920 0x00010939 then
+                    Just LetterOther
+
+                else if r 0x000108FB 0x000108FF || r 0x00010916 0x0001091B then
                     Just NumberOther
 
-                else if r 0x00010880 0x0001089E || r 0x000108E0 0x000108F2 || r 0x000108F4 0x000108F5 || r 0x00010900 0x00010915 then
-                    Just LetterOther
+                else if e 0x0001091F then
+                    Just PunctuationOther
 
                 else
                     Nothing
 
-            else if l 0x00010AC8 then
-                if l 0x00010A0F then
-                    if e 0x0001091F || e 0x0001093F then
+            else if l 0x00010AE4 then
+                if l 0x00010A18 then
+                    if e 0x0001093F then
                         Just PunctuationOther
 
-                    else if r 0x00010920 0x00010939 || r 0x00010980 0x000109B7 || r 0x000109BE 0x000109BF || e 0x00010A00 then
+                    else if r 0x00010980 0x000109B7 || r 0x000109BE 0x000109BF || e 0x00010A00 || r 0x00010A10 0x00010A13 || r 0x00010A15 0x00010A17 then
                         Just LetterOther
 
                     else if r 0x000109BC 0x000109BD || r 0x000109C0 0x000109CF || r 0x000109D2 0x000109FF then
                         Just NumberOther
 
-                    else if r 0x00010A01 0x00010A03 || r 0x00010A05 0x00010A06 || r 0x00010A0C 0x00010A0E then
+                    else if r 0x00010A01 0x00010A03 || r 0x00010A05 0x00010A06 || r 0x00010A0C 0x00010A0F then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if l 0x00010A4F then
-                    if e 0x00010A0F || r 0x00010A38 0x00010A3A || e 0x00010A3F then
-                        Just MarkNonSpacing
-
-                    else if r 0x00010A10 0x00010A13 || r 0x00010A15 0x00010A17 || r 0x00010A19 0x00010A35 then
+                else if l 0x00010A7C then
+                    if r 0x00010A19 0x00010A35 || r 0x00010A60 0x00010A7B then
                         Just LetterOther
+
+                    else if r 0x00010A38 0x00010A3A || e 0x00010A3F then
+                        Just MarkNonSpacing
 
                     else if r 0x00010A40 0x00010A48 then
                         Just NumberOther
 
+                    else if r 0x00010A50 0x00010A58 then
+                        Just PunctuationOther
+
                     else
                         Nothing
 
-                else if r 0x00010A50 0x00010A58 || e 0x00010A7F then
-                    Just PunctuationOther
-
-                else if r 0x00010A60 0x00010A7C || r 0x00010A80 0x00010A9C || r 0x00010AC0 0x00010AC7 then
+                else if e 0x00010A7C || r 0x00010A80 0x00010A9C || r 0x00010AC0 0x00010AC7 || r 0x00010AC9 0x00010AE3 then
                     Just LetterOther
 
                 else if r 0x00010A7D 0x00010A7E || r 0x00010A9D 0x00010A9F then
                     Just NumberOther
 
+                else if e 0x00010A7F then
+                    Just PunctuationOther
+
+                else if e 0x00010AC8 then
+                    Just SymbolOther
+
                 else
                     Nothing
 
-            else if l 0x00010BA8 then
-                if l 0x00010B38 then
-                    if e 0x00010AC8 then
-                        Just SymbolOther
-
-                    else if r 0x00010AC9 0x00010AE4 || r 0x00010B00 0x00010B35 then
+            else if l 0x00010BFF then
+                if l 0x00010B3F then
+                    if e 0x00010AE4 || r 0x00010B00 0x00010B35 then
                         Just LetterOther
 
                     else if r 0x00010AE5 0x00010AE6 then
@@ -5451,29 +5488,26 @@ getCategory c =
                     else if r 0x00010AEB 0x00010AEF then
                         Just NumberOther
 
-                    else if r 0x00010AF0 0x00010AF6 then
+                    else if r 0x00010AF0 0x00010AF6 || r 0x00010B39 0x00010B3E then
                         Just PunctuationOther
 
                     else
                         Nothing
 
-                else if r 0x00010B39 0x00010B3F || r 0x00010B99 0x00010B9C then
+                else if e 0x00010B3F || r 0x00010B99 0x00010B9C then
                     Just PunctuationOther
 
                 else if r 0x00010B40 0x00010B55 || r 0x00010B60 0x00010B72 || r 0x00010B80 0x00010B91 then
                     Just LetterOther
 
-                else if r 0x00010B58 0x00010B5F || r 0x00010B78 0x00010B7F then
+                else if r 0x00010B58 0x00010B5F || r 0x00010B78 0x00010B7F || r 0x00010BA9 0x00010BAF then
                     Just NumberOther
 
                 else
                     Nothing
 
-            else if l 0x00010D2F then
-                if r 0x00010BA9 0x00010BAF || r 0x00010CFA 0x00010CFF then
-                    Just NumberOther
-
-                else if r 0x00010C00 0x00010C48 || r 0x00010D00 0x00010D23 then
+            else if l 0x00010E5F then
+                if r 0x00010C00 0x00010C48 || r 0x00010D00 0x00010D23 then
                     Just LetterOther
 
                 else if r 0x00010C80 0x00010CB2 then
@@ -5482,22 +5516,25 @@ getCategory c =
                 else if r 0x00010CC0 0x00010CF2 then
                     Just LetterLowercase
 
+                else if r 0x00010CFA 0x00010CFF then
+                    Just NumberOther
+
                 else if r 0x00010D24 0x00010D27 then
                     Just MarkNonSpacing
+
+                else if r 0x00010D30 0x00010D39 then
+                    Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if r 0x00010D30 0x00010D39 then
-                Just NumberDecimalDigit
-
             else if r 0x00010E60 0x00010E7E then
                 Just NumberOther
 
-            else if r 0x00010E80 0x00010EA9 || r 0x00010EB0 0x00010EB1 then
+            else if r 0x00010E80 0x00010EA9 || r 0x00010EB0 0x00010EB1 || r 0x00010F00 0x00010F1B then
                 Just LetterOther
 
-            else if r 0x00010EAB 0x00010EAC || r 0x00010EFD 0x00010EFE then
+            else if r 0x00010EAB 0x00010EAC || r 0x00010EFD 0x00010EFF then
                 Just MarkNonSpacing
 
             else if e 0x00010EAD then
@@ -5506,18 +5543,18 @@ getCategory c =
             else
                 Nothing
 
-        else if l 0x00011331 then
-            if l 0x0001114F then
-                if l 0x00011074 then
-                    if l 0x00010FC4 then
-                        if e 0x00010EFF || r 0x00010F46 0x00010F50 || r 0x00010F82 0x00010F85 then
-                            Just MarkNonSpacing
-
-                        else if r 0x00010F00 0x00010F1C || e 0x00010F27 || r 0x00010F30 0x00010F45 || r 0x00010F70 0x00010F81 || r 0x00010FB0 0x00010FC3 then
+        else if l 0x00011334 then
+            if l 0x00011172 then
+                if l 0x0001107E then
+                    if l 0x00010FDF then
+                        if e 0x00010F1C || e 0x00010F27 || r 0x00010F30 0x00010F45 || r 0x00010F70 0x00010F81 || r 0x00010FB0 0x00010FC4 then
                             Just LetterOther
 
-                        else if r 0x00010F1D 0x00010F26 || r 0x00010F51 0x00010F54 then
+                        else if r 0x00010F1D 0x00010F26 || r 0x00010F51 0x00010F54 || r 0x00010FC5 0x00010FCB then
                             Just NumberOther
+
+                        else if r 0x00010F46 0x00010F50 || r 0x00010F82 0x00010F85 then
+                            Just MarkNonSpacing
 
                         else if r 0x00010F55 0x00010F59 || r 0x00010F86 0x00010F89 then
                             Just PunctuationOther
@@ -5525,26 +5562,20 @@ getCategory c =
                         else
                             Nothing
 
-                    else if l 0x00011037 then
-                        if e 0x00010FC4 || r 0x00010FE0 0x00010FF6 || r 0x00011003 0x00011036 then
+                    else if l 0x00011046 then
+                        if r 0x00010FE0 0x00010FF6 || r 0x00011003 0x00011037 then
                             Just LetterOther
-
-                        else if r 0x00010FC5 0x00010FCB then
-                            Just NumberOther
 
                         else if e 0x00011000 || e 0x00011002 then
                             Just MarkSpacingCombining
 
-                        else if e 0x00011001 then
+                        else if e 0x00011001 || r 0x00011038 0x00011045 then
                             Just MarkNonSpacing
 
                         else
                             Nothing
 
-                    else if e 0x00011037 || r 0x00011071 0x00011072 then
-                        Just LetterOther
-
-                    else if r 0x00011038 0x00011046 || e 0x00011070 || e 0x00011073 then
+                    else if e 0x00011046 || e 0x00011070 || r 0x00011073 0x00011074 then
                         Just MarkNonSpacing
 
                     else if r 0x00011047 0x0001104D then
@@ -5556,59 +5587,49 @@ getCategory c =
                     else if r 0x00011066 0x0001106F then
                         Just NumberDecimalDigit
 
+                    else if r 0x00011071 0x00011072 || e 0x00011075 then
+                        Just LetterOther
+
                     else
                         Nothing
 
-                else if l 0x000110CC then
-                    if l 0x000110B2 then
-                        if e 0x00011074 || r 0x0001107F 0x00011081 then
-                            Just MarkNonSpacing
+                else if l 0x000110CF then
+                    if r 0x0001107F 0x00011081 || r 0x000110B3 0x000110B6 || r 0x000110B9 0x000110BA || e 0x000110C2 then
+                        Just MarkNonSpacing
 
-                        else if e 0x00011075 || r 0x00011083 0x000110AF then
-                            Just LetterOther
-
-                        else if e 0x00011082 || r 0x000110B0 0x000110B1 then
-                            Just MarkSpacingCombining
-
-                        else
-                            Nothing
-
-                    else if e 0x000110B2 || r 0x000110B7 0x000110B8 then
+                    else if e 0x00011082 || r 0x000110B0 0x000110B2 || r 0x000110B7 0x000110B8 then
                         Just MarkSpacingCombining
 
-                    else if r 0x000110B3 0x000110B6 || r 0x000110B9 0x000110BA || e 0x000110C2 then
-                        Just MarkNonSpacing
+                    else if r 0x00011083 0x000110AF then
+                        Just LetterOther
 
                     else if r 0x000110BB 0x000110BC || r 0x000110BE 0x000110C1 then
                         Just PunctuationOther
 
-                    else if e 0x000110BD then
+                    else if e 0x000110BD || e 0x000110CD then
                         Just OtherFormat
 
                     else
                         Nothing
 
-                else if l 0x0001112B then
-                    if e 0x000110CD then
-                        Just OtherFormat
-
-                    else if r 0x000110D0 0x000110E8 || r 0x00011103 0x00011126 then
+                else if l 0x0001112C then
+                    if r 0x000110D0 0x000110E8 || r 0x00011103 0x00011126 then
                         Just LetterOther
 
                     else if r 0x000110F0 0x000110F9 then
                         Just NumberDecimalDigit
 
-                    else if r 0x00011100 0x00011102 || r 0x00011127 0x0001112A then
+                    else if r 0x00011100 0x00011102 || r 0x00011127 0x0001112B then
                         Just MarkNonSpacing
 
                     else
                         Nothing
 
-                else if e 0x0001112B || r 0x0001112D 0x00011134 then
-                    Just MarkNonSpacing
-
                 else if e 0x0001112C || r 0x00011145 0x00011146 then
                     Just MarkSpacingCombining
+
+                else if r 0x0001112D 0x00011134 then
+                    Just MarkNonSpacing
 
                 else if r 0x00011136 0x0001113F then
                     Just NumberDecimalDigit
@@ -5616,35 +5637,48 @@ getCategory c =
                 else if r 0x00011140 0x00011143 then
                     Just PunctuationOther
 
-                else if e 0x00011144 || e 0x00011147 then
+                else if e 0x00011144 || e 0x00011147 || r 0x00011150 0x00011171 then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if l 0x0001122E then
-                if l 0x000111C8 then
-                    if r 0x00011150 0x00011172 || e 0x00011176 || r 0x00011183 0x000111B2 || r 0x000111C1 0x000111C4 then
-                        Just LetterOther
+            else if l 0x00011231 then
+                if l 0x000111CC then
+                    if l 0x00011182 then
+                        if e 0x00011172 || e 0x00011176 then
+                            Just LetterOther
 
-                    else if e 0x00011173 || r 0x00011180 0x00011181 || r 0x000111B6 0x000111BE then
-                        Just MarkNonSpacing
+                        else if e 0x00011173 || r 0x00011180 0x00011181 then
+                            Just MarkNonSpacing
 
-                    else if r 0x00011174 0x00011175 || r 0x000111C5 0x000111C7 then
-                        Just PunctuationOther
+                        else if r 0x00011174 0x00011175 then
+                            Just PunctuationOther
+
+                        else
+                            Nothing
 
                     else if e 0x00011182 || r 0x000111B3 0x000111B5 || r 0x000111BF 0x000111C0 then
                         Just MarkSpacingCombining
 
+                    else if r 0x00011183 0x000111B2 || r 0x000111C1 0x000111C4 then
+                        Just LetterOther
+
+                    else if r 0x000111B6 0x000111BE || r 0x000111C9 0x000111CB then
+                        Just MarkNonSpacing
+
+                    else if r 0x000111C5 0x000111C8 then
+                        Just PunctuationOther
+
                     else
                         Nothing
 
-                else if l 0x000111DA then
-                    if e 0x000111C8 || e 0x000111CD then
-                        Just PunctuationOther
-
-                    else if r 0x000111C9 0x000111CC || e 0x000111CF then
+                else if l 0x000111DB then
+                    if e 0x000111CC || e 0x000111CF then
                         Just MarkNonSpacing
+
+                    else if e 0x000111CD then
+                        Just PunctuationOther
 
                     else if e 0x000111CE then
                         Just MarkSpacingCombining
@@ -5652,49 +5686,58 @@ getCategory c =
                     else if r 0x000111D0 0x000111D9 then
                         Just NumberDecimalDigit
 
+                    else if e 0x000111DA then
+                        Just LetterOther
+
                     else
                         Nothing
-
-                else if e 0x000111DA || e 0x000111DC || r 0x00011200 0x00011211 || r 0x00011213 0x0001122B then
-                    Just LetterOther
 
                 else if e 0x000111DB || r 0x000111DD 0x000111DF then
                     Just PunctuationOther
 
+                else if e 0x000111DC || r 0x00011200 0x00011211 || r 0x00011213 0x0001122B then
+                    Just LetterOther
+
                 else if r 0x000111E1 0x000111F4 then
                     Just NumberOther
 
-                else if r 0x0001122C 0x0001122D then
+                else if r 0x0001122C 0x0001122E then
                     Just MarkSpacingCombining
+
+                else if r 0x0001122F 0x00011230 then
+                    Just MarkNonSpacing
 
                 else
                     Nothing
 
-            else if l 0x0001128E then
-                if l 0x00011237 then
-                    if e 0x0001122E || r 0x00011232 0x00011233 || e 0x00011235 then
+            else if l 0x0001129E then
+                if l 0x0001123D then
+                    if e 0x00011231 || e 0x00011234 || r 0x00011236 0x00011237 then
+                        Just MarkNonSpacing
+
+                    else if r 0x00011232 0x00011233 || e 0x00011235 then
                         Just MarkSpacingCombining
 
-                    else if r 0x0001122F 0x00011231 || e 0x00011234 || e 0x00011236 then
-                        Just MarkNonSpacing
+                    else if r 0x00011238 0x0001123C then
+                        Just PunctuationOther
 
                     else
                         Nothing
 
-                else if e 0x00011237 || e 0x0001123E || e 0x00011241 then
-                    Just MarkNonSpacing
-
-                else if r 0x00011238 0x0001123D then
+                else if e 0x0001123D then
                     Just PunctuationOther
 
-                else if r 0x0001123F 0x00011240 || r 0x00011280 0x00011286 || e 0x00011288 || r 0x0001128A 0x0001128D then
+                else if e 0x0001123E || e 0x00011241 then
+                    Just MarkNonSpacing
+
+                else if r 0x0001123F 0x00011240 || r 0x00011280 0x00011286 || e 0x00011288 || r 0x0001128A 0x0001128D || r 0x0001128F 0x0001129D then
                     Just LetterOther
 
                 else
                     Nothing
 
-            else if l 0x000112EF then
-                if r 0x0001128F 0x0001129D || r 0x0001129F 0x000112A8 || r 0x000112B0 0x000112DE then
+            else if l 0x000112FF then
+                if r 0x0001129F 0x000112A8 || r 0x000112B0 0x000112DE then
                     Just LetterOther
 
                 else if e 0x000112A9 then
@@ -5706,11 +5749,11 @@ getCategory c =
                 else if r 0x000112E0 0x000112E2 then
                     Just MarkSpacingCombining
 
+                else if r 0x000112F0 0x000112F9 then
+                    Just NumberDecimalDigit
+
                 else
                     Nothing
-
-            else if r 0x000112F0 0x000112F9 then
-                Just NumberDecimalDigit
 
             else if r 0x00011300 0x00011301 then
                 Just MarkNonSpacing
@@ -5718,85 +5761,89 @@ getCategory c =
             else if r 0x00011302 0x00011303 then
                 Just MarkSpacingCombining
 
-            else if r 0x00011305 0x0001130C || r 0x0001130F 0x00011310 || r 0x00011313 0x00011328 || r 0x0001132A 0x00011330 then
+            else if r 0x00011305 0x0001130C || r 0x0001130F 0x00011310 || r 0x00011313 0x00011328 || r 0x0001132A 0x00011330 || r 0x00011332 0x00011333 then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if l 0x000115DB then
-            if l 0x00011459 then
-                if l 0x00011361 then
-                    if r 0x00011332 0x00011333 || r 0x00011335 0x00011339 || e 0x0001133D || e 0x00011350 || r 0x0001135D 0x00011360 then
+        else if l 0x000115FF then
+            if l 0x0001145C then
+                if l 0x00011365 then
+                    if r 0x00011335 0x00011339 || e 0x0001133D || e 0x00011350 || r 0x0001135D 0x00011361 then
                         Just LetterOther
 
                     else if r 0x0001133B 0x0001133C || e 0x00011340 then
                         Just MarkNonSpacing
 
-                    else if r 0x0001133E 0x0001133F || r 0x00011341 0x00011344 || r 0x00011347 0x00011348 || r 0x0001134B 0x0001134D || e 0x00011357 then
+                    else if r 0x0001133E 0x0001133F || r 0x00011341 0x00011344 || r 0x00011347 0x00011348 || r 0x0001134B 0x0001134D || e 0x00011357 || r 0x00011362 0x00011363 then
                         Just MarkSpacingCombining
 
                     else
                         Nothing
 
-                else if l 0x0001143F then
-                    if e 0x00011361 || r 0x00011400 0x00011434 then
-                        Just LetterOther
-
-                    else if r 0x00011362 0x00011363 || r 0x00011435 0x00011437 then
-                        Just MarkSpacingCombining
-
-                    else if r 0x00011366 0x0001136C || r 0x00011370 0x00011374 || r 0x00011438 0x0001143E then
+                else if l 0x00011441 then
+                    if r 0x00011366 0x0001136C || r 0x00011370 0x00011374 || r 0x00011438 0x0001143F then
                         Just MarkNonSpacing
 
+                    else if r 0x00011400 0x00011434 then
+                        Just LetterOther
+
+                    else if r 0x00011435 0x00011437 || e 0x00011440 then
+                        Just MarkSpacingCombining
+
                     else
                         Nothing
 
-                else if e 0x0001143F || r 0x00011442 0x00011444 || e 0x00011446 then
-                    Just MarkNonSpacing
-
-                else if r 0x00011440 0x00011441 || e 0x00011445 then
+                else if e 0x00011441 || e 0x00011445 then
                     Just MarkSpacingCombining
+
+                else if r 0x00011442 0x00011444 || e 0x00011446 then
+                    Just MarkNonSpacing
 
                 else if r 0x00011447 0x0001144A then
                     Just LetterOther
 
-                else if r 0x0001144B 0x0001144F then
+                else if r 0x0001144B 0x0001144F || r 0x0001145A 0x0001145B then
                     Just PunctuationOther
 
-                else if r 0x00011450 0x00011458 then
+                else if r 0x00011450 0x00011459 then
                     Just NumberDecimalDigit
 
                 else
                     Nothing
 
-            else if l 0x000114C1 then
-                if e 0x00011459 then
-                    Just NumberDecimalDigit
+            else if l 0x000114C5 then
+                if l 0x000114B8 then
+                    if e 0x0001145D then
+                        Just PunctuationOther
 
-                else if r 0x0001145A 0x0001145B || e 0x0001145D then
-                    Just PunctuationOther
+                    else if e 0x0001145E || r 0x000114B3 0x000114B7 then
+                        Just MarkNonSpacing
 
-                else if e 0x0001145E || r 0x000114B3 0x000114B8 || e 0x000114BA || r 0x000114BF 0x000114C0 then
+                    else if r 0x0001145F 0x00011461 || r 0x00011480 0x000114AF then
+                        Just LetterOther
+
+                    else if r 0x000114B0 0x000114B2 then
+                        Just MarkSpacingCombining
+
+                    else
+                        Nothing
+
+                else if e 0x000114B8 || e 0x000114BA || r 0x000114BF 0x000114C0 || r 0x000114C2 0x000114C3 then
                     Just MarkNonSpacing
 
-                else if r 0x0001145F 0x00011461 || r 0x00011480 0x000114AF then
+                else if e 0x000114B9 || r 0x000114BB 0x000114BE || e 0x000114C1 then
+                    Just MarkSpacingCombining
+
+                else if e 0x000114C4 then
                     Just LetterOther
 
-                else if r 0x000114B0 0x000114B2 || e 0x000114B9 || r 0x000114BB 0x000114BE then
-                    Just MarkSpacingCombining
-
                 else
                     Nothing
 
-            else if l 0x000115AE then
-                if e 0x000114C1 then
-                    Just MarkSpacingCombining
-
-                else if r 0x000114C2 0x000114C3 then
-                    Just MarkNonSpacing
-
-                else if r 0x000114C4 0x000114C5 || e 0x000114C7 || r 0x00011580 0x000115AD then
+            else if l 0x000115B7 then
+                if e 0x000114C5 || e 0x000114C7 || r 0x00011580 0x000115AE then
                     Just LetterOther
 
                 else if e 0x000114C6 then
@@ -5805,50 +5852,43 @@ getCategory c =
                 else if r 0x000114D0 0x000114D9 then
                     Just NumberDecimalDigit
 
+                else if r 0x000115AF 0x000115B1 then
+                    Just MarkSpacingCombining
+
+                else if r 0x000115B2 0x000115B5 then
+                    Just MarkNonSpacing
+
                 else
                     Nothing
 
-            else if e 0x000115AE || r 0x000115D8 0x000115DA then
-                Just LetterOther
-
-            else if r 0x000115AF 0x000115B1 || r 0x000115B8 0x000115BB || e 0x000115BE then
+            else if r 0x000115B8 0x000115BB || e 0x000115BE then
                 Just MarkSpacingCombining
 
-            else if r 0x000115B2 0x000115B5 || r 0x000115BC 0x000115BD || r 0x000115BF 0x000115C0 then
+            else if r 0x000115BC 0x000115BD || r 0x000115BF 0x000115C0 || r 0x000115DC 0x000115DD then
                 Just MarkNonSpacing
 
             else if r 0x000115C1 0x000115D7 then
                 Just PunctuationOther
 
+            else if r 0x000115D8 0x000115DB then
+                Just LetterOther
+
             else
                 Nothing
 
-        else if l 0x0001171F then
-            if l 0x0001167F then
-                if l 0x0001163C then
-                    if e 0x000115DB || r 0x00011600 0x0001162F then
-                        Just LetterOther
+        else if l 0x00011721 then
+            if l 0x000116AA then
+                if r 0x00011600 0x0001162F || e 0x00011644 || r 0x00011680 0x000116A9 then
+                    Just LetterOther
 
-                    else if r 0x000115DC 0x000115DD || r 0x00011633 0x0001163A then
-                        Just MarkNonSpacing
-
-                    else if r 0x00011630 0x00011632 || e 0x0001163B then
-                        Just MarkSpacingCombining
-
-                    else
-                        Nothing
-
-                else if e 0x0001163C || e 0x0001163E then
+                else if r 0x00011630 0x00011632 || r 0x0001163B 0x0001163C || e 0x0001163E then
                     Just MarkSpacingCombining
 
-                else if e 0x0001163D || r 0x0001163F 0x00011640 then
+                else if r 0x00011633 0x0001163A || e 0x0001163D || r 0x0001163F 0x00011640 then
                     Just MarkNonSpacing
 
                 else if r 0x00011641 0x00011643 || r 0x00011660 0x0001166C then
                     Just PunctuationOther
-
-                else if e 0x00011644 then
-                    Just LetterOther
 
                 else if r 0x00011650 0x00011659 then
                     Just NumberDecimalDigit
@@ -5856,11 +5896,11 @@ getCategory c =
                 else
                     Nothing
 
-            else if l 0x000116B5 then
-                if r 0x00011680 0x000116AA then
+            else if l 0x000116B6 then
+                if e 0x000116AA then
                     Just LetterOther
 
-                else if e 0x000116AB || e 0x000116AD || r 0x000116B0 0x000116B4 then
+                else if e 0x000116AB || e 0x000116AD || r 0x000116B0 0x000116B5 then
                     Just MarkNonSpacing
 
                 else if e 0x000116AC || r 0x000116AE 0x000116AF then
@@ -5869,11 +5909,11 @@ getCategory c =
                 else
                     Nothing
 
-            else if e 0x000116B5 || e 0x000116B7 || r 0x0001171D 0x0001171E then
-                Just MarkNonSpacing
-
-            else if e 0x000116B6 then
+            else if e 0x000116B6 || e 0x00011720 then
                 Just MarkSpacingCombining
+
+            else if e 0x000116B7 || r 0x0001171D 0x0001171F then
+                Just MarkNonSpacing
 
             else if e 0x000116B8 || r 0x00011700 0x0001171A then
                 Just LetterOther
@@ -5887,21 +5927,14 @@ getCategory c =
             else
                 Nothing
 
-        else if l 0x00011837 then
-            if l 0x00011739 then
-                if e 0x0001171F || r 0x00011722 0x00011725 || r 0x00011727 0x0001172B then
-                    Just MarkNonSpacing
+        else if l 0x00011838 then
+            if e 0x00011721 || e 0x00011726 || r 0x0001182C 0x0001182E then
+                Just MarkSpacingCombining
 
-                else if r 0x00011720 0x00011721 || e 0x00011726 then
-                    Just MarkSpacingCombining
+            else if r 0x00011722 0x00011725 || r 0x00011727 0x0001172B || r 0x0001182F 0x00011837 then
+                Just MarkNonSpacing
 
-                else if r 0x00011730 0x00011738 then
-                    Just NumberDecimalDigit
-
-                else
-                    Nothing
-
-            else if e 0x00011739 then
+            else if r 0x00011730 0x00011739 then
                 Just NumberDecimalDigit
 
             else if r 0x0001173A 0x0001173B then
@@ -5916,21 +5949,15 @@ getCategory c =
             else if r 0x00011740 0x00011746 || r 0x00011800 0x0001182B then
                 Just LetterOther
 
-            else if r 0x0001182C 0x0001182E then
-                Just MarkSpacingCombining
-
-            else if r 0x0001182F 0x00011836 then
-                Just MarkNonSpacing
-
             else
                 Nothing
 
-        else if l 0x000118E9 then
-            if e 0x00011837 || r 0x00011839 0x0001183A then
-                Just MarkNonSpacing
-
-            else if e 0x00011838 then
+        else if l 0x000118FE then
+            if e 0x00011838 then
                 Just MarkSpacingCombining
+
+            else if r 0x00011839 0x0001183A then
+                Just MarkNonSpacing
 
             else if e 0x0001183B then
                 Just PunctuationOther
@@ -5941,23 +5968,23 @@ getCategory c =
             else if r 0x000118C0 0x000118DF then
                 Just LetterLowercase
 
-            else if r 0x000118E0 0x000118E8 then
+            else if r 0x000118E0 0x000118E9 then
                 Just NumberDecimalDigit
+
+            else if r 0x000118EA 0x000118F2 then
+                Just NumberOther
 
             else
                 Nothing
-
-        else if e 0x000118E9 then
-            Just NumberDecimalDigit
-
-        else if r 0x000118EA 0x000118F2 then
-            Just NumberOther
 
         else if r 0x000118FF 0x00011906 || e 0x00011909 || r 0x0001190C 0x00011913 || r 0x00011915 0x00011916 || r 0x00011918 0x0001192F then
             Just LetterOther
 
         else if r 0x00011930 0x00011935 || r 0x00011937 0x00011938 then
             Just MarkSpacingCombining
+
+        else if e 0x0001193B then
+            Just MarkNonSpacing
 
         else
             Nothing
@@ -5967,7 +5994,7 @@ getCategory c =
             if l 0x00011C3F then
                 if l 0x00011A32 then
                     if l 0x000119D0 then
-                        if r 0x0001193B 0x0001193C || e 0x0001193E || e 0x00011943 then
+                        if e 0x0001193C || e 0x0001193E || e 0x00011943 then
                             Just MarkNonSpacing
 
                         else if e 0x0001193D || e 0x00011940 || e 0x00011942 then
@@ -6562,7 +6589,7 @@ getCategory c =
         else
             Nothing
 
-    else if l 0x0001F02F then
+    else if l 0x0001F09F then
         if l 0x0001EDFF then
             if l 0x0001E921 then
                 if r 0x0001E4D0 0x0001E4EA || r 0x0001E7E0 0x0001E7E6 || r 0x0001E7E8 0x0001E7EB || r 0x0001E7ED 0x0001E7EE || r 0x0001E7F0 0x0001E7FE || r 0x0001E800 0x0001E8C4 then
@@ -6623,35 +6650,42 @@ getCategory c =
             else
                 Nothing
 
-        else if l 0x0001EE63 then
-            if r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F || r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 || r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || e 0x0001EE54 || r 0x0001EE61 0x0001EE62 || ((modBy 2 code == 1) && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B || r 0x0001EE57 0x0001EE5F)) then
+        else if l 0x0001EE66 then
+            if l 0x0001EE33 then
+                if r 0x0001EE00 0x0001EE03 || r 0x0001EE05 0x0001EE1F || r 0x0001EE21 0x0001EE22 || e 0x0001EE24 || e 0x0001EE27 || r 0x0001EE29 0x0001EE32 then
+                    Just LetterOther
+
+                else
+                    Nothing
+
+            else if r 0x0001EE34 0x0001EE37 || e 0x0001EE42 || r 0x0001EE4D 0x0001EE4F || r 0x0001EE51 0x0001EE52 || e 0x0001EE54 || r 0x0001EE61 0x0001EE62 || e 0x0001EE64 || modBy 2 code == 1 && (r 0x0001EE39 0x0001EE3B || r 0x0001EE47 0x0001EE4B || r 0x0001EE57 0x0001EE5F) then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if l 0x0001EE7F then
-            if e 0x0001EE64 || r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E then
+        else if l 0x0001EE8A then
+            if r 0x0001EE67 0x0001EE6A || r 0x0001EE6C 0x0001EE72 || r 0x0001EE74 0x0001EE77 || r 0x0001EE79 0x0001EE7C || e 0x0001EE7E || r 0x0001EE80 0x0001EE89 then
                 Just LetterOther
 
             else
                 Nothing
 
-        else if r 0x0001EE80 0x0001EE89 || r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3 || r 0x0001EEA5 0x0001EEA9 || r 0x0001EEAB 0x0001EEBB then
+        else if r 0x0001EE8B 0x0001EE9B || r 0x0001EEA1 0x0001EEA3 || r 0x0001EEA5 0x0001EEA9 || r 0x0001EEAB 0x0001EEBB then
             Just LetterOther
 
         else if r 0x0001EEF0 0x0001EEF1 then
             Just SymbolMath
 
-        else if r 0x0001F000 0x0001F02B then
+        else if r 0x0001F000 0x0001F02B || r 0x0001F030 0x0001F093 then
             Just SymbolOther
 
         else
             Nothing
 
-    else if l 0x0001F88F then
-        if l 0x0001F2FF then
-            if r 0x0001F030 0x0001F093 || r 0x0001F0A0 0x0001F0AE || r 0x0001F0B1 0x0001F0BF || r 0x0001F0C1 0x0001F0CF || r 0x0001F0D1 0x0001F0F5 || r 0x0001F10D 0x0001F1AD || r 0x0001F1E6 0x0001F202 || r 0x0001F210 0x0001F23B || r 0x0001F240 0x0001F248 || r 0x0001F250 0x0001F251 || r 0x0001F260 0x0001F265 then
+    else if l 0x0001F8AF then
+        if l 0x0001F3FA then
+            if r 0x0001F0A0 0x0001F0AE || r 0x0001F0B1 0x0001F0BF || r 0x0001F0C1 0x0001F0CF || r 0x0001F0D1 0x0001F0F5 || r 0x0001F10D 0x0001F1AD || r 0x0001F1E6 0x0001F202 || r 0x0001F210 0x0001F23B || r 0x0001F240 0x0001F248 || r 0x0001F250 0x0001F251 || r 0x0001F260 0x0001F265 || r 0x0001F300 0x0001F3F9 then
                 Just SymbolOther
 
             else if r 0x0001F100 0x0001F10C then
@@ -6660,8 +6694,8 @@ getCategory c =
             else
                 Nothing
 
-        else if l 0x0001F77A then
-            if r 0x0001F300 0x0001F3FA || r 0x0001F400 0x0001F6D7 || r 0x0001F6DC 0x0001F6EC || r 0x0001F6F0 0x0001F6FC || r 0x0001F700 0x0001F776 then
+        else if l 0x0001F7DF then
+            if e 0x0001F3FA || r 0x0001F400 0x0001F6D7 || r 0x0001F6DC 0x0001F6EC || r 0x0001F6F0 0x0001F6FC || r 0x0001F700 0x0001F776 || r 0x0001F77B 0x0001F7D9 then
                 Just SymbolOther
 
             else if r 0x0001F3FB 0x0001F3FF then
@@ -6670,31 +6704,31 @@ getCategory c =
             else
                 Nothing
 
-        else if r 0x0001F77B 0x0001F7D9 || r 0x0001F7E0 0x0001F7EB || e 0x0001F7F0 || r 0x0001F800 0x0001F80B || r 0x0001F810 0x0001F847 || r 0x0001F850 0x0001F859 || r 0x0001F860 0x0001F887 then
+        else if r 0x0001F7E0 0x0001F7EB || e 0x0001F7F0 || r 0x0001F800 0x0001F80B || r 0x0001F810 0x0001F847 || r 0x0001F850 0x0001F859 || r 0x0001F860 0x0001F887 || r 0x0001F890 0x0001F8AD then
             Just SymbolOther
 
         else
             Nothing
 
-    else if l 0x0001FBEF then
-        if l 0x0001FA8F then
-            if r 0x0001F890 0x0001F8AD || r 0x0001F8B0 0x0001F8B1 || r 0x0001F900 0x0001FA53 || r 0x0001FA60 0x0001FA6D || r 0x0001FA70 0x0001FA7C || r 0x0001FA80 0x0001FA88 then
+    else if l 0x0001FFFF then
+        if l 0x0001FABE then
+            if r 0x0001F8B0 0x0001F8B1 || r 0x0001F900 0x0001FA53 || r 0x0001FA60 0x0001FA6D || r 0x0001FA70 0x0001FA7C || r 0x0001FA80 0x0001FA88 || r 0x0001FA90 0x0001FABD then
                 Just SymbolOther
 
             else
                 Nothing
 
-        else if r 0x0001FA90 0x0001FABD || r 0x0001FABF 0x0001FAC5 || r 0x0001FACE 0x0001FADB || r 0x0001FAE0 0x0001FAE8 || r 0x0001FAF0 0x0001FAF8 || r 0x0001FB00 0x0001FB92 || r 0x0001FB94 0x0001FBCA then
+        else if r 0x0001FABF 0x0001FAC5 || r 0x0001FACE 0x0001FADB || r 0x0001FAE0 0x0001FAE8 || r 0x0001FAF0 0x0001FAF8 || r 0x0001FB00 0x0001FB92 || r 0x0001FB94 0x0001FBCA then
             Just SymbolOther
+
+        else if r 0x0001FBF0 0x0001FBF9 then
+            Just NumberDecimalDigit
 
         else
             Nothing
 
     else if l 0x0002F7FF then
-        if r 0x0001FBF0 0x0001FBF9 then
-            Just NumberDecimalDigit
-
-        else if r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 then
+        if r 0x00020000 0x0002A6DF || r 0x0002A700 0x0002B739 || r 0x0002B740 0x0002B81D || r 0x0002B820 0x0002CEA1 || r 0x0002CEB0 0x0002EBE0 || r 0x0002EBF0 0x0002EE5D then
             Just LetterOther
 
         else
