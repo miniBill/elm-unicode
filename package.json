@@ -1,9 +1,9 @@
 {
     "devDependencies": {
         "elm": "^0.19.1-6",
-        "elm-codegen": "^0.5.2",
-        "elm-review": "^2.11.1",
-        "elm-test-rs": "^3.0.0-5"
+        "elm-codegen": "^0.6.3",
+        "elm-review": "^2.13.5",
+        "elm-test-rs": "^3.0.1-0"
     },
     "scripts": {
         "regen": "pnpm codegen install"
