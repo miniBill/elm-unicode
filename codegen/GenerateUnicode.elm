@@ -258,7 +258,10 @@ splitAt at tree =
 
         Node n ->
             let
-                splot =
+                splat :
+                    List ( Int, Int, c )
+                    -> ( List ( Int, Int, c ), List ( Int, Int, c ) )
+                splat =
                     List.foldr
                         (\(( elf, elt, ecat ) as e) ( lacc, hacc ) ->
                             if elt < at then
@@ -275,13 +278,13 @@ splitAt at tree =
                         ( [], [] )
 
                 ( la, ha ) =
-                    splot n.all
+                    splat n.all
 
                 ( le, he ) =
-                    splot n.even
+                    splat n.even
 
                 ( lo, ho ) =
-                    splot n.odd
+                    splat n.odd
             in
             if List.isEmpty la && List.isEmpty le && List.isEmpty lo then
                 tree
