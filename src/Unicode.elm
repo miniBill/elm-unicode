@@ -50,7 +50,10 @@ isUpper c =
         r from to =
             from <= code && code <= to
     in
-    if simple then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if simple then
         code <= 0x215F || r 0x2170 0x24B5 || r 0x24D0 0x000F0000
 
     else if l 0x0001D4AD then
@@ -87,7 +90,10 @@ isLower c =
         r from to =
             from <= code && code <= to
     in
-    if simple then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if simple then
         code <= 0x0344 || r 0x0346 0x216F || r 0x2180 0x24CF || r 0x24EA 0x000F0000
 
     else if l 0xA7F9 then
@@ -135,7 +141,10 @@ isAlpha c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if l 0x0100 then
         r 0x41 0x5A || r 0x61 0x7A || e 0xAA || e 0xB5 || e 0xBA || r 0xC0 0xD6 || r 0xD8 0xF6 || r 0xF8 0xFF
 
     else if l 0xAB00 then
@@ -379,7 +388,10 @@ isAlphaNum c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if l 0x0100 then
         r 0x30 0x39 || r 0x41 0x5A || r 0x61 0x7A || e 0xAA || r 0xB2 0xB3 || e 0xB5 || r 0xB9 0xBA || r 0xBC 0xBE || r 0xC0 0xD6 || r 0xD8 0xF6 || r 0xF8 0xFF
 
     else if l 0xF8FF then
@@ -623,7 +635,10 @@ isDigit c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if l 0x0100 then
         r 0x30 0x39 || r 0xB2 0xB3 || e 0xB9 || r 0xBC 0xBE
 
     else if l 0x0001049F then
@@ -719,7 +734,7 @@ type Category
 
 {-| Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead.
 -}
-getCategory : Char.Char -> Maybe Category
+getCategory : Char -> Maybe Category
 getCategory c =
     let
         code =
@@ -734,7 +749,10 @@ getCategory c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        Just OtherSurrogate
+
+    else if l 0x0100 then
         if l 0xA0 then
             if l 0x3B then
                 if l 0x29 then
@@ -7576,7 +7594,10 @@ isSpace c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if l 0x0100 then
         e 0x20 || e 0xA0
 
     else
@@ -7600,7 +7621,10 @@ isSeparator c =
         r from to =
             from <= code && code <= to
     in
-    if l 0x0100 then
+    if Basics.isNaN (Basics.toFloat code) then
+        False
+
+    else if l 0x0100 then
         e 0x20 || e 0xA0
 
     else
