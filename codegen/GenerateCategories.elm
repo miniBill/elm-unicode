@@ -2,29 +2,30 @@ module GenerateCategories exposing (declarations, main)
 
 import Elm exposing (Declaration, File)
 import Elm.Annotation as Type exposing (Annotation)
+import Elm.Arg
 import Elm.Case
 import Gen.CodeGen.Generate as Generate
 
 
 main : Program {} () ()
 main =
-    Generate.run <|
-        [ file
-        ]
+    Generate.run [ file ]
 
 
 file : File
 file =
-    Elm.file [ "Categories" ] (categoryToConstructor :: declarations)
+    Elm.file [ "Categories" ] [ declarations, categoryToConstructor ]
 
 
-declarations : List Declaration
+declarations : Declaration
 declarations =
-    [ category
+    [ Elm.docs "## Categories"
+    , category
     , categoryFromString
     , categoryToString
     , categoryToDescription
     ]
+        |> Elm.group
 
 
 categoryList : List ( String, String, String )
@@ -68,7 +69,7 @@ category =
         |> List.map (\( _, name, _ ) -> Elm.variant name)
         |> Elm.customType "Category"
         |> Elm.withDocumentation "A category as defined by the Unicode standard."
-        |> Elm.exposeWith { exposeConstructor = True, group = Just "Categories" }
+        |> Elm.exposeConstructor
 
 
 categoryFromString : Declaration
@@ -104,16 +105,12 @@ categoryFromString =
                         , annotation = Nothing
                         }
                 }
+                |> Elm.withType (Type.namedWith [] "Maybe" [ categoryAnnotation ])
     in
-    Elm.fn ( "generalCategory", Nothing ) body
-        |> Elm.withType
-            (Type.function
-                [ Type.string ]
-                (Type.namedWith [] "Maybe" [ categoryAnnotation ])
-            )
+    Elm.fn (Elm.Arg.varWith "generalCategory" Type.string) body
         |> Elm.declaration "categoryFromString"
         |> Elm.withDocumentation "Parses a category name (Lu, Ll, Lt, ...)."
-        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.expose
 
 
 categoryToString : Declaration
@@ -124,15 +121,15 @@ categoryToString =
             categoryList
                 |> List.map
                     (\( short, long, _ ) ->
-                        Elm.Case.branch0 long (Elm.string short)
+                        Elm.Case.branch (Elm.Arg.customType long short) Elm.string
                     )
                 |> Elm.Case.custom generalCategory categoryAnnotation
+                |> Elm.withType Type.string
     in
-    Elm.fn ( "generalCategory", Nothing ) body
-        |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
+    Elm.fn (Elm.Arg.varWith "generalCategory" categoryAnnotation) body
         |> Elm.declaration "categoryToString"
         |> Elm.withDocumentation "Convert a category to its short category name (Lu, Ll, Lt, ...)."
-        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.expose
 
 
 categoryToConstructor : Declaration
@@ -143,15 +140,15 @@ categoryToConstructor =
             categoryList
                 |> List.map
                     (\( _, long, _ ) ->
-                        Elm.Case.branch0 long (Elm.string long)
+                        Elm.Case.branch (Elm.Arg.customType long long) Elm.string
                     )
                 |> Elm.Case.custom generalCategory categoryAnnotation
+                |> Elm.withType Type.string
     in
-    Elm.fn ( "generalCategory", Nothing ) body
-        |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
+    Elm.fn (Elm.Arg.varWith "generalCategory" categoryAnnotation) body
         |> Elm.declaration "categoryToConstructor"
         |> Elm.withDocumentation "Convert a category to its constructor name."
-        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.expose
 
 
 categoryToDescription : Declaration
@@ -162,15 +159,15 @@ categoryToDescription =
             categoryList
                 |> List.map
                     (\( _, long, longer ) ->
-                        Elm.Case.branch0 long (Elm.string longer)
+                        Elm.Case.branch (Elm.Arg.customType long longer) Elm.string
                     )
                 |> Elm.Case.custom generalCategory categoryAnnotation
+                |> Elm.withType Type.string
     in
-    Elm.fn ( "generalCategory", Nothing ) body
-        |> Elm.withType (Type.function [ categoryAnnotation ] Type.string)
+    Elm.fn (Elm.Arg.varWith "generalCategory" categoryAnnotation) body
         |> Elm.declaration "categoryToDescription"
         |> Elm.withDocumentation "Converts a category to its English description. Mostly useful for debugging purposes."
-        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.expose
 
 
 categoryAnnotation : Annotation
