@@ -14,20 +14,20 @@ tests/TestData.elm: dist/UnicodeData.txt Makefile
 	echo "    ]" >> $@
 	elm-format --yes $@
 
-codegen/Gen/Basics.elm: codegen/elm.codegen.json dist/yarn-run
-	yarn elm-codegen install
+codegen/Gen/Basics.elm: codegen/elm.codegen.json dist/bun-run
+	bun elm-codegen install
 
-codegen/Categories.elm: codegen/GenerateCategories.elm codegen/Gen/Basics.elm codegen/elm.json dist/UnicodeData.txt dist/yarn-run
-	yarn elm-codegen run $< --output $(dir $@)
+codegen/Categories.elm: codegen/GenerateCategories.elm codegen/Gen/Basics.elm codegen/elm.json dist/UnicodeData.txt dist/bun-run
+	bun elm-codegen run $< --output $(dir $@)
 	elm-format --yes $@
 
-src/Unicode.elm: codegen/GenerateUnicode.elm codegen/Gen/Basics.elm dist/UnicodeData.txt codegen/Categories.elm dist/yarn-run
-	yarn elm-codegen run $< --flags-from dist/UnicodeData.txt --output $(dir $@) --debug
+src/Unicode.elm: codegen/GenerateUnicode.elm codegen/Gen/Basics.elm dist/UnicodeData.txt codegen/Categories.elm dist/bun-run
+	bun elm-codegen run $< --flags-from dist/UnicodeData.txt --output $(dir $@) --debug
 	elm-format --yes $@
 
-dist/yarn-run: package.json yarn.lock
+dist/bun-run: package.json bun.lock
 	mkdir -p $(dir $@)
-	yarn install && touch $@
+	bun install && touch $@
 
 docs.json: src/Unicode.elm
 	elm make --docs=$@
