@@ -14,10 +14,10 @@ main =
 
 file : File
 file =
-    Elm.file [ "Categories" ] [ declarations, categoryToConstructor ]
+    Elm.file [ "Categories" ] [ Elm.group (declarations ++ [ categoryToConstructor ]) ]
 
 
-declarations : Declaration
+declarations : List Declaration
 declarations =
     [ Elm.docs "## Categories"
     , category
@@ -25,7 +25,6 @@ declarations =
     , categoryToString
     , categoryToDescription
     ]
-        |> Elm.group
 
 
 categoryList : List ( String, String, String )

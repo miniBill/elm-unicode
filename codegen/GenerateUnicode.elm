@@ -4,6 +4,7 @@ import Categories exposing (Category(..), categoryFromString)
 import Dict exposing (Dict)
 import Elm exposing (Declaration, Expression, File)
 import Elm.Annotation as Type
+import Elm.Arg
 import Elm.Let
 import Elm.Op
 import Gen.Char
@@ -132,7 +133,16 @@ flagsToFile csv =
 
         declarations : List Declaration
         declarations =
-            [ categoriesToDeclarationWithSimpleCheck
+            [ Elm.group lettersDeclarations
+            , Elm.group digitsDeclarations
+            , Elm.group categoriesDeclarations
+            , Elm.group separatorsDeclarations
+            ]
+
+        lettersDeclarations : List Declaration
+        lettersDeclarations =
+            [ Elm.docs "## Letters"
+            , categoriesToDeclarationWithSimpleCheck
                 { name = "isUpper"
                 , categories = [ LetterUppercase ]
                 , comment = "Detect upper case characters (Unicode category Lu)"
@@ -172,13 +182,6 @@ flagsToFile csv =
                 }
                 ranges
             , categoriesToDeclaration
-                { name = "isDigit"
-                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
-                , group = "Digits"
-                }
-                ranges
-            , categoriesToDeclaration
                 { name = "isAlphaNum"
                 , categories =
                     [ LetterLowercase
@@ -194,6 +197,29 @@ flagsToFile csv =
                 , group = "Letters"
                 }
                 ranges
+            ]
+
+        digitsDeclarations : List Declaration
+        digitsDeclarations =
+            [ Elm.docs "## Digits"
+            , categoriesToDeclaration
+                { name = "isDigit"
+                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                , group = "Digits"
+                }
+                ranges
+            ]
+
+        categoriesDeclarations : List Declaration
+        categoriesDeclarations =
+            List.take 2 GenerateCategories.declarations
+                ++ (getCategoryDeclaration ranges
+                        :: List.drop 2 GenerateCategories.declarations
+                   )
+
+        separatorsDeclarations =
+            [ Elm.docs "## Separators"
             , categoriesToDeclaration
                 { name = "isSpace"
                 , categories = [ SeparatorSpace ]
@@ -211,35 +237,10 @@ flagsToFile csv =
             ]
     in
     Elm.fileWith [ "Unicode" ]
-        { docs =
-            \groups ->
-                "Unicode aware functions for working with characters."
-                    :: List.map Elm.docs
-                        (List.sortBy
-                            (\{ group } ->
-                                case group of
-                                    Just "Letters" ->
-                                        0
-
-                                    Just "Digits" ->
-                                        1
-
-                                    Just "Categories" ->
-                                        2
-
-                                    _ ->
-                                        3
-                            )
-                            groups
-                        )
+        { docs = "Unicode aware functions for working with characters."
         , aliases = []
         }
-        (declarations
-            ++ List.take 1 GenerateCategories.declarations
-            ++ (getCategoryDeclaration ranges
-                    :: List.drop 1 GenerateCategories.declarations
-               )
-        )
+        declarations
 
 
 splitAt : Int -> Tree a -> Tree a
@@ -480,23 +481,23 @@ letCodeWithSimpleCheck { body, simpleCheckExpression } code =
 
 lessThanDef : Expression -> Expression
 lessThanDef code =
-    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.lt code hex
+    Elm.fn (Elm.Arg.varWith "hex" Type.int) <|
+        \hex -> Elm.Op.lt code hex
 
 
 equalsDef : Expression -> Expression
 equalsDef code =
-    Elm.fn ( "hex", Just Type.int ) <| \hex -> Elm.Op.equal hex code
+    Elm.fn (Elm.Arg.varWith "hex" Type.int) <|
+        \hex -> Elm.Op.equal hex code
 
 
 inRangeDef : Expression -> Expression
 inRangeDef code =
-    Elm.fn2 ( "from", Just Type.int )
-        ( "to", Just Type.int )
-        (\from to ->
+    Elm.fn2 (Elm.Arg.varWith "from" Type.int) (Elm.Arg.varWith "to" Type.int) <|
+        \from to ->
             Elm.Op.and
                 (Elm.Op.lte from code)
                 (Elm.Op.lte code to)
-        )
 
 
 getCategoryDeclaration :
@@ -607,10 +608,10 @@ getCategoryDeclaration ranges =
                 |> split
                 |> treeToExpression code
     in
-    Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
+    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char") (letCode checks)
         |> Elm.withType annotation
         |> Elm.declaration "getCategory"
-        |> Elm.exposeWith { exposeConstructor = False, group = Just "Categories" }
+        |> Elm.expose
         |> Elm.withDocumentation doc
 
 
@@ -716,11 +717,11 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                 |> rangesToTree True (\_ -> ())
                 |> treeToExpression inputs
     in
-    Elm.fn ( "c", Just <| Type.named [] "Char" ) (letCode checks)
+    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char") (letCode checks)
         |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
         |> Elm.declaration name
         |> Elm.withDocumentation comment
-        |> Elm.exposeWith { exposeConstructor = False, group = Just group }
+        |> Elm.expose
 
 
 categoriesToDeclarationWithSimpleCheck :
@@ -894,7 +895,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         nonsimpleTree =
             rangesToTree True (\_ -> ()) nonsimpleRanges
     in
-    Elm.fn ( "c", Just <| Type.named [] "Char" )
+    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
         (letCodeWithSimpleCheck
             { simpleCheckExpression = simpleCheckExpression
             , body = toBody
@@ -903,7 +904,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
         |> Elm.declaration name
         |> Elm.withDocumentation comment
-        |> Elm.exposeWith { exposeConstructor = False, group = Just group }
+        |> Elm.expose
 
 
 rangesToTree : Bool -> ({ a | from : Int, to : Int } -> payload) -> List { a | from : Int, to : Int } -> Tree payload
