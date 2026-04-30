@@ -3,7 +3,7 @@
         "elm": "^0.19.1-6",
         "elm-codegen": "^0.6.3",
         "elm-review": "^2.13.5",
-        "elm-test-rs": "^3.0.1-0"
+        "elm-test-rs": "^3.0.2-0"
     },
     "scripts": {
         "regen": "pnpm codegen install"
