@@ -362,13 +362,20 @@ parseLine line =
             Nothing
 
 
-rangeToCondition : { equals : Int -> Expression, inRange : Int -> Int -> Expression } -> ( Int, Int, a ) -> Expression
-rangeToCondition { equals, inRange } ( from, to, _ ) =
+rangeToCondition : Expression -> ( Int, Int, a ) -> Expression
+rangeToCondition code ( from, to, _ ) =
     if from == to then
-        equals from
+        Elm.Op.equal code (Elm.hex from)
+
+    else if from == 0 then
+        Elm.Op.lte code (Elm.hex to)
 
     else
-        inRange from to
+        Elm.Op.parens
+            (Elm.Op.and
+                (Elm.Op.lte (Elm.hex from) code)
+                (Elm.Op.lte code (Elm.hex to))
+            )
 
 
 joinOr : List Expression -> Expression
@@ -397,42 +404,12 @@ modIs code n =
 
 
 letCode :
-    ({ code : Expression
-     , lessThan : Int -> Expression
-     , equals : Int -> Expression
-     , inRange : Int -> Int -> Expression
-     }
-     -> Expression
-    )
+    (Expression -> Expression)
     -> Expression
     -> Expression
-letCode inner code =
-    Elm.Let.letIn
-        (\codeVar ->
-            Elm.Let.letIn
-                (\lessThan equals inRange ->
-                    inner
-                        { code = codeVar
-                        , lessThan =
-                            \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
-                        , equals =
-                            \i ->
-                                Elm.apply equals [ Elm.hex i ]
-                        , inRange =
-                            \from to ->
-                                if from == 0 then
-                                    Elm.Op.lte codeVar (Elm.hex to)
-
-                                else
-                                    Elm.apply inRange [ Elm.hex from, Elm.hex to ]
-                        }
-                )
-                |> Elm.Let.value "l" (lessThanDef codeVar)
-                |> Elm.Let.value "e" (equalsDef codeVar)
-                |> Elm.Let.value "r" (inRangeDef codeVar)
-                |> Elm.Let.toExpression
-        )
-        |> Elm.Let.value "code" (Gen.Char.call_.toCode code)
+letCode inner c =
+    Elm.Let.letIn inner
+        |> Elm.Let.value "code" (Gen.Char.call_.toCode c)
         |> Elm.Let.toExpression
 
 
@@ -441,67 +418,24 @@ letCodeWithSimpleCheck :
     , body :
         { code : Expression
         , simple : Expression
-        , lessThan : Int -> Expression
-        , equals : Int -> Expression
-        , inRange : Int -> Int -> Expression
         }
         -> Expression
     }
     -> Expression
     -> Expression
-letCodeWithSimpleCheck { body, simpleCheckExpression } code =
+letCodeWithSimpleCheck { body, simpleCheckExpression } c =
     Elm.Let.letIn
-        (\codeVar simpleVar ->
-            Elm.Let.letIn
-                (\lessThan equals inRange ->
-                    body
-                        { code = codeVar
-                        , simple = simpleVar
-                        , lessThan =
-                            \upperBound -> Elm.apply lessThan [ Elm.hex upperBound ]
-                        , equals =
-                            \i ->
-                                Elm.apply equals [ Elm.hex i ]
-                        , inRange =
-                            \from to ->
-                                if from == 0 then
-                                    Elm.Op.lte codeVar (Elm.hex to)
-
-                                else
-                                    Elm.apply inRange [ Elm.hex from, Elm.hex to ]
-                        }
-                )
-                |> Elm.Let.value "l" (lessThanDef codeVar)
-                |> Elm.Let.value "e" (equalsDef codeVar)
-                |> Elm.Let.value "r" (inRangeDef codeVar)
-                |> Elm.Let.toExpression
+        (\code simple ->
+            body
+                { code = code
+                , simple = simple
+                }
         )
         |> Elm.Let.value "code"
-            (Gen.Char.call_.toCode code)
+            (Gen.Char.call_.toCode c)
         |> Elm.Let.value "simple"
-            (simpleCheckExpression code)
+            (simpleCheckExpression c)
         |> Elm.Let.toExpression
-
-
-lessThanDef : Expression -> Expression
-lessThanDef code =
-    Elm.fn (Elm.Arg.varWith "hex" Type.int) <|
-        \hex -> Elm.Op.lt code hex
-
-
-equalsDef : Expression -> Expression
-equalsDef code =
-    Elm.fn (Elm.Arg.varWith "hex" Type.int) <|
-        \hex -> Elm.Op.equal hex code
-
-
-inRangeDef : Expression -> Expression
-inRangeDef code =
-    Elm.fn2 (Elm.Arg.varWith "from" Type.int) (Elm.Arg.varWith "to" Type.int) <|
-        \from to ->
-            Elm.Op.and
-                (Elm.Op.lte from code)
-                (Elm.Op.lte code to)
 
 
 getCategoryDeclaration :
@@ -540,23 +474,14 @@ getCategoryDeclaration ranges =
                     go category
 
         treeToExpression :
-            { code : Expression
-            , lessThan : Int -> Expression
-            , equals : Int -> Expression
-            , inRange : Int -> Int -> Expression
-            }
+            Expression
             -> Tree Category
             -> Expression
-        treeToExpression { equals, lessThan, inRange, code } =
+        treeToExpression code =
             let
                 rangesToConditions : List ( Int, Int, a ) -> List Expression
                 rangesToConditions =
-                    List.map
-                        (rangeToCondition
-                            { equals = equals
-                            , inRange = inRange
-                            }
-                        )
+                    List.map (rangeToCondition code)
 
                 go t =
                     case t of
@@ -597,26 +522,20 @@ getCategoryDeclaration ranges =
                                 |> List.foldr (\( category, condition ) acc -> Elm.ifThen condition category acc) nothing
 
                         Split at l r ->
-                            Elm.ifThen (lessThan at)
+                            Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                                 (go l)
                                 (go r)
             in
             go
 
-        checks :
-            { lessThan : Int -> Expression
-            , equals : Int -> Expression
-            , inRange : Int -> Int -> Expression
-            , code : Expression
-            }
-            -> Expression
-        checks vars =
-            Elm.ifThen (isNaN vars.code)
+        checks : Expression -> Expression
+        checks code =
+            Elm.ifThen (isNaN code)
                 (Elm.maybe (Just (Elm.val "OtherSurrogate")))
                 (ranges
                     |> rangesToTree True .category
                     |> split
-                    |> treeToExpression vars
+                    |> treeToExpression code
                 )
     in
     Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
@@ -675,23 +594,14 @@ categoriesToDeclaration :
 categoriesToDeclaration { name, categories, comment, group } ranges =
     let
         treeToExpression :
-            { code : Expression
-            , lessThan : Int -> Expression
-            , equals : Int -> Expression
-            , inRange : Int -> Int -> Expression
-            }
+            Expression
             -> Tree a
             -> Expression
-        treeToExpression { code, lessThan, equals, inRange } =
+        treeToExpression code =
             let
                 rangesToCondition : List ( Int, Int, a ) -> List Expression
                 rangesToCondition =
-                    List.map
-                        (rangeToCondition
-                            { equals = equals
-                            , inRange = inRange
-                            }
-                        )
+                    List.map (rangeToCondition code)
 
                 go t =
                     case t of
@@ -724,26 +634,20 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
                                 (rangesToCondition all ++ modded)
 
                         Split at l r ->
-                            Elm.ifThen (lessThan at)
+                            Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                                 (go l)
                                 (go r)
             in
             go
 
-        checks :
-            { lessThan : Int -> Expression
-            , equals : Int -> Expression
-            , inRange : Int -> Int -> Expression
-            , code : Expression
-            }
-            -> Expression
-        checks inputs =
-            Elm.ifThen (isNaN inputs.code)
+        checks : Expression -> Expression
+        checks code =
+            Elm.ifThen (isNaN code)
                 (Elm.bool False)
                 (ranges
                     |> List.filter (\{ category } -> List.member category categories)
                     |> rangesToTree True (\_ -> ())
-                    |> treeToExpression inputs
+                    |> treeToExpression code
                 )
     in
     Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
@@ -784,21 +688,13 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
         toBody :
             { code : Expression
             , simple : Expression
-            , lessThan : Int -> Expression
-            , equals : Int -> Expression
-            , inRange : Int -> Int -> Expression
             }
             -> Expression
-        toBody { code, simple, lessThan, equals, inRange } =
+        toBody { code, simple } =
             let
                 rangesToCondition : List ( Int, Int, a ) -> List Expression
                 rangesToCondition =
-                    List.map
-                        (rangeToCondition
-                            { equals = equals
-                            , inRange = inRange
-                            }
-                        )
+                    List.map (rangeToCondition code)
 
                 go : Tree a -> Expression
                 go t =
@@ -832,7 +728,7 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 (rangesToCondition all ++ modded)
 
                         Split at l r ->
-                            Elm.ifThen (lessThan at)
+                            Elm.ifThen (Elm.Op.lt code (Elm.hex at))
                                 (go l)
                                 (go r)
             in
