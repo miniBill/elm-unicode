@@ -7,6 +7,7 @@ import Elm.Annotation as Type
 import Elm.Arg
 import Elm.Let
 import Elm.Op
+import Gen.Basics
 import Gen.Char
 import Gen.CodeGen.Generate as Generate
 import GenerateCategories
@@ -508,9 +509,6 @@ getCategoryDeclaration :
     -> Declaration
 getCategoryDeclaration ranges =
     let
-        annotation =
-            Type.function [ Type.char ] (Type.maybe <| Type.named [] "Category")
-
         doc =
             """Get the Unicode category. Warning: this function is very big. You should usually use one of the `isXXX` ones instead."""
 
@@ -605,17 +603,35 @@ getCategoryDeclaration ranges =
             in
             go
 
-        checks code =
-            ranges
-                |> rangesToTree True .category
-                |> split
-                |> treeToExpression code
+        checks :
+            { lessThan : Int -> Expression
+            , equals : Int -> Expression
+            , inRange : Int -> Int -> Expression
+            , code : Expression
+            }
+            -> Expression
+        checks vars =
+            Elm.ifThen (isNaN vars.code)
+                (Elm.maybe (Just (Elm.val "OtherSurrogate")))
+                (ranges
+                    |> rangesToTree True .category
+                    |> split
+                    |> treeToExpression vars
+                )
     in
-    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char") (letCode checks)
-        |> Elm.withType annotation
+    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
+        (\c ->
+            letCode checks c
+                |> Elm.withType (Type.maybe <| Type.named [] "Category")
+        )
         |> Elm.declaration "getCategory"
         |> Elm.expose
         |> Elm.withDocumentation doc
+
+
+isNaN : Expression -> Expression
+isNaN code =
+    Gen.Basics.call_.isNaN (Gen.Basics.call_.toFloat code)
 
 
 nothing : Expression
@@ -714,14 +730,27 @@ categoriesToDeclaration { name, categories, comment, group } ranges =
             in
             go
 
+        checks :
+            { lessThan : Int -> Expression
+            , equals : Int -> Expression
+            , inRange : Int -> Int -> Expression
+            , code : Expression
+            }
+            -> Expression
         checks inputs =
-            ranges
-                |> List.filter (\{ category } -> List.member category categories)
-                |> rangesToTree True (\_ -> ())
-                |> treeToExpression inputs
+            Elm.ifThen (isNaN inputs.code)
+                (Elm.bool False)
+                (ranges
+                    |> List.filter (\{ category } -> List.member category categories)
+                    |> rangesToTree True (\_ -> ())
+                    |> treeToExpression inputs
+                )
     in
-    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char") (letCode checks)
-        |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
+    Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
+        (\c ->
+            letCode checks c
+                |> Elm.withType Type.bool
+        )
         |> Elm.declaration name
         |> Elm.withDocumentation comment
         |> Elm.expose
@@ -807,9 +836,12 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
                                 (go l)
                                 (go r)
             in
-            Elm.ifThen simple
-                (go simpleTree)
-                (go nonsimpleTree)
+            Elm.ifThen (isNaN code)
+                (Elm.bool False)
+                (Elm.ifThen simple
+                    (go simpleTree)
+                    (go nonsimpleTree)
+                )
 
         simpleRanges : List { from : Int, to : Int, hasAny : Bool }
         simpleRanges =
@@ -899,12 +931,14 @@ categoriesToDeclarationWithSimpleCheck { name, categories, comment, group, simpl
             rangesToTree True (\_ -> ()) nonsimpleRanges
     in
     Elm.fn (Elm.Arg.varWith "c" <| Type.named [] "Char")
-        (letCodeWithSimpleCheck
-            { simpleCheckExpression = simpleCheckExpression
-            , body = toBody
-            }
+        (\c ->
+            letCodeWithSimpleCheck
+                { simpleCheckExpression = simpleCheckExpression
+                , body = toBody
+                }
+                c
+                |> Elm.withType Type.bool
         )
-        |> Elm.withType (Type.function [ Type.named [] "Char" ] Type.bool)
         |> Elm.declaration name
         |> Elm.withDocumentation comment
         |> Elm.expose
