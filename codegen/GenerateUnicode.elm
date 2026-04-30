@@ -12,17 +12,48 @@ import Gen.Char
 import Gen.CodeGen.Generate as Generate
 import GenerateCategories
 import Hex
+import Json.Decode
+import Json.Encode
 import List.Extra
+import Maybe.Extra
 import Result
+import Result.Extra
 import Set exposing (Set)
 
 
-main : Program String () ()
+main : Program Json.Decode.Value () ()
 main =
-    Generate.fromText <|
-        \input ->
-            [ flagsToFile input
-            ]
+    Platform.worker
+        { init =
+            \flags ->
+                case Json.Decode.decodeValue Generate.directoryDecoder flags of
+                    Ok input ->
+                        case flagsToFile input of
+                            Ok file ->
+                                ( ()
+                                , Generate.files [ file ]
+                                )
+
+                            Err e ->
+                                ( ()
+                                , Generate.error
+                                    [ { title = "Error generating file"
+                                      , description = e
+                                      }
+                                    ]
+                                )
+
+                    Err e ->
+                        ( ()
+                        , Generate.error
+                            [ { title = "Error decoding flags"
+                              , description = Json.Decode.errorToString e
+                              }
+                            ]
+                        )
+        , update = \_ model -> ( model, Cmd.none )
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 {-| Tries to aggregate consecutive elements. When the aggregation fails they get added to the output list.
@@ -58,190 +89,221 @@ foldWithLast step list =
            )
 
 
-flagsToFile : String -> File
-flagsToFile csv =
-    let
-        raw : List { codeValue : CodeValue, category : Category }
-        raw =
-            csv
-                |> String.split "\n"
-                |> List.filterMap parseLine
+flagsToFile : Generate.Directory -> Result String File
+flagsToFile (Generate.Directory dir) =
+    Dict.get "UnicodeData.txt" dir.files
+        |> Result.fromMaybe "Missing UnicodeData.txt"
+        |> Result.andThen
+            (\unicodeData ->
+                unicodeData
+                    |> String.split "\n"
+                    |> Result.Extra.combineMap parseUnicodeDataLine
+            )
+        |> Result.map Maybe.Extra.values
+        |> Result.andThen
+            (Result.Extra.foldlWhileOk
+                (\e ( last, acc ) ->
+                    case last of
+                        Nothing ->
+                            Ok ( Just e, acc )
 
-        ranges : List { from : Int, to : Int, category : Category }
-        ranges =
-            raw
-                |> List.foldl
-                    (\e ( last, acc ) ->
-                        case last of
-                            Nothing ->
-                                ( Just e, acc )
+                        Just l ->
+                            case ( l.codeValue, e.codeValue ) of
+                                ( First li, Last ei ) ->
+                                    ( Nothing
+                                    , { from = li
+                                      , to = ei
+                                      , category = l.category
+                                      }
+                                        :: acc
+                                    )
+                                        |> Ok
 
-                            Just l ->
-                                case ( l.codeValue, e.codeValue ) of
-                                    ( First li, Last ei ) ->
-                                        ( Nothing
-                                        , { from = li
-                                          , to = ei
-                                          , category = l.category
-                                          }
-                                            :: acc
-                                        )
+                                ( Single ls, _ ) ->
+                                    ( Just e
+                                    , { from = ls
+                                      , to = ls
+                                      , category = l.category
+                                      }
+                                        :: acc
+                                    )
+                                        |> Ok
 
-                                    ( Single ls, _ ) ->
-                                        ( Just e
-                                        , { from = ls
-                                          , to = ls
-                                          , category = l.category
-                                          }
-                                            :: acc
-                                        )
+                                _ ->
+                                    Err ("Invalid input file: found " ++ lineToString e ++ " after " ++ lineToString l)
+                )
+                ( Nothing, [] )
+            )
+        |> Result.andThen
+            (\( last, acc ) ->
+                case last of
+                    Nothing ->
+                        Ok (List.reverse acc)
 
-                                    _ ->
-                                        Debug.todo <| "Invalid input file: found " ++ Debug.toString e ++ " after " ++ Debug.toString l
-                    )
-                    ( Nothing, [] )
-                |> (\( last, acc ) ->
-                        case last of
-                            Nothing ->
-                                List.reverse acc
+                    Just l ->
+                        case l.codeValue of
+                            Single ls ->
+                                ({ from = ls
+                                 , to = ls
+                                 , category = l.category
+                                 }
+                                    :: acc
+                                )
+                                    |> List.reverse
+                                    |> Ok
 
-                            Just l ->
-                                case l.codeValue of
-                                    Single ls ->
-                                        List.reverse <|
-                                            { from = ls
-                                            , to = ls
-                                            , category = l.category
-                                            }
-                                                :: acc
+                            _ ->
+                                Err ("Invalid input file: list ended with " ++ lineToString l)
+            )
+        |> Result.map
+            (foldWithLast
+                (\e last ->
+                    if
+                        (last.to + 1 == e.from || e.category == OtherPrivateUse)
+                            && (last.category == e.category)
+                    then
+                        Just { last | to = e.to }
 
-                                    _ ->
-                                        Debug.todo <|
-                                            "Invalid input file: list ended with "
-                                                ++ Debug.toString l
-                   )
-                |> foldWithLast
-                    (\e last ->
-                        if
-                            (last.to + 1 == e.from || e.category == OtherPrivateUse)
-                                && (last.category == e.category)
-                        then
-                            Just { last | to = e.to }
+                    else
+                        Nothing
+                )
+            )
+        |> Result.map
+            (\ranges ->
+                let
+                    declarations : List Declaration
+                    declarations =
+                        [ Elm.group lettersDeclarations
+                        , Elm.group digitsDeclarations
+                        , Elm.group categoriesDeclarations
+                        , Elm.group separatorsDeclarations
+                        ]
 
-                        else
-                            Nothing
-                    )
+                    lettersDeclarations : List Declaration
+                    lettersDeclarations =
+                        [ Elm.docs "## Letters"
+                        , categoriesToDeclarationWithSimpleCheck
+                            { name = "isUpper"
+                            , categories = [ LetterUppercase ]
+                            , comment = "Detect upper case characters (Unicode category Lu)"
+                            , group = "Letters"
+                            , simpleCheck = \c -> Char.toUpper c == c && Char.toLower c /= c
+                            , simpleCheckExpression =
+                                \c ->
+                                    Elm.Op.and
+                                        (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
+                                        (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
+                            }
+                            ranges
+                        , categoriesToDeclarationWithSimpleCheck
+                            { name = "isLower"
+                            , categories = [ LetterLowercase ]
+                            , comment = "Detect lower case characters (Unicode category Ll)"
+                            , group = "Letters"
+                            , simpleCheck = \c -> Char.toLower c == c && Char.toUpper c /= c
+                            , simpleCheckExpression =
+                                \c ->
+                                    Elm.Op.and
+                                        (Elm.Op.equal (Gen.Char.call_.toLower c) c)
+                                        (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
+                            }
+                            ranges
+                        , categoriesToDeclaration
+                            { name = "isAlpha"
+                            , categories =
+                                [ LetterLowercase
+                                , LetterUppercase
+                                , LetterTitlecase
+                                , LetterModifier
+                                , LetterOther
+                                ]
+                            , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
+                            , group = "Letters"
+                            }
+                            ranges
+                        , categoriesToDeclaration
+                            { name = "isAlphaNum"
+                            , categories =
+                                [ LetterLowercase
+                                , LetterUppercase
+                                , LetterTitlecase
+                                , LetterModifier
+                                , LetterOther
+                                , NumberDecimalDigit
+                                , NumberLetter
+                                , NumberOther
+                                ]
+                            , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
+                            , group = "Letters"
+                            }
+                            ranges
+                        ]
 
-        declarations : List Declaration
-        declarations =
-            [ Elm.group lettersDeclarations
-            , Elm.group digitsDeclarations
-            , Elm.group categoriesDeclarations
-            , Elm.group separatorsDeclarations
-            ]
+                    digitsDeclarations : List Declaration
+                    digitsDeclarations =
+                        [ Elm.docs "## Digits"
+                        , categoriesToDeclaration
+                            { name = "isDigit"
+                            , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
+                            , comment = "Detect digits (Unicode categories Nd, Nl, No)"
+                            , group = "Digits"
+                            }
+                            ranges
+                        ]
 
-        lettersDeclarations : List Declaration
-        lettersDeclarations =
-            [ Elm.docs "## Letters"
-            , categoriesToDeclarationWithSimpleCheck
-                { name = "isUpper"
-                , categories = [ LetterUppercase ]
-                , comment = "Detect upper case characters (Unicode category Lu)"
-                , group = "Letters"
-                , simpleCheck = \c -> Char.toUpper c == c && Char.toLower c /= c
-                , simpleCheckExpression =
-                    \c ->
-                        Elm.Op.and
-                            (Elm.Op.equal (Gen.Char.call_.toUpper c) c)
-                            (Elm.Op.notEqual (Gen.Char.call_.toLower c) c)
-                }
-                ranges
-            , categoriesToDeclarationWithSimpleCheck
-                { name = "isLower"
-                , categories = [ LetterLowercase ]
-                , comment = "Detect lower case characters (Unicode category Ll)"
-                , group = "Letters"
-                , simpleCheck = \c -> Char.toLower c == c && Char.toUpper c /= c
-                , simpleCheckExpression =
-                    \c ->
-                        Elm.Op.and
-                            (Elm.Op.equal (Gen.Char.call_.toLower c) c)
-                            (Elm.Op.notEqual (Gen.Char.call_.toUpper c) c)
-                }
-                ranges
-            , categoriesToDeclaration
-                { name = "isAlpha"
-                , categories =
-                    [ LetterLowercase
-                    , LetterUppercase
-                    , LetterTitlecase
-                    , LetterModifier
-                    , LetterOther
-                    ]
-                , comment = "Detect letters (Unicode categories Lu, Ll, Lt, Lm, Lo)"
-                , group = "Letters"
-                }
-                ranges
-            , categoriesToDeclaration
-                { name = "isAlphaNum"
-                , categories =
-                    [ LetterLowercase
-                    , LetterUppercase
-                    , LetterTitlecase
-                    , LetterModifier
-                    , LetterOther
-                    , NumberDecimalDigit
-                    , NumberLetter
-                    , NumberOther
-                    ]
-                , comment = "Detect letters or digits (Unicode categories Lu, Ll, Lt, Lm, Lo, Nd, Nl, No)"
-                , group = "Letters"
-                }
-                ranges
-            ]
+                    categoriesDeclarations : List Declaration
+                    categoriesDeclarations =
+                        List.take 2 GenerateCategories.declarations
+                            ++ (getCategoryDeclaration ranges
+                                    :: List.drop 2 GenerateCategories.declarations
+                               )
 
-        digitsDeclarations : List Declaration
-        digitsDeclarations =
-            [ Elm.docs "## Digits"
-            , categoriesToDeclaration
-                { name = "isDigit"
-                , categories = [ NumberDecimalDigit, NumberLetter, NumberOther ]
-                , comment = "Detect digits (Unicode categories Nd, Nl, No)"
-                , group = "Digits"
-                }
-                ranges
-            ]
+                    separatorsDeclarations =
+                        [ Elm.docs "## Separators"
+                        , categoriesToDeclaration
+                            { name = "isSpace"
+                            , categories = [ SeparatorSpace ]
+                            , comment = "Detect spaces (Unicode category Zs)"
+                            , group = "Separators"
+                            }
+                            ranges
+                        , categoriesToDeclaration
+                            { name = "isSeparator"
+                            , categories = [ SeparatorSpace, SeparatorLine, SeparatorParagraph ]
+                            , comment = "Detect spaces (Unicode categories Zs, Zl, Zp)"
+                            , group = "Separators"
+                            }
+                            ranges
+                        ]
+                in
+                Elm.fileWith [ "Unicode" ]
+                    { docs = "Unicode aware functions for working with characters."
+                    , aliases = []
+                    }
+                    declarations
+            )
 
-        categoriesDeclarations : List Declaration
-        categoriesDeclarations =
-            List.take 2 GenerateCategories.declarations
-                ++ (getCategoryDeclaration ranges
-                        :: List.drop 2 GenerateCategories.declarations
-                   )
 
-        separatorsDeclarations =
-            [ Elm.docs "## Separators"
-            , categoriesToDeclaration
-                { name = "isSpace"
-                , categories = [ SeparatorSpace ]
-                , comment = "Detect spaces (Unicode category Zs)"
-                , group = "Separators"
-                }
-                ranges
-            , categoriesToDeclaration
-                { name = "isSeparator"
-                , categories = [ SeparatorSpace, SeparatorLine, SeparatorParagraph ]
-                , comment = "Detect spaces (Unicode categories Zs, Zl, Zp)"
-                , group = "Separators"
-                }
-                ranges
-            ]
-    in
-    Elm.fileWith [ "Unicode" ]
-        { docs = "Unicode aware functions for working with characters."
-        , aliases = []
-        }
-        declarations
+lineToString : { codeValue : CodeValue, category : Category } -> String
+lineToString { codeValue, category } =
+    "{ codeValue = "
+        ++ codeValueToString codeValue
+        ++ ", category = "
+        ++ Categories.categoryToString category
+        ++ "}"
+
+
+codeValueToString : CodeValue -> String
+codeValueToString codeValue =
+    case codeValue of
+        Single i ->
+            "Single " ++ String.fromInt i
+
+        First i ->
+            "First " ++ String.fromInt i
+
+        Last i ->
+            "Last " ++ String.fromInt i
 
 
 splitAt : Int -> Tree a -> Tree a
@@ -337,11 +399,11 @@ type CodeValue
     | Last Int
 
 
-parseLine : String -> Maybe { codeValue : CodeValue, category : Category }
-parseLine line =
+parseUnicodeDataLine : String -> Result String (Maybe { codeValue : CodeValue, category : Category })
+parseUnicodeDataLine line =
     case String.split ";" line of
         codeValueHex :: characterName :: generalCategory :: _ ->
-            Maybe.map2
+            Result.map2
                 (\codeValue category ->
                     { codeValue =
                         if String.endsWith "First>" characterName then
@@ -354,12 +416,22 @@ parseLine line =
                             Single codeValue
                     , category = category
                     }
+                        |> Just
                 )
-                (Result.toMaybe <| Hex.fromString <| String.toLower codeValueHex)
-                (categoryFromString generalCategory)
+                (Hex.fromString <| String.toLower codeValueHex)
+                (case categoryFromString generalCategory of
+                    Just category ->
+                        Ok category
+
+                    Nothing ->
+                        Err ("Invalid category: " ++ generalCategory)
+                )
+
+        [ "" ] ->
+            Ok Nothing
 
         _ ->
-            Nothing
+            Err ("Invalid UnicodeData.txt line: " ++ Json.Encode.encode 0 (Json.Encode.string line))
 
 
 rangeToCondition : Expression -> ( Int, Int, a ) -> Expression

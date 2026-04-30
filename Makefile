@@ -22,7 +22,7 @@ codegen/Categories.elm: codegen/GenerateCategories.elm codegen/Gen/Basics.elm co
 	elm-format --yes $@
 
 src/Unicode.elm: codegen/GenerateUnicode.elm codegen/Gen/Basics.elm dist/UnicodeData.txt codegen/Categories.elm dist/bun-run
-	bun elm-codegen run $< --flags-from dist/UnicodeData.txt --output $(dir $@) --debug
+	bun elm-codegen run $< --flags-from dist --output $(dir $@)
 	elm-format --yes $@
 
 dist/bun-run: package.json bun.lock
